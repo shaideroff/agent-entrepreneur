@@ -33,3 +33,26 @@ def test_database_symlink_is_rejected(tmp_path: Path):
         pytest.skip("symbolic links are not available")
     with pytest.raises(ValueError, match="symbolic link"):
         connect(link)
+
+
+def test_context_managed_connection_rolls_back_on_exception(tmp_path: Path):
+    path = tmp_path / "rollback.db"
+    with pytest.raises(RuntimeError, match="force rollback"):
+        with connect(path) as db:
+            db.execute(
+                "INSERT INTO memory(id, scope, content) VALUES (?, ?, ?)",
+                ("memory-1", "private", "must not persist"),
+            )
+            raise RuntimeError("force rollback")
+
+    with connect(path) as db:
+        row = db.execute("SELECT id FROM memory WHERE id = ?", ("memory-1",)).fetchone()
+    assert row is None
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX directory permissions only")
+def test_new_database_directory_requests_private_permissions(tmp_path: Path):
+    path = tmp_path / "private-dir" / "nested" / "data.sqlite3"
+    with connect(path) as db:
+        db.execute("SELECT 1")
+    assert path.parent.stat().st_mode & 0o777 == 0o700
