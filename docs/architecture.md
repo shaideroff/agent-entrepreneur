@@ -1,30 +1,49 @@
 # Architecture
 
-Agent Entrepreneur is an MCP server. The connected MCP host supplies model inference and user interaction. The server provides typed workflow preparation, local persistence, entrepreneur knowledge resources, prompts and bounded specialist task planning.
+Agent Entrepreneur is a public, model-independent MCP server. The connected MCP host supplies model inference, live research tools and user interaction. Agent Entrepreneur provides six core business capabilities, a twelve-discipline specialist catalogue, source-aware entrepreneur knowledge, consent-gated local memory, workflow checkpoints and structured result validation.
 
-Layers: `domain` (Pydantic contracts), `services` (deterministic workflows), `knowledge` (attributed profiles), `agents` (bounded specialist planning), `memory` and `storage` (local SQLite), `security` (approval policy), and `server` (MCP registration).
+Layers:
+- `domain`: typed business contracts.
+- `services`: deterministic business workflow logic.
+- `knowledge`: attributed entrepreneur profiles and claim-level evidence.
+- `agents`: bounded specialist planning, response validation and synthesis.
+- `memory` and `storage`: local SQLite persistence.
+- `workflows`: durable checkpoint state and safe continuation.
+- `security`: approval policy and fail-closed transport configuration.
+- `server`: MCP tool, resource and prompt registration.
 
-Request lifecycle: validate input; perform deterministic checks; return structured facts, assumptions and evidence gaps; let the connected client reason; require approval before consequential actions.
+## Request lifecycle
 
-Specialists are versionable role definitions, not simulated identities. The current orchestrator prepares specialist tasks; it does not claim to run autonomous model subagents.
+1. The MCP client calls a core business tool or asks the server to plan a specialist workflow.
+2. The server validates input and returns structured business context, evidence gaps or specialist assignments.
+3. The connected client performs reasoning and any permitted research; retrieved content remains untrusted data.
+4. The client submits structured specialist findings and claim records to the server.
+5. The server validates specialist attribution and claim/source identifiers, persists checkpoints and consolidates findings, recommendations, risks, disagreements, unknowns and limitations.
+6. The client presents the result and obtains user approval before any consequential external action.
 
-Public seed data is shipped with the package. User memory and workflow state are local. Private memory is never automatically added to shared knowledge.
+## Specialist orchestration
 
+The `agents` package provides twelve analytical disciplines. Roles are reusable methods and evaluation rubrics, not simulated identities or endorsements. The caller supplies the reasoning; the server does not embed an LLM provider or claim hidden autonomous model subagents.
 
-## Specialist orchestration runtime
+The MCP workflow tools are:
+- `plan_specialist_workflow`: deterministic, bounded role selection and assignment.
+- `complete_specialist_workflow`: accept one structured response per planned specialist, validate provenance and persist progress.
+- `resume_specialist_workflow`: validate the original request and ordered plan, reload completed work, and execute only unfinished specialists.
 
-The `agents` package provides a bounded, role-based orchestration layer. The caller supplies an executor callback backed by its connected model/client; the MCP server does not embed a model provider or pretend to run independent hidden LLM instances. Specialist assignments carry the role, documented methodology, objective, task context and a separately labelled untrusted-material field.
+Checkpoint identity is bound to a SHA-256 fingerprint of the objective, context, untrusted material, execution limits and ordered specialist assignments. A mismatched request or plan is rejected. Legacy empty checkpoints can resume only when their objective matches and no specialist output has been completed. Recovery is at-least-once: an interrupted specialist may be invoked again if it had not yet been checkpointed. Executor callbacks must therefore be analysis-only and side-effect-free.
 
-The orchestrator runs selected specialists sequentially, validates response attribution, consolidates findings, recommendations, risks, challenges/disagreements, unknowns and evidence references, and preserves completed work if a later specialist fails. Selection and step limits are enforced in code. Role definitions are not impersonations of the entrepreneurs or practitioners whose documented methods inform them.
+## Knowledge and evidence
 
-`CheckpointStore` persists workflow state in the existing SQLite `workflow_runs` table. Checkpoints contain execution state and structured specialist outputs only; they must not contain hidden chain-of-thought or silently capture raw conversations. The current runtime creates resumable records and supports lookup by workflow ID; automatic continuation/replay of unfinished specialist tasks is a subsequent enhancement.
+Entrepreneur profiles carry region, expertise, ventures, methods, decisions, outcomes, evidence level, confidence, attribution, update date and source metadata. The current seed contains 18 profiles across eight regions; the 100-profile catalogue is a longer-term research target. Empty methods, decisions or outcomes mean they have not yet been researched and are not to be invented.
 
+Evidence claims use explicit claim status, evidence level, scope, source metadata, limitations and contradictions. The server enforces identifier-level provenance, not semantic entailment: it does not prove that a source logically entails a finding. A reviewer or connected model must assess source relevance and truth.
 
-Partial specialist workflows retain structured outputs in SQLite. `Orchestrator.resume(...)` reloads those outputs, verifies their attribution against the supplied specialist plan, skips completed specialists and continues from the next unfinished assignment under the same workflow ID. Completed workflows cannot be resumed. The caller must provide the same ordered specialist plan and request context; checkpoints do not persist credentials, private model chain-of-thought or arbitrary provider state.
+## Memory and privacy
 
+Local memory writes require explicit consent. Memory and workflow checkpoints share the configured SQLite database but remain separate from the public entrepreneur knowledge registry. The server exposes memory search and deletion. SQLite is not encrypted by the application; operators must protect local files and backups. Do not store credentials or secrets.
 
-Checkpoint recovery validates the stored status and JSON shape before exposing state to the orchestrator. Corrupt JSON, non-object state and invalid statuses are rejected. Resume is bound to the exact saved objective and revalidates all persisted specialist findings against the evidence registry supplied by the caller. These checks protect against accidental corruption and cross-task reuse; SQLite checkpoint files remain local application data and are not cryptographically tamper-proof against a hostile local user.
+## Transport and deployment
 
-### Retry and side-effect boundary
+STDIO is the supported default. Streamable HTTP is restricted to loopback. Non-loopback binding is disabled until an authenticated remote deployment with TLS, rate limiting and audit controls is implemented and tested.
 
-Specialist executor callbacks are analysis-only and must be side-effect-free: they may inspect supplied context and return structured findings, but must not publish content, contact customers, spend money, mutate external systems or perform other consequential actions. A checkpoint is written after a specialist response is validated. If a process crashes after an executor begins but before its response is checkpointed, resuming can invoke that specialist again. Therefore v1 does not promise exactly-once execution. Any future integration that performs external work must use explicit human approval, a durable operation record, and provider-supported idempotency keys or an operator reconciliation step before retry; it must never rely on checkpointing alone to prevent duplicate effects.
+The core server does not browse the live web, execute arbitrary code, contact customers, publish content, spend money or make binding business decisions. Market research sources must be supplied by the connected client or a separately configured research integration.
