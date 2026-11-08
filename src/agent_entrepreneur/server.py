@@ -40,7 +40,9 @@ from agent_entrepreneur.workflows.checkpoints import CheckpointStore
 def _string_values(value: Any, field_name: str) -> tuple[str, ...]:
     if value is None:
         return ()
-    if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+    if not isinstance(value, list) or any(
+        not isinstance(item, str) or not item.strip() for item in value
+    ):
         raise ValueError(f"{field_name} must be a list of strings")
     return tuple(value)
 
@@ -63,10 +65,12 @@ def _parse_specialist_responses(
             if not isinstance(item, dict):
                 raise ValueError("each specialist finding must be an object")
             statement = item.get("statement")
-            if not isinstance(statement, str):
+            if not isinstance(statement, str) or not statement.strip():
                 raise ValueError("each specialist finding requires a statement")
             status = item.get("evidence_status", "unverified")
-            if status not in {"supported", "partial", "unverified", "assumption"}:
+            if not isinstance(status, str) or status not in {
+                "supported", "partial", "unverified", "assumption"
+            }:
                 raise ValueError("specialist finding evidence_status is invalid")
             findings.append(
                 SpecialistFinding(
@@ -276,6 +280,8 @@ def create_server(settings: Settings) -> FastMCP:
         evidence_claims: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         """Validate and checkpoint client-produced specialist findings and consolidate results."""
+        if not workflow_id.strip() or not objective.strip():
+            raise ValueError("workflow_id and objective must not be empty")
         specialists = plan_specialists(objective, domains, max_specialists=max_specialists)
         expected_ids = [item.specialist_id for item in specialists]
         responses = _parse_specialist_responses(specialist_responses)
@@ -308,6 +314,8 @@ def create_server(settings: Settings) -> FastMCP:
         evidence_claims: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         """Resume only unfinished specialists after validating the saved request and plan."""
+        if not workflow_id.strip() or not objective.strip():
+            raise ValueError("workflow_id and objective must not be empty")
         specialists = plan_specialists(objective, domains, max_specialists=max_specialists)
         checkpoint = checkpoints.resume(workflow_id)
         if checkpoint is None:
@@ -359,17 +367,25 @@ def create_server(settings: Settings) -> FastMCP:
     @mcp.tool()
     def save_memory(content: str, scope: str = "user", consent: bool = False) -> dict[str, str]:
         """Save a local memory record only after explicit user consent."""
+        if not content.strip() or len(content) > 20_000:
+            raise ValueError("memory content must contain 1 to 20000 characters")
+        if not scope.strip() or len(scope) > 128:
+            raise ValueError("memory scope must contain 1 to 128 characters")
         record_id = memory.save(content, scope=scope, consent=consent)
         return {"record_id": record_id, "scope": scope}
 
     @mcp.tool()
     def search_memory(query: str = "", scope: str = "user") -> list[dict[str, Any]]:
         """Search local memory records within the requested scope."""
+        if len(query) > 500 or not scope.strip() or len(scope) > 128:
+            raise ValueError("memory query or scope exceeds its allowed length")
         return memory.search(query=query, scope=scope)
 
     @mcp.tool()
     def delete_memory(record_id: str) -> dict[str, bool]:
         """Delete a local memory record by its identifier."""
+        if not record_id.strip():
+            raise ValueError("record_id must not be empty")
         return {"deleted": memory.delete(record_id)}
 
     @mcp.resource("agent-entrepreneur://knowledge/specialists")
