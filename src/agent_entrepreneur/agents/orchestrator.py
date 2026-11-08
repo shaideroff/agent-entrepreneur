@@ -172,6 +172,9 @@ class Orchestrator:
             raise ValueError(f"workflow checkpoint not found: {workflow_id}")
         if checkpoint.status == "completed":
             raise ValueError("completed workflows cannot be resumed")
+        saved_objective = checkpoint.state.get("objective")
+        if not isinstance(saved_objective, str) or saved_objective != request.objective:
+            raise ValueError("resume objective must match the saved workflow objective")
         raw_responses = checkpoint.state.get("responses", [])
         if not isinstance(raw_responses, list):
             raise ValueError("checkpoint responses are invalid")
