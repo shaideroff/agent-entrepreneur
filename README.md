@@ -19,7 +19,7 @@ Agent Entrepreneur helps a connected AI client structure business context, prepa
 
 ## Capabilities
 
-Six core MCP tools: `understand_business`, `research_market`, `analyse_business_model`, `evaluate_decision_options`, `create_execution_plan`, `review_outcomes`.
+Six core MCP tools: `understand_business`, `research_market`, `analyse_business`, `evaluate_decision`, `create_execution_plan`, `review_outcomes`.
 
 The server also exposes entrepreneur and specialist catalogue resources plus reusable business-diagnosis, market-entry and founder-execution prompts.
 
