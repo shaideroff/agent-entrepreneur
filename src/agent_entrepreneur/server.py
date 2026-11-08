@@ -23,12 +23,12 @@ def create_server(settings: Settings) -> FastMCP:
         """Prepare a market research brief and explicitly identify evidence gaps."""
         return prepare_market_research(MarketResearchInput(market=market, geography=geography, customer=customer or None, research_questions=research_questions or [])).model_dump(mode="json")
     @mcp.tool()
-    def analyse_business_model(name: str, industry: str = "", geography: str = "", metrics: dict[str, float] | None = None, question: str = "Diagnose the business model and identify priority issues.") -> dict[str, Any]:
+    def analyse_business(name: str, industry: str = "", geography: str = "", metrics: dict[str, float] | None = None, question: str = "Diagnose the business model and identify priority issues.") -> dict[str, Any]:
         """Analyse supplied business metrics and prepare deeper client reasoning."""
         business = BusinessInput(name=name, industry=industry or None, geography=geography or None)
         return run_business_analysis(BusinessAnalysisInput(business=business, metrics=metrics or {}, question=question)).model_dump(mode="json")
     @mcp.tool()
-    def evaluate_decision_options(decision: str, options: list[str], objectives: list[str] | None = None, constraints: list[str] | None = None, risk_tolerance: str = "moderate") -> dict[str, Any]:
+    def evaluate_decision(decision: str, options: list[str], objectives: list[str] | None = None, constraints: list[str] | None = None, risk_tolerance: str = "moderate") -> dict[str, Any]:
         """Structure a decision into comparable options, risks and trade-offs."""
         return assess_decision(DecisionInput(decision=decision, options=options, objectives=objectives or [], constraints=constraints or [], risk_tolerance=risk_tolerance)).model_dump(mode="json")
     @mcp.tool()
