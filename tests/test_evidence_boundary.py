@@ -125,10 +125,10 @@ def test_supported_finding_requires_source_reference():
 
 def test_duplicate_claim_ids_in_registry_are_rejected():
     specialists = plan_specialists("evaluate pilot", ["finance"], max_specialists=1)
-    result = Orchestrator().run(
-        WorkflowRequest("evaluate pilot"),
-        specialists,
-        lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
-        evidence_claims=(claim(), claim()),
-    )
-    assert result.status == "failed" or result.error is not None
+    with pytest.raises(ValueError, match="unique"):
+        Orchestrator().run(
+            WorkflowRequest("evaluate pilot"),
+            specialists,
+            lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
+            evidence_claims=(claim(), claim()),
+        )
