@@ -46,17 +46,17 @@ def test_graph_is_deterministic_and_rendered_as_mermaid() -> None:
 
 
 def test_snapshot_write_and_check_round_trip(tmp_path: Path) -> None:
-    snapshot = Path("graph.json")
-    write_snapshot(tmp_path, snapshot)
-    assert check_snapshot(tmp_path, snapshot)
-    assert (tmp_path / snapshot).read_text(encoding="utf-8") == snapshot_content(
-        build_graph(ROOT)
-    ) if False else (tmp_path / snapshot).is_file()
+    snapshot = tmp_path / "graph.json"
+    write_snapshot(ROOT, snapshot)
+    assert check_snapshot(ROOT, snapshot)
+    assert snapshot.read_text(encoding="utf-8") == snapshot_content(build_graph(ROOT))
 
 
 def test_snapshot_check_detects_stale_and_missing_files(tmp_path: Path) -> None:
-    snapshot = Path("stale.json")
-    assert not check_snapshot(tmp_path, snapshot)
+    snapshot = tmp_path / "stale.json"
+    assert not check_snapshot(ROOT, snapshot)
+    snapshot.write_text('{"nodes": [], "edges": []}\n', encoding="utf-8")
+    assert not check_snapshot(ROOT, snapshot)
 
 
 def test_invalid_python_source_fails_with_file_context(tmp_path: Path) -> None:
