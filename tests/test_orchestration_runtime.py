@@ -1,6 +1,6 @@
+import sqlite3
 from datetime import date
 from pathlib import Path
-import sqlite3
 
 import pytest
 
@@ -198,17 +198,18 @@ def test_checkpoint_rejects_non_object_json_on_resume(tmp_path: Path):
 def test_resume_rejects_a_different_objective(tmp_path: Path):
     specialists = plan_specialists("market entry", ["finance", "operations"], max_specialists=2)
     store = CheckpointStore(tmp_path / "objective.db")
+    def stop_after_first(assignment):
+        if assignment.step_number == 2:
+            raise RuntimeError("stop")
+        return SpecialistResponse(
+            specialist_id=assignment.specialist_id,
+            findings=(SpecialistFinding("Initial work saved."),),
+        )
+
     first = Orchestrator().run(
         WorkflowRequest("market entry", max_specialists=2),
         specialists,
-        lambda assignment: (
-            (_ for _ in ()).throw(RuntimeError("stop"))
-            if assignment.step_number == 2
-            else SpecialistResponse(
-                specialist_id=assignment.specialist_id,
-                findings=(SpecialistFinding("Initial work saved."),),
-            )
-        ),
+        stop_after_first,
         store,
     )
     assert first.status == "partial"
