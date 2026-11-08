@@ -30,6 +30,7 @@ class SpecialistFinding:
     statement: str
     evidence_refs: tuple[str, ...] = ()
     evidence_status: Literal["supported", "partial", "unverified", "assumption"] = "unverified"
+    claim_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
