@@ -1,6 +1,6 @@
 # SQLite backup and restore
 
-Agent Entrepreneur stores local application data in SQLite. The backup helper uses SQLite's online backup API to produce a consistent snapshot of committed database state. It does not encrypt backups and does not upload them anywhere.
+Agent Entrepreneur stores local application data in SQLite. The backup helper uses SQLite's online backup API to produce a consistent snapshot of committed database state. It validates the completed snapshot with SQLite's `PRAGMA integrity_check` before publishing it. It does not encrypt backups and does not upload them anywhere.
 
 ## Create a backup
 
@@ -19,11 +19,13 @@ PY
 
 Set `source` to the path configured by `AGENT_ENTREPRENEUR_DB` when using a custom database location. Choose a new destination for every snapshot; the helper refuses to overwrite an existing file. On POSIX systems, the resulting database file is restricted to owner read/write permissions (`0600`).
 
+The snapshot is first written to a uniquely named, owner-private temporary file in the destination directory. After the SQLite backup completes and passes its integrity check, the helper flushes the file and atomically publishes it with a no-overwrite filesystem operation. A destination path therefore does not become visible as a completed backup while the snapshot is still being written. A process forcibly terminated before publication can leave a hidden `.{destination-name}.*.tmp` file; inspect these files before removing them, and never treat them as backups.
+
 Keep backups in a directory accessible only to the intended user. The helper creates missing parent directories, but it does not encrypt backup contents or secure an already-existing parent directory. Treat the backup as sensitive business data.
 
 ## Verify a backup
 
-Before relying on a snapshot, run SQLite's integrity check:
+The helper validates each snapshot before publication. You can independently repeat SQLite's integrity check:
 
 ```bash
 python - <<'PY'
@@ -56,6 +58,7 @@ For a safer rehearsal, restore to a temporary database path first by setting `AG
 
 - Backups are unencrypted. Use encrypted storage or an encrypted volume when backups leave the local machine.
 - The helper refuses symbolic-link source paths and existing destinations; keep the parent directory trusted and not writable by untrusted users.
-- A backup file is created at its destination before the SQLite copy finishes. Do not treat a destination as a valid snapshot until the operation returns successfully and the integrity check passes.
+- Atomic publication uses a same-directory hard link. The temporary file and final destination must reside on a filesystem that supports hard links; if publication is unsupported, the helper fails without exposing a partial destination.
+- A forced process termination may leave a hidden temporary file. Such files are not published backups and require cautious manual cleanup.
 - No automated retention, scheduling, off-site replication or restore command is provided in v0.1.
 - This backup utility snapshots the configured SQLite database only. It does not back up application code, environment variables, credentials or external provider state.
