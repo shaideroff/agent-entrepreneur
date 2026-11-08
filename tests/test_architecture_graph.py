@@ -67,3 +67,49 @@ def test_invalid_python_source_fails_with_file_context(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="cannot parse module"):
         build_graph(tmp_path)
+
+
+def test_dependency_cycle_detector_reports_closed_cycle() -> None:
+    from agent_entrepreneur.architecture_graph import find_dependency_cycles
+
+    graph = {
+        "nodes": [{"id": name} for name in ("a", "b", "c", "d")],
+        "edges": [
+            {"source": "a", "target": "b"},
+            {"source": "b", "target": "c"},
+            {"source": "c", "target": "a"},
+            {"source": "c", "target": "d"},
+        ],
+    }
+
+    assert find_dependency_cycles(graph) == [["a", "b", "c", "a"]]
+
+
+def test_import_boundary_checker_rejects_domain_dependencies_on_outer_layers() -> None:
+    from agent_entrepreneur.architecture_graph import find_import_boundary_violations
+
+    graph = {
+        "nodes": [
+            {"id": "agent_entrepreneur.domain.models"},
+            {"id": "agent_entrepreneur.services.core"},
+            {"id": "agent_entrepreneur.storage.database"},
+        ],
+        "edges": [
+            {
+                "source": "agent_entrepreneur.domain.models",
+                "target": "agent_entrepreneur.services.core",
+            },
+            {
+                "source": "agent_entrepreneur.storage.database",
+                "target": "agent_entrepreneur.domain.models",
+            },
+        ],
+    }
+
+    assert find_import_boundary_violations(graph) == [
+        {
+            "source": "agent_entrepreneur.domain.models",
+            "target": "agent_entrepreneur.services.core",
+            "rule": "domain_must_not_depend_on_application_or_infrastructure",
+        }
+    ]
