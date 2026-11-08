@@ -77,6 +77,26 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             assert result.content
             payload = json.loads(result.content[0].text)
             assert payload["business"]["name"] == "Protocol Test Co"
+            market_result = await session.call_tool(
+                "research_market",
+                {
+                    "market": "digital banking",
+                    "geography": "Brazil",
+                    "research_questions": ["What is the competitive structure?"],
+                    "supplied_sources": [
+                        {
+                            "title": "Nubank investor relations",
+                            "url": "https://nu.com/en/investors/governance/management-team/",
+                            "source_type": "primary",
+                            "accessed_at": "2026-11-09",
+                        }
+                    ],
+                },
+            )
+            assert market_result.isError is False
+            market_brief = json.loads(market_result.content[0].text)
+            assert len(market_brief["evidence"]) == 1
+            assert "not been independently verified" in " ".join(market_brief["findings"])
 
             plan_result = await session.call_tool(
                 "plan_specialist_workflow",
