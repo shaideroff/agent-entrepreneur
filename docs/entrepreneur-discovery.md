@@ -2,23 +2,23 @@
 
 Agent Entrepreneur maintains a public, source-linked directory of entrepreneurs whose documented company histories can help builders investigate business decisions, operating models and market creation.
 
-This is a **research directory**, not a celebrity chatbot directory. A profile tells you who is currently represented in the knowledge registry, what domains are in scope, which public source anchors the profile and how much evidence is available. It does not mean the project has reconstructed that person's private thinking or independently validated every lesson commonly attributed to them.
+This is a **research directory**, not a celebrity chatbot directory. A profile tells you who is currently represented in the knowledge registry, what domains are in scope, which sources or contributed materials anchor the profile and how much evidence is available. It does not mean the project has reconstructed that person's private thinking or independently validated every lesson commonly attributed to them.
 
 ## How to use this directory
 
 1. Choose an entrepreneur whose public company-building experience is relevant to your question.
-2. Open the linked source and inspect the original context.
+2. Open the linked source or inspect the stated contribution basis and original context.
 3. Use the profile as a research starting point, not as proof that a tactic will transfer to your business.
 4. Separate documented facts from interpretation and your own proposed experiment.
 5. Check the evidence label and limitations before relying on a claim.
 
 ## Current public registry
 
-The following 18 profiles are present in the repository's seed knowledge registry. Their summaries are deliberately scoped to what the cited profile source supports.
+The following 18 profiles are present in the repository's seed knowledge registry. Their summaries are deliberately scoped to what the cited source or stated contribution basis supports.
 
 | Entrepreneur | Region | Research domains | Evidence |
 |---|---|---|---|
-| S Haider | South Asia | Bootstrapping, venture building, early-stage execution | Unverified — founder-contributed methodology |
+| S Haider | South Asia | Bootstrapping, venture building, early-stage execution | Founder-contributed primary-source profile; claim-level independent corroboration pending |
 | Warren Buffett | North America | Capital allocation, investment | B |
 | Jeff Bezos | North America | Customer experience, operations, scaling | B |
 | Sara Blakely | North America | Bootstrapping, consumer products, brand building | C |
@@ -37,10 +37,11 @@ The following 18 profiles are present in the repository's seed knowledge registr
 | Melanie Perkins | Oceania | Product, technology, consumer business, brand building | B |
 | Mike Cannon-Brookes | Oceania | Technology, software, leadership, investment | B |
 
-**Evidence labels:** A indicates strong primary evidence plus independent corroboration; B indicates credible traceable documentation with corroboration potentially incomplete; C indicates emerging or limited public evidence that needs verification; unverified indicates founder-contributed or candidate material not independently corroborated. These are profile-level triage labels, not blanket validation of every statement. Check the underlying source and limitations for each claim.
+**Evidence labels:** A indicates strong primary evidence plus independent corroboration; B indicates credible traceable documentation with corroboration potentially incomplete; C indicates emerging or limited public evidence that needs verification. **Founder-contributed primary-source** identifies material supplied directly by the founder or contained in project records; it is not a claim of independent corroboration. Independent corroboration is assessed separately at the individual-claim level. These labels are profile-level triage, not blanket validation of every statement. Check the underlying source and limitations for each claim.
 
-## Source links
+## Source links and contribution basis
 
+- **S Haider — Built from Zero:** founder-contributed primary-source material, including first-person founder history, project records and materials supplied within the S Haider project. This establishes the contribution basis for the experience profile; individual dates, metrics and historical claims must still be attributed and independently corroborated where possible.
 - [Warren Buffett — Berkshire Hathaway shareholder letters](https://www.berkshirehathaway.com/letters/letters.html)
 - [Jeff Bezos — Amazon shareholder letter archive / company material](https://www.aboutamazon.com/news/company-news/2016-letter-to-shareholders)
 - [Sara Blakely — SPANX](https://www.spanx.com/)
@@ -58,11 +59,10 @@ The following 18 profiles are present in the repository's seed knowledge registr
 - [David Vélez — Nubank management team](https://nu.com/en/investors/governance/management-team/)
 - [Melanie Perkins — Canva newsroom](https://www.canva.com/newsroom/news/author/melanie-perkins/)
 - [Mike Cannon-Brookes — Atlassian leadership](https://investors.atlassian.com/governance/management-team---board-of-directors/default.aspx)
-- S Haider's entry is founder-contributed methodology with no independent public source yet; it is intentionally marked unverified.
 
 ## What this directory does not claim yet
 
-The current 18 records are not 18 completed entrepreneur agents. The seed profiles currently provide identity/context, domains and source anchors; many do not yet contain researched methods, decision cases or outcome analyses. Do not present the registry count as the number of fully operational experience agents.
+The current 18 records are not 18 completed entrepreneur agents. The seed profiles currently provide identity/context, domains and source anchors or contribution basis; many do not yet contain researched methods, decision cases or outcome analyses. Do not present the registry count as the number of fully operational experience agents.
 
 The v1.1 roadmap will turn selected profiles into versioned experience dossiers containing:
 - documented operating principles with claim-level citations;
@@ -76,14 +76,14 @@ The first six proposed dossier pilots are S Haider, Sara Blakely, Jeff Bezos, Wa
 
 ## Independence and attribution
 
-Entrepreneurs named here are discussed as subjects of public-source research. Agent Entrepreneur is independent and is not affiliated with, endorsed by, or speaking on behalf of any person or company named. The system must not fabricate private thoughts, personal advice, quotations or first-person statements. Public material may be copyrighted; this project uses source links and original concise analysis rather than reproducing books or paid courses.
+Entrepreneurs named here are discussed as subjects of public-source research or founder-contributed experience material. Agent Entrepreneur is independent and is not affiliated with, endorsed by, or speaking on behalf of any person or company named. The system must not fabricate private thoughts, personal advice, quotations or first-person statements. Public material may be copyrighted; this project uses source links and original concise analysis rather than reproducing books or paid courses.
 
 ## Contribute
 
 Help expand the directory by proposing a founder, supplying credible public primary sources, identifying counter-evidence, or reviewing a claim. A useful contribution includes:
 - the exact claim being proposed;
-- a direct public source and publication date;
-- what the source supports and what it does not support;
+- a direct public source and publication date, or a clear description of founder-contributed material;
+- what the source or contribution supports and what it does not support;
 - independent corroboration or conflicting evidence;
 - why the case is useful to entrepreneurs in a defined context.
 
