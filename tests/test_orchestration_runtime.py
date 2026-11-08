@@ -247,22 +247,35 @@ def test_checkpoint_store_handles_concurrent_workflow_writes(tmp_path: Path):
     assert results == [f"objective-{index}" for index in range(16)]
 
 
-def test_executor_may_be_reinvoked_if_checkpoint_write_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_executor_may_be_reinvoked_after_uncheckpointed_interruption(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     specialists = plan_specialists("market entry", ["finance"], max_specialists=1)
     store = CheckpointStore(tmp_path / "retry-boundary.db")
     orchestrator = Orchestrator()
     attempts: list[str] = []
     original_save = store.save
-    fail_once = True
+    workflow_id = "retry-boundary"
 
-    def fail_first_save(checkpoint):
-        nonlocal fail_once
-        if fail_once:
-            fail_once = False
-            raise OSError("simulated checkpoint write failure")
-        original_save(checkpoint)
+    # Persist the initial state, then simulate a storage outage across the
+    # executor checkpoint and final status checkpoint.
+    store.save(
+        WorkflowCheckpoint(
+            workflow_id,
+            "running",
+            {
+                "objective": "market entry",
+                "completed_steps": 0,
+                "specialists_consulted": [],
+                "responses": [],
+            },
+        )
+    )
 
-    monkeypatch.setattr(store, "save", fail_first_save)
+    def fail_save(checkpoint):
+        raise OSError("simulated checkpoint write failure")
+
+    monkeypatch.setattr(store, "save", fail_save)
 
     def executor(assignment):
         attempts.append(assignment.specialist_id)
@@ -271,18 +284,19 @@ def test_executor_may_be_reinvoked_if_checkpoint_write_fails(tmp_path: Path, mon
             findings=(SpecialistFinding("Analysis completed without external side effects."),),
         )
 
-    first = orchestrator.run(
-        WorkflowRequest("market entry", max_specialists=1),
-        specialists,
-        executor,
-        store,
-    )
-    assert first.status == "partial"
-    assert first.steps_completed == 0
+    with pytest.raises(OSError, match="simulated checkpoint write failure"):
+        orchestrator.run(
+            WorkflowRequest("market entry", max_specialists=1),
+            specialists,
+            executor,
+            store,
+            workflow_id=workflow_id,
+        )
     assert len(attempts) == 1
 
+    monkeypatch.setattr(store, "save", original_save)
     resumed = orchestrator.resume(
-        first.workflow_id,
+        workflow_id,
         WorkflowRequest("market entry", max_specialists=1),
         specialists,
         executor,
