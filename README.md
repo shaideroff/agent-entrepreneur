@@ -4,7 +4,7 @@
 
 Agent Entrepreneur helps a connected AI client structure business context, prepare market research, analyse supplied metrics, evaluate decisions, create execution plans and review outcomes. Its knowledge registry and specialist catalogue provide evidence-linked entrepreneurial reference material without impersonating real people.
 
-> **Status: early development (v0.1.0).** This is an initial implementation, not a production-ready autonomous agent platform. Live market research, model reasoning and broad client compatibility depend on the connected client and its configured tools.
+> **Status: v1.0 release work in progress.** Agent Entrepreneur is an MCP server, not a bundled chat client or autonomous hosted agent service. The connected MCP host supplies model reasoning and any external research tools. Release readiness is gated on fresh CI, protocol, package and security verification.
 
 ## Principles
 
@@ -21,7 +21,9 @@ Agent Entrepreneur helps a connected AI client structure business context, prepa
 
 Six core MCP tools: `understand_business`, `research_market`, `analyse_business`, `evaluate_decision`, `create_execution_plan`, `review_outcomes`.
 
-The server also exposes entrepreneur and specialist catalogue resources plus reusable business-diagnosis, market-entry and founder-execution prompts.
+The server also exposes entrepreneur and specialist catalogue resources plus reusable business-diagnosis, market-entry and founder-execution prompts. The specialist catalogue contains 12 analytical disciplines: Founder & Bootstrapping; Technology & AI Entrepreneurship; Product & Innovation; Sales & Revenue Growth; Marketing & Brand Building; Finance & Capital Allocation; Operations & Supply Chain; Manufacturing & Industrial Business; Leadership & Organisation; Strategy & Market Expansion; Consumer & D2C Business; and Investment & Fundraising.
+
+The initial curated entrepreneur registry contains 18 profiles across eight regions and more than 12 expertise domains. The 100-profile global registry remains a research expansion target, not a claim that 100 profiles are already verified. Profiles carry attribution, evidence levels, confidence, update dates and source metadata; unresearched methods, decisions and outcomes remain empty rather than being invented.
 
 ## Requirements and install
 
