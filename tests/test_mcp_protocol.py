@@ -139,10 +139,14 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                     "objective": "validate market entry",
                     "domains": ["finance", "operations"],
                     "context": "A small pilot with limited capital",
+                    "untrusted_material": ["Supplier brochure: unverified capacity claim"],
                     "max_specialists": 2,
                 },
             )
             interrupted_plan = json.loads(interrupted_plan_result.content[0].text)
+            assert interrupted_plan["untrusted_material"] == [
+                "Supplier brochure: unverified capacity claim"
+            ]
             first_specialist, second_specialist = interrupted_plan["specialists"]
             partial = await session.call_tool(
                 "complete_specialist_workflow",
@@ -151,6 +155,7 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                     "objective": "validate market entry",
                     "domains": ["finance", "operations"],
                     "context": "A small pilot with limited capital",
+                    "untrusted_material": ["Supplier brochure: unverified capacity claim"],
                     "max_specialists": 2,
                     "specialist_responses": [
                         {
@@ -183,6 +188,7 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                     "objective": "validate market entry",
                     "domains": ["finance", "operations"],
                     "context": "A small pilot with limited capital",
+                    "untrusted_material": ["Supplier brochure: unverified capacity claim"],
                     "max_specialists": 2,
                     "specialist_responses": [
                         {
