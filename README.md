@@ -44,9 +44,9 @@ STDIO is the default transport. SQLite defaults to `~/.local/share/agent-entrepr
 | `AGENT_ENTREPRENEUR_TRANSPORT` | `stdio` | `stdio` or `streamable-http` |
 | `AGENT_ENTREPRENEUR_HOST` | `127.0.0.1` | HTTP bind host |
 | `AGENT_ENTREPRENEUR_PORT` | `8765` | HTTP port |
-| `AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP` | `false` | Explicit opt-in for non-loopback binding |
+| `AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP` | ignored for remote access | Legacy setting; non-loopback HTTP remains disabled until authentication is implemented |
 
-HTTP mode is not enabled by default. Do not expose it publicly without authenticated TLS protection and a deployment-specific security review.
+HTTP mode is loopback-only. Non-loopback binding is deliberately disabled, including when the legacy remote opt-in variable is set. Remote deployment requires a tested OAuth 2.1 resource-server integration, TLS, rate limiting and audit controls.
 
 ## Development checks
 
