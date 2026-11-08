@@ -28,8 +28,11 @@ flowchart TB
     Config --> Server
     Server --> Core
     Server --> Agents
+    Server --> AgentModels
     Server --> Knowledge
+    Server --> Evidence
     Server --> Memory
+    Server --> Checkpoints
     Server --> Approval
     Core --> Domain
     Agents --> AgentModels
@@ -71,7 +74,7 @@ flowchart LR
 
 | Area | Primary path | Responsibility |
 |---|---|---|
-| MCP interface | `src/agent_entrepreneur/server.py` | Exposes the six tools, two resources and three prompts over the MCP server |
+| MCP interface | `src/agent_entrepreneur/server.py` | Exposes 13 tools, two resources and three prompts over the MCP server |
 | Configuration | `src/agent_entrepreneur/config.py` | Validates transport, host and port; remote HTTP remains fail-closed |
 | Domain | `src/agent_entrepreneur/domain/models.py` | Shared business-domain data structures |
 | Core services | `src/agent_entrepreneur/services/core.py` | Deterministic business analysis and workflow service logic |
@@ -94,6 +97,13 @@ flowchart LR
 | Tool | `evaluate_decision` |
 | Tool | `create_execution_plan` |
 | Tool | `review_outcomes` |
+| Tool | `plan_specialist_workflow` |
+| Tool | `complete_specialist_workflow` |
+| Tool | `resume_specialist_workflow` |
+| Tool | `search_entrepreneurs` |
+| Tool | `save_memory` |
+| Tool | `search_memory` |
+| Tool | `delete_memory` |
 | Resource | `agent-entrepreneur://knowledge/specialists` |
 | Resource | `agent-entrepreneur://knowledge/entrepreneurs` |
 | Prompt | Business diagnosis |
@@ -114,7 +124,8 @@ flowchart LR
 
 - `tests/test_mcp_protocol.py` — MCP tools, resources, prompts and an in-memory client/server interaction.
 - `tests/test_core.py`, `tests/test_server.py` — core service and server behavior.
-- `tests/test_knowledge_agents.py`, `tests/test_orchestration_runtime.py` — specialist registry, bounded execution and workflow recovery.
+- `tests/test_knowledge_agents.py`, `tests/test_specialist_catalogue.py`, `tests/test_orchestration_runtime.py`, `tests/test_resume_integrity.py` — specialist registry, bounded execution and workflow recovery.
+- `tests/test_profile_schema.py` — global profile metadata, evidence labels and source validation.
 - `tests/test_evidence.py`, `tests/test_evidence_boundary.py` — evidence model validation and specialist finding provenance.
 - `tests/test_memory.py` — explicit-consent memory behavior.
 - `tests/test_config.py` — transport and network binding validation.
