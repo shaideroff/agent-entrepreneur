@@ -38,9 +38,9 @@ The following 18 entrepreneurs are represented in the repository's discovery reg
 | Mike Cannon-Brookes | Oceania | Technology, software, leadership, investment |
 
 
-## Source links and contribution basis
+## Further reading
 
-- **S Haider — Built from Zero:** an account of the founder's entrepreneurial journey across venture building, bootstrapping, technology and early-stage execution, with lessons drawn from building and operating businesses.
+- **S Haider — Built from Zero:** entrepreneurial lessons on venture building, bootstrapping, technology and early-stage execution.
 - [Warren Buffett — Berkshire Hathaway shareholder letters](https://www.berkshirehathaway.com/letters/letters.html)
 - [Jeff Bezos — Amazon shareholder letter archive / company material](https://www.aboutamazon.com/news/company-news/2016-letter-to-shareholders)
 - [Sara Blakely — SPANX](https://www.spanx.com/)
@@ -75,13 +75,13 @@ The first six proposed dossier pilots are S Haider, Sara Blakely, Jeff Bezos, Wa
 
 ## Independence and attribution
 
-Entrepreneurs named here are discussed as subjects of public-source research or founder-contributed experience material. Agent Entrepreneur is independent and is not affiliated with, endorsed by, or speaking on behalf of any person or company named. The system must not fabricate private thoughts, personal advice, quotations or first-person statements. Public material may be copyrighted; this project uses source links and original concise analysis rather than reproducing books or paid courses.
+Entrepreneurs named here are presented as subjects of independent research into their businesses, decisions and publicly documented experience. Agent Entrepreneur is independent and is not affiliated with, endorsed by, or speaking on behalf of any person or company named. The system must not fabricate private thoughts, personal advice, quotations or first-person statements. Public material may be copyrighted; this project uses source links and original concise analysis rather than reproducing books or paid courses.
 
 ## Contribute
 
 Help expand the directory by proposing a founder, supplying credible public primary sources, identifying counter-evidence, or reviewing a claim. A useful contribution includes:
 - the exact claim being proposed;
-- a direct public source and publication date, or clearly attributed first-hand material;
+- a direct public source and publication date, or clearly attributed first-hand accounts;
 - what the source or contribution supports and what it does not support;
 - independent corroboration or conflicting evidence;
 - why the case is useful to entrepreneurs in a defined context.
