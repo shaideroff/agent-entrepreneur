@@ -92,6 +92,79 @@ def build_graph(repository_root: Path) -> dict[str, Any]:
     }
 
 
+def find_dependency_cycles(graph: dict[str, Any]) -> list[list[str]]:
+    """Return deterministic, closed paths for statically detected import cycles."""
+    adjacency: dict[str, set[str]] = {node["id"]: set() for node in graph["nodes"]}
+    for edge in graph["edges"]:
+        source, target = edge["source"], edge["target"]
+        if source in adjacency and target in adjacency:
+            adjacency[source].add(target)
+
+    state: dict[str, int] = {}
+    stack: list[str] = []
+    cycles: list[list[str]] = []
+    seen: set[tuple[str, ...]] = set()
+
+    def visit(node: str) -> None:
+        state[node] = 1
+        stack.append(node)
+        for target in sorted(adjacency[node]):
+            if state.get(target, 0) == 0:
+                visit(target)
+            elif state.get(target) == 1:
+                start = stack.index(target)
+                body = stack[start:]
+                rotations = [tuple(body[index:] + body[:index]) for index in range(len(body))]
+                canonical = min(rotations)
+                if canonical not in seen:
+                    seen.add(canonical)
+                    cycles.append(list(canonical) + [canonical[0]])
+        stack.pop()
+        state[node] = 2
+
+    for node in sorted(adjacency):
+        if state.get(node, 0) == 0:
+            visit(node)
+    return sorted(cycles)
+
+
+def find_import_boundary_violations(graph: dict[str, Any]) -> list[dict[str, str]]:
+    """Enforce inward-only dependencies for the domain layer."""
+    forbidden_domain_targets = (
+        "agent_entrepreneur.agents",
+        "agent_entrepreneur.memory",
+        "agent_entrepreneur.security",
+        "agent_entrepreneur.server",
+        "agent_entrepreneur.services",
+        "agent_entrepreneur.storage",
+        "agent_entrepreneur.workflows",
+    )
+    violations: list[dict[str, str]] = []
+    for edge in graph["edges"]:
+        source, target = edge["source"], edge["target"]
+        if source.startswith("agent_entrepreneur.domain.") and target.startswith(
+            forbidden_domain_targets
+        ):
+            violations.append({
+                "source": source,
+                "target": target,
+                "rule": "domain_must_not_depend_on_application_or_infrastructure",
+            })
+    return sorted(violations, key=lambda item: (item["source"], item["target"], item["rule"]))
+
+
+def architecture_violations(graph: dict[str, Any]) -> list[str]:
+    """Format cycle and layer-boundary findings for CI and CLI output."""
+    findings = [
+        "dependency cycle: " + " -> ".join(cycle)
+        for cycle in find_dependency_cycles(graph)
+    ]
+    findings.extend(
+        f"import boundary violation ({item['rule']}): {item['source']} -> {item['target']}"
+        for item in find_import_boundary_violations(graph)
+    )
+    return findings
+
 def render_graph(graph: dict[str, Any]) -> str:
     lines = ["flowchart LR"]
     for node in graph["nodes"]:
@@ -134,11 +207,17 @@ def main() -> int:
     if args.write:
         print(f"Updated {write_snapshot(root, args.snapshot)}")
         return 0
-    if check_snapshot(root, args.snapshot):
-        print(f"Architecture dependency snapshot is current: {args.snapshot}")
-        return 0
-    print("Architecture dependency snapshot is stale; regenerate it with --write.")
-    return 1
+    if not check_snapshot(root, args.snapshot):
+        print("Architecture dependency snapshot is stale; regenerate it with --write.")
+        return 1
+    graph = build_graph(root)
+    violations = architecture_violations(graph)
+    if violations:
+        for violation in violations:
+            print(f"Architecture violation: {violation}")
+        return 1
+    print(f"Architecture dependency snapshot is current and policy-clean: {args.snapshot}")
+    return 0
 
 
 if __name__ == "__main__":
