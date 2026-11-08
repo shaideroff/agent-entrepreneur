@@ -114,3 +114,28 @@ def test_backup_rejects_symbolic_link_destination(tmp_path: Path):
     with pytest.raises(FileExistsError):
         backup_database(source, link)
     assert target.read_bytes() == b"do not follow"
+
+
+def test_backup_is_not_published_until_snapshot_is_complete(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    import sqlite3
+
+    source = tmp_path / "source.sqlite3"
+    destination = tmp_path / "backup.sqlite3"
+    with connect(source):
+        pass
+
+    original_connect = sqlite3.connect
+    source_uri = source.as_uri() + "?mode=ro"
+
+    def guarded_connect(database, *args, **kwargs):
+        if str(database) != source_uri:
+            assert not destination.exists()
+        return original_connect(database, *args, **kwargs)
+
+    monkeypatch.setattr("agent_entrepreneur.storage.backup.sqlite3.connect", guarded_connect)
+
+    backup_database(source, destination)
+
+    assert destination.is_file()
