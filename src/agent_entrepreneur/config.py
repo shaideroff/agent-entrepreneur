@@ -69,8 +69,10 @@ class Settings:
         if allow_remote_raw not in {"true", "false"}:
             raise ValueError("AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP must be 'true' or 'false'")
         allow_remote = allow_remote_raw == "true"
-        if transport == "streamable-http" and not is_loopback_host(host) and not allow_remote:
-            raise ValueError("Non-loopback HTTP binding requires AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP=true")
+        if transport == "streamable-http" and not is_loopback_host(host):
+            raise ValueError(
+                "Non-loopback HTTP binding is disabled until authentication is configured"
+            )
         parent = database_path.expanduser().parent
         try:
             parent.mkdir(parents=True, exist_ok=True)
