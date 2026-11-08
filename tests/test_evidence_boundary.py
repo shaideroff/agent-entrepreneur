@@ -1,4 +1,5 @@
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -9,6 +10,7 @@ from agent_entrepreneur.agents.models import (
 )
 from agent_entrepreneur.agents.orchestrator import Orchestrator, plan_specialists
 from agent_entrepreneur.knowledge.evidence import EvidenceClaim, EvidenceSource
+from agent_entrepreneur.workflows.checkpoints import CheckpointStore
 
 
 def claim(*, status="supported", evidence_level="B"):
@@ -131,4 +133,62 @@ def test_duplicate_claim_ids_in_registry_are_rejected():
             specialists,
             lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
             evidence_claims=(claim(), claim()),
+        )
+
+
+
+def test_checkpoint_round_trip_preserves_claim_ids_and_resume_revalidates(tmp_path: Path):
+    specialists = plan_specialists("evaluate pilot", ["finance", "operations"], max_specialists=2)
+    store = CheckpointStore(tmp_path / "evidence-resume.db")
+    orchestrator = Orchestrator()
+    calls = 0
+    supported = SpecialistFinding(
+        "The pilot contribution margin was positive.",
+        evidence_refs=("source:ledger",),
+        evidence_status="supported",
+        claim_ids=("claim:margin",),
+    )
+
+    def interrupt_after_first(assignment):
+        nonlocal calls
+        calls += 1
+        if assignment.step_number == 2:
+            raise RuntimeError("temporary interruption")
+        return SpecialistResponse(
+            specialist_id=assignment.specialist_id,
+            findings=(supported,),
+        )
+
+    first = orchestrator.run(
+        WorkflowRequest("evaluate pilot", max_specialists=2),
+        specialists,
+        interrupt_after_first,
+        store,
+        evidence_claims=(claim(),),
+    )
+    assert first.status == "partial"
+    checkpoint = store.resume(first.workflow_id)
+    assert checkpoint is not None
+    saved_finding = checkpoint.state["responses"][0]["findings"][0]
+    assert saved_finding["claim_ids"] == ["claim:margin"]
+
+    resumed = orchestrator.resume(
+        first.workflow_id,
+        WorkflowRequest("evaluate pilot", max_specialists=2),
+        specialists,
+        lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
+        store,
+        evidence_claims=(claim(),),
+    )
+    assert resumed.status == "completed"
+    assert resumed.findings[0].claim_ids == ("claim:margin",)
+
+    with pytest.raises(ValueError, match="not found"):
+        orchestrator.resume(
+            first.workflow_id,
+            WorkflowRequest("evaluate pilot", max_specialists=2),
+            specialists,
+            lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
+            store,
+            evidence_claims=(),
         )
