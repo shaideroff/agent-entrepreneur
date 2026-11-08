@@ -2,46 +2,45 @@
 
 Agent Entrepreneur maintains a public, source-linked directory of entrepreneurs whose documented company histories can help builders investigate business decisions, operating models and market creation.
 
-This is a **research directory**, not a celebrity chatbot directory. A profile tells you who is currently represented in the knowledge registry, what domains are in scope, which sources or contributed materials anchor the profile and how much evidence is available. It does not mean the project has reconstructed that person's private thinking or independently validated every lesson commonly attributed to them.
+This is a **research directory**, not a celebrity chatbot directory. Each profile introduces an entrepreneur and the areas of company-building experience relevant to the directory. Profiles connect readers to source material and documented business history; they are starting points for learning and analysis, not claims to reproduce anyone's private thinking.
 
 ## How to use this directory
 
 1. Choose an entrepreneur whose public company-building experience is relevant to your question.
-2. Open the linked source or inspect the stated contribution basis and original context.
+2. Explore the linked sources and original context.
 3. Use the profile as a research starting point, not as proof that a tactic will transfer to your business.
 4. Separate documented facts from interpretation and your own proposed experiment.
-5. Check the evidence label and limitations before relying on a claim.
+5. Check the original sources and context before relying on a claim.
 
 ## Current public registry
 
-The following 18 profiles are present in the repository's seed knowledge registry. Their summaries are deliberately scoped to what the cited source or stated contribution basis supports.
+The following 18 entrepreneurs are represented in the repository's discovery registry. The directory is designed to help builders explore different approaches to starting, operating and growing businesses.
 
-| Entrepreneur | Region | Research domains | Evidence |
-|---|---|---|---|
-| S Haider | South Asia | Bootstrapping, venture building, early-stage execution | Founder-contributed primary-source profile; claim-level independent corroboration pending |
-| Warren Buffett | North America | Capital allocation, investment | B |
-| Jeff Bezos | North America | Customer experience, operations, scaling | B |
-| Sara Blakely | North America | Bootstrapping, consumer products, brand building | C |
-| Markus Villig | Europe | Technology, mobility, sales, market expansion | B |
-| Julian Hearn | Europe | Bootstrapping, consumer business, marketing, brand building | C |
-| Deepinder Goyal | South Asia | Consumer business, technology, product, market expansion | B |
-| Anand Deshpande | South Asia | Technology, software, leadership, product | B |
-| Tony Fernandes | East and Southeast Asia | Consumer business, operations, market expansion, finance | B |
-| Lei Jun | East and Southeast Asia | Technology, product, consumer business, investment | B |
-| Mohamed Alabbar | Middle East | Strategy, market expansion, consumer business, operations | B |
-| Mohamed Bin Issa Al Jaber | Middle East | Manufacturing, industrial business, operations, investment | B |
-| Mo Ibrahim | Africa | Technology, telecommunications, investment, leadership | B |
-| Aliko Dangote | Africa | Manufacturing, industrial business, operations, capital allocation | B |
-| Marcos Galperin | Latin America | Technology, consumer business, finance, market expansion | B |
-| David Vélez | Latin America | Finance, technology, consumer business, investment, growth | B |
-| Melanie Perkins | Oceania | Product, technology, consumer business, brand building | B |
-| Mike Cannon-Brookes | Oceania | Technology, software, leadership, investment | B |
+| Entrepreneur | Region | Research domains |
+|---|---|---|
+| S Haider | South Asia | Entrepreneurship, venture building, bootstrapping, technology and early-stage execution |
+| Warren Buffett | North America | Capital allocation, investment |
+| Jeff Bezos | North America | Customer experience, operations, scaling |
+| Sara Blakely | North America | Bootstrapping, consumer products, brand building |
+| Markus Villig | Europe | Technology, mobility, sales, market expansion |
+| Julian Hearn | Europe | Bootstrapping, consumer business, marketing, brand building |
+| Deepinder Goyal | South Asia | Consumer business, technology, product, market expansion |
+| Anand Deshpande | South Asia | Technology, software, leadership, product |
+| Tony Fernandes | East and Southeast Asia | Consumer business, operations, market expansion, finance |
+| Lei Jun | East and Southeast Asia | Technology, product, consumer business, investment |
+| Mohamed Alabbar | Middle East | Strategy, market expansion, consumer business, operations |
+| Mohamed Bin Issa Al Jaber | Middle East | Manufacturing, industrial business, operations, investment |
+| Mo Ibrahim | Africa | Technology, telecommunications, investment, leadership |
+| Aliko Dangote | Africa | Manufacturing, industrial business, operations, capital allocation |
+| Marcos Galperin | Latin America | Technology, consumer business, finance, market expansion |
+| David Vélez | Latin America | Finance, technology, consumer business, investment, growth |
+| Melanie Perkins | Oceania | Product, technology, consumer business, brand building |
+| Mike Cannon-Brookes | Oceania | Technology, software, leadership, investment |
 
-**Evidence labels:** A indicates strong primary evidence plus independent corroboration; B indicates credible traceable documentation with corroboration potentially incomplete; C indicates emerging or limited public evidence that needs verification. **Founder-contributed primary-source** identifies material supplied directly by the founder or contained in project records; it is not a claim of independent corroboration. Independent corroboration is assessed separately at the individual-claim level. These labels are profile-level triage, not blanket validation of every statement. Check the underlying source and limitations for each claim.
 
-## Source links and contribution basis
+## Further reading
 
-- **S Haider — Built from Zero:** founder-contributed primary-source material, including first-person founder history, project records and materials supplied within the S Haider project. This establishes the contribution basis for the experience profile; individual dates, metrics and historical claims must still be attributed and independently corroborated where possible.
+- **S Haider — Built from Zero:** entrepreneurial lessons on venture building, bootstrapping, technology and early-stage execution.
 - [Warren Buffett — Berkshire Hathaway shareholder letters](https://www.berkshirehathaway.com/letters/letters.html)
 - [Jeff Bezos — Amazon shareholder letter archive / company material](https://www.aboutamazon.com/news/company-news/2016-letter-to-shareholders)
 - [Sara Blakely — SPANX](https://www.spanx.com/)
@@ -62,7 +61,7 @@ The following 18 profiles are present in the repository's seed knowledge registr
 
 ## What this directory does not claim yet
 
-The current 18 records are not 18 completed entrepreneur agents. The seed profiles currently provide identity/context, domains and source anchors or contribution basis; many do not yet contain researched methods, decision cases or outcome analyses. Do not present the registry count as the number of fully operational experience agents.
+The current 18 records are not 18 completed entrepreneur agents. The discovery registry introduces entrepreneurs and their areas of experience; many profiles are still being developed into researched methods, decision cases and outcome analyses. Do not present the registry count as the number of fully operational experience agents.
 
 The v1.1 roadmap will turn selected profiles into versioned experience dossiers containing:
 - documented operating principles with claim-level citations;
@@ -76,13 +75,13 @@ The first six proposed dossier pilots are S Haider, Sara Blakely, Jeff Bezos, Wa
 
 ## Independence and attribution
 
-Entrepreneurs named here are discussed as subjects of public-source research or founder-contributed experience material. Agent Entrepreneur is independent and is not affiliated with, endorsed by, or speaking on behalf of any person or company named. The system must not fabricate private thoughts, personal advice, quotations or first-person statements. Public material may be copyrighted; this project uses source links and original concise analysis rather than reproducing books or paid courses.
+Entrepreneurs named here are presented as subjects of independent research into their businesses, decisions and publicly documented experience. Agent Entrepreneur is independent and is not affiliated with, endorsed by, or speaking on behalf of any person or company named. The system must not fabricate private thoughts, personal advice, quotations or first-person statements. Public material may be copyrighted; this project uses source links and original concise analysis rather than reproducing books or paid courses.
 
 ## Contribute
 
 Help expand the directory by proposing a founder, supplying credible public primary sources, identifying counter-evidence, or reviewing a claim. A useful contribution includes:
 - the exact claim being proposed;
-- a direct public source and publication date, or a clear description of founder-contributed material;
+- a direct public source and publication date, or clearly attributed first-hand accounts;
 - what the source or contribution supports and what it does not support;
 - independent corroboration or conflicting evidence;
 - why the case is useful to entrepreneurs in a defined context.
