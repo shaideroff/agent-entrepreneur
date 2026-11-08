@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import uuid
+
+from agent_entrepreneur.knowledge.evidence import EvidenceClaim
 from collections.abc import Callable, Iterable, Sequence
 from typing import Literal, cast
 
@@ -58,6 +60,7 @@ class Orchestrator:
         *,
         workflow_id: str | None = None,
         prior_responses: Sequence[SpecialistResponse] = (),
+        evidence_claims: Sequence[EvidenceClaim] = (),
     ) -> WorkflowResult:
         if not request.objective.strip():
             raise ValueError("objective must not be empty")
@@ -74,6 +77,9 @@ class Orchestrator:
             raise ValueError("prior response count exceeds selected specialist count")
         if any(response.specialist_id != selected[index].specialist_id for index, response in enumerate(prior_responses)):
             raise ValueError("checkpoint specialist responses do not match the supplied plan")
+        claim_registry = {claim.claim_id: claim for claim in evidence_claims}
+        if len(claim_registry) != len(evidence_claims):
+            raise ValueError("evidence claim IDs must be unique")
         workflow_id = workflow_id or str(uuid.uuid4())
         responses: list[SpecialistResponse] = list(prior_responses)
         failures: list[str] = []
@@ -92,6 +98,7 @@ class Orchestrator:
                 response = executor(assignment)
                 if response.specialist_id != specialist.specialist_id:
                     raise ValueError("executor response specialist_id did not match its assignment")
+                _validate_findings(response.findings, claim_registry)
                 responses.append(response)
                 if checkpoint_store is not None:
                     checkpoint_store.save(WorkflowCheckpoint(
@@ -185,7 +192,7 @@ def _unique(values: Iterable[str]) -> tuple[str, ...]:
 def _response_state(response: SpecialistResponse) -> dict[str, object]:
     return {
         "specialist_id": response.specialist_id,
-        "findings": [{"statement": item.statement, "evidence_refs": list(item.evidence_refs), "evidence_status": item.evidence_status} for item in response.findings],
+        "findings": [{"statement": item.statement, "evidence_refs": list(item.evidence_refs), "evidence_status": item.evidence_status, "claim_ids": list(item.claim_ids)} for item in response.findings],
         "recommendations": list(response.recommendations),
         "risks": list(response.risks),
         "challenges": list(response.challenges),
@@ -200,7 +207,7 @@ def _result_state(result: WorkflowResult) -> dict[str, object]:
         "status": result.status,
         "objective": result.objective,
         "specialists_consulted": list(result.specialists_consulted),
-        "findings": [{"statement": item.statement, "evidence_refs": list(item.evidence_refs), "evidence_status": item.evidence_status} for item in result.findings],
+        "findings": [{"statement": item.statement, "evidence_refs": list(item.evidence_refs), "evidence_status": item.evidence_status, "claim_ids": list(item.claim_ids)} for item in result.findings],
         "recommendations": list(result.recommendations),
         "risks": list(result.risks),
         "disagreements": list(result.disagreements),
@@ -224,10 +231,14 @@ def _response_from_state(value: object) -> SpecialistResponse:
         refs = item.get("evidence_refs", [])
         if not isinstance(refs, list):
             raise ValueError("checkpoint evidence_refs must be a list")
+        claim_ids = item.get("claim_ids", [])
+        if not isinstance(claim_ids, list):
+            raise ValueError("checkpoint claim_ids must be a list")
         findings.append(SpecialistFinding(
             statement=str(item.get("statement", "")),
             evidence_refs=tuple(str(ref) for ref in refs),
             evidence_status=cast(Literal["supported", "partial", "unverified", "assumption"], item.get("evidence_status", "unverified")),
+            claim_ids=tuple(str(claim_id) for claim_id in claim_ids),
         ))
     def strings(key: str) -> tuple[str, ...]:
         raw = value.get(key, [])
@@ -243,3 +254,19 @@ def _response_from_state(value: object) -> SpecialistResponse:
         unknowns=strings("unknowns"),
         limitations=strings("limitations"),
     )
+
+
+def _validate_findings(findings, claim_registry: dict[str, EvidenceClaim]) -> None:
+    for finding in findings:
+        if finding.evidence_status in ("supported", "partial") and not finding.claim_ids:
+            raise ValueError("supported or partial findings require validated claim IDs")
+        if len(set(finding.claim_ids)) != len(finding.claim_ids):
+            raise ValueError("finding claim IDs must be unique")
+        for claim_id in finding.claim_ids:
+            claim = claim_registry.get(claim_id)
+            if claim is None:
+                raise ValueError(f"evidence claim not found: {claim_id}")
+            if claim.status in ("contested", "stale", "retracted", "unverified"):
+                raise ValueError(f"claim {claim_id} has status {claim.status} and cannot support a finding")
+            if claim.evidence_level == "unverified":
+                raise ValueError(f"claim {claim_id} has unverified evidence and cannot support a finding")
