@@ -41,6 +41,13 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "evaluate_decision",
                 "create_execution_plan",
                 "review_outcomes",
+                "plan_specialist_workflow",
+                "complete_specialist_workflow",
+                "resume_specialist_workflow",
+                "search_entrepreneurs",
+                "save_memory",
+                "search_memory",
+                "delete_memory",
             }
 
             resources = await session.list_resources()
@@ -70,3 +77,64 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             assert result.content
             payload = json.loads(result.content[0].text)
             assert payload["business"]["name"] == "Protocol Test Co"
+
+            plan_result = await session.call_tool(
+                "plan_specialist_workflow",
+                {"objective": "evaluate pricing", "domains": ["finance"], "max_specialists": 1},
+            )
+            assert plan_result.isError is False
+            plan = json.loads(plan_result.content[0].text)
+            assert len(plan["specialists"]) == 1
+            specialist_id = plan["specialists"][0]["specialist_id"]
+
+            completed = await session.call_tool(
+                "complete_specialist_workflow",
+                {
+                    "workflow_id": plan["workflow_id"],
+                    "objective": "evaluate pricing",
+                    "domains": ["finance"],
+                    "max_specialists": 1,
+                    "specialist_responses": [
+                        {
+                            "specialist_id": specialist_id,
+                            "findings": [
+                                {
+                                    "statement": "Pricing needs a paid validation test.",
+                                    "evidence_status": "unverified",
+                                }
+                            ],
+                            "recommendations": ["Run a bounded paid pilot."],
+                        }
+                    ],
+                },
+            )
+            assert completed.isError is False
+            workflow = json.loads(completed.content[0].text)
+            assert workflow["status"] == "completed"
+            assert workflow["steps_completed"] == 1
+
+            profile_result = await session.call_tool(
+                "search_entrepreneurs", {"query": "Canva", "region": "Oceania"}
+            )
+            assert profile_result.isError is False
+            profiles = json.loads(profile_result.content[0].text)
+            assert profiles[0]["name"] == "Melanie Perkins"
+
+            denied_memory = await session.call_tool(
+                "save_memory", {"content": "pricing notes", "consent": False}
+            )
+            assert denied_memory.isError is True
+            saved_memory = await session.call_tool(
+                "save_memory", {"content": "pricing notes", "consent": True}
+            )
+            assert saved_memory.isError is False
+            memory = json.loads(saved_memory.content[0].text)
+            searched_memory = await session.call_tool(
+                "search_memory", {"query": "pricing"}
+            )
+            assert searched_memory.isError is False
+            assert json.loads(searched_memory.content[0].text)[0]["id"] == memory["record_id"]
+            deleted_memory = await session.call_tool(
+                "delete_memory", {"record_id": memory["record_id"]}
+            )
+            assert deleted_memory.isError is False
