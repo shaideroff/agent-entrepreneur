@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import uuid
 
 from agent_entrepreneur.knowledge.evidence import EvidenceClaim
@@ -73,6 +75,7 @@ class Orchestrator:
             raise ValueError("at least one specialist is required")
         if len(selected) > request.max_steps:
             raise ValueError("specialist count exceeds the workflow step limit")
+        request_fingerprint = _request_fingerprint(request, selected)
         if len(prior_responses) > len(selected):
             raise ValueError("prior response count exceeds selected specialist count")
         if any(response.specialist_id != selected[index].specialist_id for index, response in enumerate(prior_responses)):
@@ -108,6 +111,7 @@ class Orchestrator:
                         status="running",
                         state={
                             "objective": request.objective,
+                    "request_fingerprint": request_fingerprint,
                             "completed_steps": index,
                             "specialists_consulted": [item.specialist_id for item in responses],
                             "responses": [_response_state(item) for item in responses],
@@ -148,6 +152,7 @@ class Orchestrator:
                 status=checkpoint_status,
                 state={
                     "objective": request.objective,
+                            "request_fingerprint": request_fingerprint,
                     "completed_steps": len(responses),
                     "specialists_consulted": [item.specialist_id for item in responses],
                     "responses": [_response_state(item) for item in responses],
@@ -172,9 +177,13 @@ class Orchestrator:
             raise ValueError(f"workflow checkpoint not found: {workflow_id}")
         if checkpoint.status == "completed":
             raise ValueError("completed workflows cannot be resumed")
-        saved_objective = checkpoint.state.get("objective")
-        if not isinstance(saved_objective, str) or saved_objective != request.objective:
-            raise ValueError("resume objective must match the saved workflow objective")
+        selected = tuple(specialists[:request.max_specialists])
+        expected_fingerprint = _request_fingerprint(request, selected)
+        saved_fingerprint = checkpoint.state.get("request_fingerprint")
+        if not isinstance(saved_fingerprint, str) or saved_fingerprint != expected_fingerprint:
+            raise ValueError(
+                "resume request or specialist plan does not match the saved workflow"
+            )
         raw_responses = checkpoint.state.get("responses", [])
         if not isinstance(raw_responses, list):
             raise ValueError("checkpoint responses are invalid")
@@ -183,6 +192,37 @@ class Orchestrator:
             request, specialists, executor, checkpoint_store,
             workflow_id=workflow_id, prior_responses=prior, evidence_claims=evidence_claims,
         )
+
+
+def _request_fingerprint(
+    request: WorkflowRequest,
+    specialists: Sequence[SpecialistAssignment],
+) -> str:
+    """Bind resumable work to the exact request and ordered specialist plan."""
+    payload = {
+        "objective": request.objective,
+        "context": request.context,
+        "untrusted_material": list(request.untrusted_material),
+        "max_specialists": request.max_specialists,
+        "max_steps": request.max_steps,
+        "specialists": [
+            {
+                "specialist_id": item.specialist_id,
+                "specialist_title": item.specialist_title,
+                "methodology": item.methodology,
+                "objective": item.objective,
+                "task": item.task,
+                "context": item.context,
+                "untrusted_material": list(item.untrusted_material),
+                "step_number": item.step_number,
+            }
+            for item in specialists
+        ],
+    }
+    encoded = json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _unique(values: Iterable[str]) -> tuple[str, ...]:
