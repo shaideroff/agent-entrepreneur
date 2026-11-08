@@ -44,3 +44,73 @@ def test_backup_rejects_same_source_and_destination(tmp_path: Path):
 def test_backup_requires_existing_source(tmp_path: Path):
     with pytest.raises(FileNotFoundError):
         backup_database(tmp_path / "missing.sqlite3", tmp_path / "backup.sqlite3")
+
+
+def test_backup_is_integrity_checked_and_owner_private_on_posix(tmp_path: Path):
+    import os
+    import stat
+    import sqlite3
+
+    if os.name != "posix":
+        pytest.skip("POSIX permission semantics are not available")
+
+    source = tmp_path / "source.sqlite3"
+    backup = tmp_path / "backup.sqlite3"
+    with connect(source) as db:
+        db.execute(
+            "INSERT INTO memory(id, scope, content) VALUES (?, ?, ?)",
+            ("m-2", "user", "integrity check"),
+        )
+
+    backup_database(source, backup)
+
+    assert stat.S_IMODE(backup.stat().st_mode) == 0o600
+    with sqlite3.connect(backup) as db:
+        assert db.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+
+
+def test_backup_never_overwrites_existing_destination(tmp_path: Path):
+    source = tmp_path / "source.sqlite3"
+    destination = tmp_path / "existing.sqlite3"
+    with connect(source):
+        pass
+    destination.write_bytes(b"preserve this file")
+
+    with pytest.raises(FileExistsError):
+        backup_database(source, destination)
+
+    assert destination.read_bytes() == b"preserve this file"
+
+
+def test_backup_rejects_symbolic_link_source(tmp_path: Path):
+    if not hasattr(Path, "symlink_to"):
+        pytest.skip("symbolic links are not available")
+
+    source = tmp_path / "source.sqlite3"
+    link = tmp_path / "source-link.sqlite3"
+    with connect(source):
+        pass
+    try:
+        link.symlink_to(source)
+    except (NotImplementedError, OSError):
+        pytest.skip("symbolic links are not permitted")
+
+    with pytest.raises(ValueError, match="symbolic link"):
+        backup_database(link, tmp_path / "backup.sqlite3")
+
+
+def test_backup_rejects_symbolic_link_destination(tmp_path: Path):
+    source = tmp_path / "source.sqlite3"
+    target = tmp_path / "target.sqlite3"
+    link = tmp_path / "backup-link.sqlite3"
+    with connect(source):
+        pass
+    target.write_bytes(b"do not follow")
+    try:
+        link.symlink_to(target)
+    except (NotImplementedError, OSError):
+        pytest.skip("symbolic links are not permitted")
+
+    with pytest.raises(FileExistsError):
+        backup_database(source, link)
+    assert target.read_bytes() == b"do not follow"
