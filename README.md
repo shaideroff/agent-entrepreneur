@@ -8,6 +8,18 @@ Agent Entrepreneur helps a connected AI client structure business context, prepa
 
 > **Status: v1.0 release work in progress.** Agent Entrepreneur is an MCP server, not a bundled chat client or autonomous hosted agent service. The connected MCP host supplies model reasoning and any external research tools. Release readiness is gated on fresh CI, protocol, package and security verification.
 
+## Support the project
+
+**Help keep entrepreneurial intelligence open, independent and useful to builders worldwide.**
+
+If Agent Entrepreneur is useful to your work, consider [sponsoring its development](https://github.com/sponsors/shaideroff). Sponsorship helps fund ongoing maintenance, security and compatibility work, documentation, testing, and evidence-led expansion of the entrepreneur knowledge registry.
+
+- **Individuals:** sponsor at a level that fits your budget.
+- **Founders and builders:** help improve practical tools for business research and execution.
+- **Teams and organisations:** support a model-independent, open-source MCP capability that can be used with your preferred MCP-compatible client.
+
+Sponsorship is voluntary support for the project, not payment for a guaranteed feature, consulting service, investment return, or preferential treatment. See [SUPPORT.md](SUPPORT.md) for the funding priorities and transparency principles.
+
 ## Principles
 
 - MCP server only; the connected AI client supplies model reasoning.
