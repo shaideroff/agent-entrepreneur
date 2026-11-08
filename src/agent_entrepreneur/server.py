@@ -106,7 +106,10 @@ def _parse_evidence_claims(raw_claims: list[dict[str, Any]] | None) -> tuple[Evi
 
 
 def _workflow_result_payload(result: Any) -> dict[str, Any]:
-    return json.loads(json.dumps(asdict(result), ensure_ascii=False))
+    payload = json.loads(json.dumps(asdict(result), ensure_ascii=False))
+    if not isinstance(payload, dict):
+        raise TypeError("workflow result must serialize to an object")
+    return cast(dict[str, Any], payload)
 
 
 def create_server(settings: Settings) -> FastMCP:
