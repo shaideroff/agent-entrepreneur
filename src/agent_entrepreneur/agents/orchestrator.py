@@ -5,7 +5,6 @@ from collections.abc import Callable, Iterable, Sequence
 
 from agent_entrepreneur.agents.models import (
     SpecialistAssignment,
-    SpecialistFinding,
     SpecialistResponse,
     WorkflowCheckpoint,
     WorkflowRequest,
@@ -126,7 +125,13 @@ class Orchestrator:
             checkpoint_store.save(WorkflowCheckpoint(
                 workflow_id=workflow_id,
                 status=status,
-                state={"objective": request.objective, "result": _result_state(result)},
+                state={
+                    "objective": request.objective,
+                    "completed_steps": len(responses),
+                    "specialists_consulted": [item.specialist_id for item in responses],
+                    "responses": [_response_state(item) for item in responses],
+                    "result": _result_state(result),
+                },
             ))
         return result
 
