@@ -227,7 +227,7 @@ def _response_from_state(value: object) -> SpecialistResponse:
         findings.append(SpecialistFinding(
             statement=str(item.get("statement", "")),
             evidence_refs=tuple(str(ref) for ref in refs),
-            evidence_status=item.get("evidence_status", "unverified"),
+            evidence_status=cast(Literal["supported", "partial", "unverified", "assumption"], item.get("evidence_status", "unverified")),
         ))
     def strings(key: str) -> tuple[str, ...]:
         raw = value.get(key, [])
