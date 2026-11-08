@@ -260,7 +260,10 @@ def _response_from_state(value: object) -> SpecialistResponse:
     )
 
 
-def _validate_findings(findings, claim_registry: dict[str, EvidenceClaim]) -> None:
+def _validate_findings(
+    findings: Sequence[SpecialistFinding],
+    claim_registry: dict[str, EvidenceClaim],
+) -> None:
     for finding in findings:
         if finding.evidence_status in ("supported", "partial") and not finding.claim_ids:
             raise ValueError("supported or partial findings require validated claim IDs")
