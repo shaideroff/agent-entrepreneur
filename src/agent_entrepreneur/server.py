@@ -1,14 +1,11 @@
 from __future__ import annotations
 import json
-import logging
 from typing import Any
 from mcp.server.fastmcp import FastMCP
 from agent_entrepreneur.config import Settings, is_loopback_host
 from agent_entrepreneur.domain.models import BusinessAnalysisInput, BusinessInput, DecisionInput, ExecutionPlanInput, MarketResearchInput, OutcomeReviewInput
 from agent_entrepreneur.knowledge.registry import KnowledgeRepository
 from agent_entrepreneur.services.core import analyse_business as run_business_analysis, create_execution_plan as build_execution_plan, evaluate_decision as assess_decision, research_market as prepare_market_research, review_outcomes as run_outcome_review, understand_business as build_business_understanding
-
-logger = logging.getLogger("agent_entrepreneur")
 
 def create_server(settings: Settings) -> FastMCP:
     mcp = FastMCP("Agent Entrepreneur", instructions="Model-independent entrepreneurial intelligence. Separate facts, assumptions, recommendations and unknowns. Cite evidence. Never impersonate real entrepreneurs. The connected client performs reasoning. Consequential actions require explicit approval.", host=settings.host, port=settings.port)
@@ -65,8 +62,6 @@ def create_server(settings: Settings) -> FastMCP:
 def main() -> None:
     settings = Settings.from_env()
     server = create_server(settings)
-    if settings.transport == "streamable-http" and not is_loopback_host(settings.host):
-        logger.warning("Remote HTTP binding explicitly enabled. Protect it with authenticated TLS infrastructure.")
     server.run(transport=settings.transport)
 
 if __name__ == "__main__":
