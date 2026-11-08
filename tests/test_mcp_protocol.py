@@ -234,10 +234,19 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             )
             assert profile_result.isError is False
             profiles_payload = json.loads(profile_result.content[0].text)
-            # MCP SDK versions may wrap list tool results in a structured result object.
-            profiles = profiles_payload.get("result", profiles_payload) if isinstance(profiles_payload, dict) else profiles_payload
-            assert isinstance(profiles, list)
-            assert profiles[0]["name"] == "Melanie Perkins"
+            # MCP SDK versions expose list results as arrays, envelopes, or individual blocks.
+            if isinstance(profiles_payload, dict) and "name" in profiles_payload:
+                first_profile = profiles_payload
+            else:
+                profiles = (
+                    profiles_payload.get("result", profiles_payload)
+                    if isinstance(profiles_payload, dict)
+                    else profiles_payload
+                )
+                assert isinstance(profiles, list)
+                assert profiles
+                first_profile = profiles[0]
+            assert first_profile["name"] == "Melanie Perkins"
 
             denied_memory = await session.call_tool(
                 "save_memory", {"content": "pricing notes", "consent": False}
