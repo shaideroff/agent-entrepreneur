@@ -75,7 +75,7 @@ class Orchestrator:
             raise ValueError("at least one specialist is required")
         if len(selected) > request.max_steps:
             raise ValueError("specialist count exceeds the workflow step limit")
-        request_fingerprint = _request_fingerprint(request, selected, evidence_claims)
+        request_fingerprint = workflow_fingerprint(request, selected, evidence_claims)
         if len(prior_responses) > len(selected):
             raise ValueError("prior response count exceeds selected specialist count")
         if any(response.specialist_id != selected[index].specialist_id for index, response in enumerate(prior_responses)):
@@ -178,7 +178,7 @@ class Orchestrator:
         if checkpoint.status == "completed":
             raise ValueError("completed workflows cannot be resumed")
         selected = tuple(specialists[:request.max_specialists])
-        expected_fingerprint = _request_fingerprint(request, selected, evidence_claims)
+        expected_fingerprint = workflow_fingerprint(request, selected, evidence_claims)
         saved_fingerprint = checkpoint.state.get("request_fingerprint")
         raw_responses = checkpoint.state.get("responses", [])
         if not isinstance(raw_responses, list):
@@ -203,12 +203,12 @@ class Orchestrator:
         )
 
 
-def _request_fingerprint(
+def workflow_fingerprint(
     request: WorkflowRequest,
     specialists: Sequence[SpecialistAssignment],
     evidence_claims: Sequence[EvidenceClaim],
 ) -> str:
-    """Bind resumable work to the exact request and ordered specialist plan."""
+    """Bind resumable work to the exact request, specialist plan and evidence registry."""
     claim_records: list[dict[str, Any]] = []
     for claim in evidence_claims:
         record = claim.model_dump(mode="json")
