@@ -22,6 +22,14 @@
     },
     {
       "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.agents.models"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.agents.orchestrator"
+    },
+    {
+      "source": "agent_entrepreneur.server",
       "target": "agent_entrepreneur.agents.registry"
     },
     {
@@ -34,11 +42,23 @@
     },
     {
       "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.knowledge.evidence"
+    },
+    {
+      "source": "agent_entrepreneur.server",
       "target": "agent_entrepreneur.knowledge.registry"
     },
     {
       "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.memory.service"
+    },
+    {
+      "source": "agent_entrepreneur.server",
       "target": "agent_entrepreneur.services.core"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.workflows.checkpoints"
     },
     {
       "source": "agent_entrepreneur.services.core",
