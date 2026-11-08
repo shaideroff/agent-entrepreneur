@@ -62,7 +62,7 @@ The result reports `completed`, `partial` or `failed`, along with findings, reco
 
 If a specialist fails validation or execution, the workflow can return `partial`. Call `resume_specialist_workflow` with the same objective, domains, context and specialist limit, plus responses for the unfinished specialist IDs only.
 
-The server binds the checkpoint to a SHA-256 fingerprint of the original request and ordered specialist plan. A changed context, changed plan or mismatched request is rejected. An older empty checkpoint without a fingerprint may be resumed only when its saved objective matches and it contains no completed specialist responses.
+The server binds the checkpoint to a SHA-256 fingerprint of the original request, ordered specialist plan and evidence claim registry. A changed context, changed plan or mismatched request is rejected. An older empty checkpoint without a fingerprint may be resumed only when its saved objective matches and it contains no completed specialist responses.
 
 ## 5. Local memory
 
