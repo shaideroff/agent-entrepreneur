@@ -36,3 +36,6 @@ select = ["F", "E9"]
 python_version = "3.11"
 strict = true
 mypy_path = "src"
+
+[tool.setuptools.package-data]
+agent_entrepreneur = ["knowledge/seed_data/*.json"]
