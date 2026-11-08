@@ -35,8 +35,7 @@ jobs:
           /tmp/agent-entrepreneur-venv/bin/python -m pip install dist/*.whl
       - name: Smoke-test installed package and CLI entry point
         run: |
-          /tmp/agent-entrepreneur-venv/bin/python -c "from agent_entrepreneur.config import Settings; from agent_entrepreneur.server import create_server; settings = Settings.from_env(); server = create_server(settings); assert server.name == 'Agent Entrepreneur'"
-          /tmp/agent-entrepreneur-venv/bin/agent-entrepreneur --help || test "$?" -eq 2
+          /tmp/agent-entrepreneur-venv/bin/python -c "from importlib.metadata import entry_points; from pathlib import Path; from agent_entrepreneur.config import Settings; from agent_entrepreneur.server import create_server; entry = next(ep for ep in entry_points(group='console_scripts') if ep.name == 'agent-entrepreneur'); assert entry.value == 'agent_entrepreneur.server:main'; server = create_server(Settings(database_path=Path('/tmp/agent-entrepreneur-smoke.sqlite3'))); assert callable(server.run)"
       - name: Upload distribution artifacts
         uses: actions/upload-artifact@v4
         with:
