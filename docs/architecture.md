@@ -21,3 +21,6 @@ The orchestrator runs selected specialists sequentially, validates response attr
 
 
 Partial specialist workflows retain structured outputs in SQLite. `Orchestrator.resume(...)` reloads those outputs, verifies their attribution against the supplied specialist plan, skips completed specialists and continues from the next unfinished assignment under the same workflow ID. Completed workflows cannot be resumed. The caller must provide the same ordered specialist plan and request context; checkpoints do not persist credentials, private model chain-of-thought or arbitrary provider state.
+
+
+Checkpoint recovery validates the stored status and JSON shape before exposing state to the orchestrator. Corrupt JSON, non-object state and invalid statuses are rejected. Resume is bound to the exact saved objective and revalidates all persisted specialist findings against the evidence registry supplied by the caller. These checks protect against accidental corruption and cross-task reuse; SQLite checkpoint files remain local application data and are not cryptographically tamper-proof against a hostile local user.
