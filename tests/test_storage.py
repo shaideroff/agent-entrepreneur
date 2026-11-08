@@ -72,3 +72,21 @@ def test_database_path_must_not_be_a_directory(tmp_path: Path):
     path.mkdir()
     with pytest.raises((ValueError, IsADirectoryError)):
         connect(path)
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file permissions only")
+def test_active_rollback_journal_uses_private_permissions(tmp_path: Path):
+    path = tmp_path / "journal.db"
+    db = connect(path)
+    try:
+        db.execute("BEGIN")
+        db.execute(
+            "INSERT INTO memory(id, scope, content) VALUES (?, ?, ?)",
+            ("journal-test", "private", "x" * 100_000),
+        )
+        journal = path.with_name(path.name + "-journal")
+        assert journal.exists()
+        assert journal.stat().st_mode & 0o777 == 0o600
+    finally:
+        db.rollback()
+        db.close()
+
