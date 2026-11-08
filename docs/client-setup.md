@@ -70,11 +70,13 @@ Replace `YOUR_USER` with the Windows account directory. If your host does not su
 
 After saving the host configuration, restart or reload the host. Confirm that it discovers:
 
-- Tools: `understand_business`, `research_market`, `analyse_business`, `evaluate_decision`, `create_execution_plan`, `review_outcomes`.
+- Core tools: `understand_business`, `research_market`, `analyse_business`, `evaluate_decision`, `create_execution_plan`, `review_outcomes`.
+- Specialist workflow tools: `plan_specialist_workflow`, `complete_specialist_workflow`, `resume_specialist_workflow`.
+- Knowledge and memory tools: `search_entrepreneurs`, `save_memory`, `search_memory`, `delete_memory`.
 - Resources: `agent-entrepreneur://knowledge/specialists` and `agent-entrepreneur://knowledge/entrepreneurs`.
 - Prompts: `business_diagnosis`, `market_entry_assessment`, `founder_execution_review`.
 
-A successful connection only confirms MCP protocol connectivity. It does not imply that the host has live web research, external integrations, or permission to execute consequential business actions.
+A successful connection only confirms MCP protocol connectivity. The host performs specialist reasoning between the planning and completion calls; Agent Entrepreneur does not embed a model provider or bundled client. `save_memory` requires `consent=true`. The server does not provide live web research, external integrations, or permission to execute consequential business actions.
 
 ## Troubleshooting
 
