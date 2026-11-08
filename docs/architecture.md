@@ -24,3 +24,7 @@ Partial specialist workflows retain structured outputs in SQLite. `Orchestrator.
 
 
 Checkpoint recovery validates the stored status and JSON shape before exposing state to the orchestrator. Corrupt JSON, non-object state and invalid statuses are rejected. Resume is bound to the exact saved objective and revalidates all persisted specialist findings against the evidence registry supplied by the caller. These checks protect against accidental corruption and cross-task reuse; SQLite checkpoint files remain local application data and are not cryptographically tamper-proof against a hostile local user.
+
+### Retry and side-effect boundary
+
+Specialist executor callbacks are analysis-only and must be side-effect-free: they may inspect supplied context and return structured findings, but must not publish content, contact customers, spend money, mutate external systems or perform other consequential actions. A checkpoint is written after a specialist response is validated. If a process crashes after an executor begins but before its response is checkpointed, resuming can invoke that specialist again. Therefore v1 does not promise exactly-once execution. Any future integration that performs external work must use explicit human approval, a durable operation record, and provider-supported idempotency keys or an operator reconciliation step before retry; it must never rely on checkpointing alone to prevent duplicate effects.
