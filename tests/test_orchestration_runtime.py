@@ -90,3 +90,51 @@ def test_orchestrator_rejects_unbounded_requests():
 
 def test_checkpoint_store_returns_none_for_unknown_run(tmp_path: Path):
     assert CheckpointStore(tmp_path / "workflow.db").resume("missing") is None
+
+
+
+def test_partial_workflow_resumes_without_repeating_completed_specialists(tmp_path: Path):
+    specialists = plan_specialists("market entry", ["finance", "operations"], max_specialists=2)
+    store = CheckpointStore(tmp_path / "resume.db")
+    orchestrator = Orchestrator()
+    attempts = []
+
+    def fail_second(assignment):
+        attempts.append(assignment.specialist_id)
+        if assignment.step_number == 2:
+            raise RuntimeError("temporary outage")
+        return SpecialistResponse(
+            specialist_id=assignment.specialist_id,
+            findings=(SpecialistFinding("First specialist completed."),),
+        )
+
+    first = orchestrator.run(
+        WorkflowRequest("market entry", max_specialists=2),
+        specialists,
+        fail_second,
+        store,
+    )
+    assert first.status == "partial"
+    assert len(attempts) == 2
+
+    resumed_calls = []
+
+    def finish(assignment):
+        resumed_calls.append(assignment.specialist_id)
+        return SpecialistResponse(
+            specialist_id=assignment.specialist_id,
+            findings=(SpecialistFinding("Second specialist completed."),),
+        )
+
+    resumed = orchestrator.resume(
+        first.workflow_id,
+        WorkflowRequest("market entry", max_specialists=2),
+        specialists,
+        finish,
+        store,
+    )
+    assert resumed.workflow_id == first.workflow_id
+    assert resumed.status == "completed"
+    assert resumed.steps_completed == 2
+    assert len(resumed.findings) == 2
+    assert resumed_calls == [specialists[1].specialist_id]
