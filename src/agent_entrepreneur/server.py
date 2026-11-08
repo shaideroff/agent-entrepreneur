@@ -243,9 +243,10 @@ def create_server(settings: Settings) -> FastMCP:
         objective: str,
         domains: list[str],
         context: str = "",
+        untrusted_material: list[str] | None = None,
         max_specialists: int = 3,
     ) -> dict[str, Any]:
-        """Create a bounded, deterministic plan for connected-client specialist reasoning."""
+        """Create a bounded plan and keep untrusted source material separate from context."""
         if not objective.strip():
             raise ValueError("objective must not be empty")
         specialists = plan_specialists(objective, domains, max_specialists=max_specialists)
@@ -253,6 +254,7 @@ def create_server(settings: Settings) -> FastMCP:
             "workflow_id": str(uuid.uuid4()),
             "objective": objective,
             "context": context,
+            "untrusted_material": untrusted_material or [],
             "max_specialists": max_specialists,
             "specialists": [
                 {
@@ -276,6 +278,7 @@ def create_server(settings: Settings) -> FastMCP:
         domains: list[str],
         specialist_responses: list[dict[str, Any]],
         context: str = "",
+        untrusted_material: list[str] | None = None,
         max_specialists: int = 3,
         evidence_claims: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
@@ -291,6 +294,7 @@ def create_server(settings: Settings) -> FastMCP:
         request = WorkflowRequest(
             objective=objective,
             context=context,
+            untrusted_material=tuple(untrusted_material or []),
             max_specialists=max_specialists,
         )
         result = orchestrator.run(
@@ -310,6 +314,7 @@ def create_server(settings: Settings) -> FastMCP:
         domains: list[str],
         specialist_responses: list[dict[str, Any]],
         context: str = "",
+        untrusted_material: list[str] | None = None,
         max_specialists: int = 3,
         evidence_claims: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
@@ -337,6 +342,7 @@ def create_server(settings: Settings) -> FastMCP:
         request = WorkflowRequest(
             objective=objective,
             context=context,
+            untrusted_material=tuple(untrusted_material or []),
             max_specialists=max_specialists,
         )
         result = orchestrator.resume(
