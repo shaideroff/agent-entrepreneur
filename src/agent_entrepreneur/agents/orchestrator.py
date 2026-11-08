@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Callable, Iterable, Sequence
+from typing import Literal, cast
 
 from agent_entrepreneur.agents.models import (
     SpecialistAssignment,
@@ -25,8 +26,8 @@ def plan_specialists(objective: str, domains: list[str], *, max_specialists: int
         if requested.intersection({domain.casefold() for domain in profile["domains"]}):
             matched.append(SpecialistAssignment(
                 specialist_id=specialist_id,
-                specialist_title=profile["title"],
-                methodology=profile["methodology"],
+                specialist_title=cast(str, profile["title"]),
+                methodology=cast(str, profile["methodology"]),
                 objective=objective,
                 task=f"Analyse the objective from the {profile['title']} discipline.",
                 context="",
@@ -105,7 +106,9 @@ class Orchestrator:
         unknowns = _unique(item for response in responses for item in response.unknowns)
         evidence_refs = _unique(ref for finding in findings for ref in finding.evidence_refs)
         limitations = _unique([item for response in responses for item in response.limitations] + failures)
-        status = "failed" if not responses else ("partial" if failures else "completed")
+        status: Literal["completed", "partial", "failed"] = (
+            "failed" if not responses else ("partial" if failures else "completed")
+        )
         result = WorkflowResult(
             workflow_id=workflow_id,
             status=status,
@@ -122,9 +125,10 @@ class Orchestrator:
             error=failures[0] if failures else None,
         )
         if checkpoint_store is not None:
+            checkpoint_status: Literal["running", "completed", "partial", "failed"] = status
             checkpoint_store.save(WorkflowCheckpoint(
                 workflow_id=workflow_id,
-                status=status,
+                status=checkpoint_status,
                 state={
                     "objective": request.objective,
                     "completed_steps": len(responses),
