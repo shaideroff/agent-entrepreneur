@@ -18,7 +18,7 @@ Layers:
 2. The server validates input and returns structured business context, evidence gaps or specialist assignments.
 3. The connected client performs reasoning and any permitted research; retrieved content remains untrusted data.
 4. The client submits structured specialist findings and claim records to the server.
-5. The server validates specialist attribution and claim/source identifiers, persists checkpoints and consolidates findings, recommendations, risks, disagreements, unknowns and limitations.
+5. The server verifies that completion matches the original plan, validates specialist attribution and claim/source identifiers, persists checkpoints and consolidates findings, recommendations, risks, disagreements, unknowns and limitations.
 6. The client presents the result and obtains user approval before any consequential external action.
 
 ## Specialist orchestration
@@ -26,7 +26,7 @@ Layers:
 The `agents` package provides twelve analytical disciplines. Roles are reusable methods and evaluation rubrics, not simulated identities or endorsements. The caller supplies the reasoning; the server does not embed an LLM provider or claim hidden autonomous model subagents.
 
 The MCP workflow tools are:
-- `plan_specialist_workflow`: deterministic, bounded role selection and assignment.
+- `plan_specialist_workflow`: deterministic, bounded role selection and assignment; persists the planned request fingerprint.
 - `complete_specialist_workflow`: accept one structured response per planned specialist, validate provenance and persist progress.
 - `resume_specialist_workflow`: validate the original request and ordered plan, reload completed work, and execute only unfinished specialists.
 
