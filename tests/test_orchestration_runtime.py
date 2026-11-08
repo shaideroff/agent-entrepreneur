@@ -245,3 +245,49 @@ def test_checkpoint_store_handles_concurrent_workflow_writes(tmp_path: Path):
         results = list(executor.map(write, range(16)))
 
     assert results == [f"objective-{index}" for index in range(16)]
+
+
+def test_executor_may_be_reinvoked_if_checkpoint_write_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    specialists = plan_specialists("market entry", ["finance"], max_specialists=1)
+    store = CheckpointStore(tmp_path / "retry-boundary.db")
+    orchestrator = Orchestrator()
+    attempts: list[str] = []
+    original_save = store.save
+    fail_once = True
+
+    def fail_first_save(checkpoint):
+        nonlocal fail_once
+        if fail_once:
+            fail_once = False
+            raise OSError("simulated checkpoint write failure")
+        original_save(checkpoint)
+
+    monkeypatch.setattr(store, "save", fail_first_save)
+
+    def executor(assignment):
+        attempts.append(assignment.specialist_id)
+        return SpecialistResponse(
+            specialist_id=assignment.specialist_id,
+            findings=(SpecialistFinding("Analysis completed without external side effects."),),
+        )
+
+    first = orchestrator.run(
+        WorkflowRequest("market entry", max_specialists=1),
+        specialists,
+        executor,
+        store,
+    )
+    assert first.status == "partial"
+    assert first.steps_completed == 0
+    assert len(attempts) == 1
+
+    resumed = orchestrator.resume(
+        first.workflow_id,
+        WorkflowRequest("market entry", max_specialists=1),
+        specialists,
+        executor,
+        store,
+    )
+    assert resumed.status == "completed"
+    assert resumed.steps_completed == 1
+    assert len(attempts) == 2
