@@ -6,7 +6,7 @@ import uuid
 
 from agent_entrepreneur.knowledge.evidence import EvidenceClaim
 from collections.abc import Callable, Iterable, Sequence
-from typing import Literal, cast
+from typing import Any, Literal, cast
 
 from agent_entrepreneur.agents.models import (
     SpecialistAssignment,
@@ -209,7 +209,7 @@ def _request_fingerprint(
     evidence_claims: Sequence[EvidenceClaim],
 ) -> str:
     """Bind resumable work to the exact request and ordered specialist plan."""
-    claim_records = []
+    claim_records: list[dict[str, Any]] = []
     for claim in evidence_claims:
         record = claim.model_dump(mode="json")
         record["sources"] = sorted(
