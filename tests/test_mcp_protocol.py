@@ -113,6 +113,73 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             assert workflow["status"] == "completed"
             assert workflow["steps_completed"] == 1
 
+            interrupted_plan_result = await session.call_tool(
+                "plan_specialist_workflow",
+                {
+                    "objective": "validate market entry",
+                    "domains": ["finance", "operations"],
+                    "context": "A small pilot with limited capital",
+                    "max_specialists": 2,
+                },
+            )
+            interrupted_plan = json.loads(interrupted_plan_result.content[0].text)
+            first_specialist, second_specialist = interrupted_plan["specialists"]
+            partial = await session.call_tool(
+                "complete_specialist_workflow",
+                {
+                    "workflow_id": interrupted_plan["workflow_id"],
+                    "objective": "validate market entry",
+                    "domains": ["finance", "operations"],
+                    "context": "A small pilot with limited capital",
+                    "max_specialists": 2,
+                    "specialist_responses": [
+                        {
+                            "specialist_id": first_specialist["specialist_id"],
+                            "findings": [
+                                {
+                                    "statement": "The pilot budget needs a capped downside.",
+                                    "evidence_status": "unverified",
+                                }
+                            ],
+                        },
+                        {
+                            "specialist_id": second_specialist["specialist_id"],
+                            "findings": [
+                                {
+                                    "statement": "Operations capacity is ready.",
+                                    "evidence_status": "supported",
+                                }
+                            ],
+                        },
+                    ],
+                },
+            )
+            partial_workflow = json.loads(partial.content[0].text)
+            assert partial_workflow["status"] == "partial"
+            resumed = await session.call_tool(
+                "resume_specialist_workflow",
+                {
+                    "workflow_id": interrupted_plan["workflow_id"],
+                    "objective": "validate market entry",
+                    "domains": ["finance", "operations"],
+                    "context": "A small pilot with limited capital",
+                    "max_specialists": 2,
+                    "specialist_responses": [
+                        {
+                            "specialist_id": second_specialist["specialist_id"],
+                            "findings": [
+                                {
+                                    "statement": "Operations capacity still needs a measured pilot.",
+                                    "evidence_status": "unverified",
+                                }
+                            ],
+                        }
+                    ],
+                },
+            )
+            assert resumed.isError is False
+            assert json.loads(resumed.content[0].text)["status"] == "completed"
+
             profile_result = await session.call_tool(
                 "search_entrepreneurs", {"query": "Canva", "region": "Oceania"}
             )
