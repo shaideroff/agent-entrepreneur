@@ -107,6 +107,29 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             assert len(plan["specialists"]) == 1
             specialist_id = plan["specialists"][0]["specialist_id"]
 
+            mismatched_plan = await session.call_tool(
+                "complete_specialist_workflow",
+                {
+                    "workflow_id": plan["workflow_id"],
+                    "objective": "evaluate pricing",
+                    "domains": ["finance"],
+                    "context": "A different context supplied after planning",
+                    "max_specialists": 1,
+                    "specialist_responses": [
+                        {
+                            "specialist_id": specialist_id,
+                            "findings": [
+                                {
+                                    "statement": "This must not reuse the original plan.",
+                                    "evidence_status": "unverified",
+                                }
+                            ],
+                        }
+                    ],
+                },
+            )
+            assert mismatched_plan.isError is True
+
             completed = await session.call_tool(
                 "complete_specialist_workflow",
                 {
