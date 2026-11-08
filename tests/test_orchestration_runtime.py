@@ -1,4 +1,5 @@
 import sqlite3
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
 
@@ -221,3 +222,26 @@ def test_resume_rejects_a_different_objective(tmp_path: Path):
             lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
             store,
         )
+
+
+
+def test_checkpoint_store_handles_concurrent_workflow_writes(tmp_path: Path):
+    store = CheckpointStore(tmp_path / "concurrent.db")
+
+    def write(index: int) -> str:
+        workflow_id = f"workflow-{index}"
+        store.save(
+            WorkflowCheckpoint(
+                workflow_id,
+                "partial",
+                {"objective": f"objective-{index}", "completed_steps": index},
+            )
+        )
+        checkpoint = store.resume(workflow_id)
+        assert checkpoint is not None
+        return str(checkpoint.state["objective"])
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        results = list(executor.map(write, range(16)))
+
+    assert results == [f"objective-{index}" for index in range(16)]
