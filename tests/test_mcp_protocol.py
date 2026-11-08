@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 import pytest
-from mcp import ClientSession
+from mcp.client.session import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 from mcp.shared.memory import create_connected_server_and_client_session
 
