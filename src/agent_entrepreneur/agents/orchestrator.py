@@ -39,8 +39,8 @@ def plan_specialists(objective: str, domains: list[str], *, max_specialists: int
         profile = SPECIALISTS["built_from_zero"]
         matched.append(SpecialistAssignment(
             specialist_id="built_from_zero",
-            specialist_title=profile["title"],
-            methodology=profile["methodology"],
+            specialist_title=cast(str, profile["title"]),
+            methodology=cast(str, profile["methodology"]),
             objective=objective,
             task=f"Clarify and scope the objective: {objective}",
             context="",
