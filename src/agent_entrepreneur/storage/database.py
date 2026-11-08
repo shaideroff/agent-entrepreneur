@@ -27,11 +27,21 @@ def _prepare_database_file(path: Path) -> None:
             os.close(descriptor)
 
 
+class ManagedConnection(sqlite3.Connection):
+    """Commit or roll back on context exit, then always release the file handle."""
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        try:
+            return super().__exit__(exc_type, exc_value, traceback)
+        finally:
+            self.close()
+
+
 def connect(path: Path) -> sqlite3.Connection:
     path = path.expanduser()
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     _prepare_database_file(path)
-    connection = sqlite3.connect(path, timeout=10)
+    connection = sqlite3.connect(path, timeout=10, factory=ManagedConnection)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
     connection.executescript(SCHEMA)
