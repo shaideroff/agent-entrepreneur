@@ -32,11 +32,27 @@ VALID_CONFIDENCE = {"high", "medium", "low"}
 class KnowledgeRepository:
     def __init__(self, seed_file: Path | None = None) -> None:
         self.seed_file = seed_file or Path(__file__).parent / "seed_data" / "experts.json"
-        self._profiles = (
+        loaded: Any = (
             json.loads(self.seed_file.read_text(encoding="utf-8"))
             if self.seed_file.exists()
             else []
         )
+        if not isinstance(loaded, list):
+            raise ValueError("entrepreneur seed registry must be a JSON list")
+        profile_ids: set[str] = set()
+        for index, profile in enumerate(loaded):
+            if not isinstance(profile, dict):
+                raise ValueError(f"entrepreneur profile at index {index} must be an object")
+            errors = self.validate_profile(profile)
+            if errors:
+                raise ValueError(
+                    f"invalid entrepreneur profile at index {index}: {', '.join(errors)}"
+                )
+            profile_id = profile["id"]
+            if profile_id in profile_ids:
+                raise ValueError(f"duplicate entrepreneur profile id: {profile_id}")
+            profile_ids.add(profile_id)
+        self._profiles: list[dict[str, Any]] = loaded
 
     def search_profiles(
         self,
@@ -93,11 +109,18 @@ class KnowledgeRepository:
             if field not in profile:
                 errors.append(f"missing required field: {field}")
 
-        if profile.get("evidence_level") not in VALID_LEVELS:
+        for field in ("id", "name", "summary", "attribution"):
+            value = profile.get(field)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(f"{field} must be a non-empty string")
+        evidence_level = profile.get("evidence_level")
+        if not isinstance(evidence_level, str) or evidence_level not in VALID_LEVELS:
             errors.append("invalid evidence_level")
-        if profile.get("region") not in VALID_REGIONS:
+        region = profile.get("region")
+        if not isinstance(region, str) or region not in VALID_REGIONS:
             errors.append("invalid region")
-        if profile.get("confidence") not in VALID_CONFIDENCE:
+        confidence = profile.get("confidence")
+        if not isinstance(confidence, str) or confidence not in VALID_CONFIDENCE:
             errors.append("invalid confidence")
 
         updated_at = profile.get("updated_at")
@@ -106,6 +129,8 @@ class KnowledgeRepository:
                 date.fromisoformat(updated_at)
             except ValueError:
                 errors.append("updated_at must be an ISO 8601 date")
+        else:
+            errors.append("updated_at must be an ISO 8601 date")
 
         for field in ("domains", "ventures", "expertise", "methods", "decisions", "outcomes"):
             value = profile.get(field)
@@ -125,7 +150,14 @@ class KnowledgeRepository:
             if not isinstance(source, dict):
                 errors.append(f"{prefix} must be an object")
                 continue
-            for field in ("source_id", "title", "publisher", "source_type", "accessed_at", "supports"):
+            for field in (
+                "source_id",
+                "title",
+                "publisher",
+                "source_type",
+                "accessed_at",
+                "supports",
+            ):
                 value = source.get(field)
                 if not isinstance(value, str) or not value.strip():
                     errors.append(f"{prefix} missing valid {field}")
@@ -135,7 +167,7 @@ class KnowledgeRepository:
                     errors.append(f"duplicate source_id: {source_id}")
                 seen_source_ids.add(source_id)
             source_type = source.get("source_type")
-            if source_type not in VALID_SOURCE_TYPES:
+            if not isinstance(source_type, str) or source_type not in VALID_SOURCE_TYPES:
                 errors.append(f"{prefix} has invalid source_type")
             url = source.get("url")
             if source_type == "founder_contributed":
@@ -151,6 +183,8 @@ class KnowledgeRepository:
                     date.fromisoformat(accessed_at)
                 except ValueError:
                     errors.append(f"{prefix} accessed_at must be an ISO 8601 date")
+            else:
+                errors.append(f"{prefix} accessed_at must be an ISO 8601 date")
             limitations = source.get("limitations", [])
             if not isinstance(limitations, list) or any(
                 not isinstance(item, str) or not item.strip() for item in limitations
