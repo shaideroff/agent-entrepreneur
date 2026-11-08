@@ -6,6 +6,7 @@ from typing import Literal, cast
 
 from agent_entrepreneur.agents.models import (
     SpecialistAssignment,
+    SpecialistFinding,
     SpecialistResponse,
     WorkflowCheckpoint,
     WorkflowRequest,
@@ -71,6 +72,8 @@ class Orchestrator:
             raise ValueError("specialist count exceeds the workflow step limit")
         if len(prior_responses) > len(selected):
             raise ValueError("prior response count exceeds selected specialist count")
+        if any(response.specialist_id != selected[index].specialist_id for index, response in enumerate(prior_responses)):
+            raise ValueError("checkpoint specialist responses do not match the supplied plan")
         workflow_id = workflow_id or str(uuid.uuid4())
         responses: list[SpecialistResponse] = list(prior_responses)
         failures: list[str] = []
