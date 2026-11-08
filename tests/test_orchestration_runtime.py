@@ -29,7 +29,7 @@ def test_orchestrator_consolidates_evidence_and_disagreement(tmp_path: Path):
         if assignment.specialist_id == "capital_allocation":
             return SpecialistResponse(
                 specialist_id=assignment.specialist_id,
-                findings=(SpecialistFinding("Unit economics are not yet proven.", ("source:unit-economics",), "partial"),),
+                findings=(SpecialistFinding("Unit economics are not yet proven.", ("source:unit-economics",), "partial", ("claim:unit-economics",)),),
                 recommendations=("Run a small paid pilot.",),
                 challenges=("Do not scale before contribution margin is positive.",),
             )
