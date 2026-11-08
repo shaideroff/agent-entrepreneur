@@ -15,6 +15,7 @@ from agent_entrepreneur.agents.models import (
 from agent_entrepreneur.agents.orchestrator import Orchestrator, plan_specialists
 from agent_entrepreneur.config import Settings
 from agent_entrepreneur.domain.models import (
+    EvidenceReference,
     BusinessAnalysisInput,
     BusinessInput,
     DecisionInput,
@@ -148,14 +149,19 @@ def create_server(settings: Settings) -> FastMCP:
         geography: str,
         customer: str = "",
         research_questions: list[str] | None = None,
+        supplied_sources: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
-        """Prepare a market research brief and explicitly identify evidence gaps."""
+        """Prepare a market research brief and attach source references supplied by the client."""
+        source_records = [
+            EvidenceReference.model_validate(item) for item in (supplied_sources or [])
+        ]
         return prepare_market_research(
             MarketResearchInput(
                 market=market,
                 geography=geography,
                 customer=customer or None,
                 research_questions=research_questions or [],
+                supplied_sources=source_records,
             )
         ).model_dump(mode="json")
 
