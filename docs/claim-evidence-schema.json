@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shaideroff.github.io/agent-entrepreneur/schemas/evidence-claim.schema.json",
+  "title": "Evidence-backed claim",
+  "description": "A claim with traceable provenance, bounded applicability, freshness and contradiction tracking.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["claim_id", "statement", "claim_type", "evidence_level", "sources", "status", "checked_at"],
+  "properties": {
+    "claim_id": {"type": "string", "minLength": 1},
+    "statement": {"type": "string", "minLength": 1},
+    "claim_type": {"enum": ["descriptive", "causal", "prescriptive", "quantitative", "historical"]},
+    "scope": {"type": "string"},
+    "population_or_context": {"type": "string"},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "evidence_level": {"enum": ["A", "B", "C", "unverified"]},
+    "status": {"enum": ["supported", "contested", "stale", "retracted", "unverified"]},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "url", "source_type", "accessed_at"],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "format": "uri"},
+          "title": {"type": "string"},
+          "publisher": {"type": "string"},
+          "author": {"type": "string"},
+          "published_at": {"type": "string", "format": "date"},
+          "accessed_at": {"type": "string", "format": "date"},
+          "source_type": {"enum": ["primary", "independent_secondary", "official_filing", "dataset", "interview", "other"]},
+          "supports": {"type": "string"},
+          "limitations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "contradictions": {"type": "array", "items": {"type": "string"}},
+    "reviewed_at": {"type": "string", "format": "date"},
+    "checked_at": {"type": "string", "format": "date"}
+  }
+}
