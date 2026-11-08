@@ -2,7 +2,7 @@ import importlib
 import sys
 import types
 
-def test_server_registers_six_tools_resources_and_prompts(monkeypatch):
+def test_server_registers_tools_resources_and_prompts(monkeypatch):
     registered = {"tools": [], "resources": [], "prompts": []}
     class FakeFastMCP:
         def __init__(self, *args, **kwargs): self.args, self.kwargs = args, kwargs
