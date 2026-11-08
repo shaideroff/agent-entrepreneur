@@ -56,3 +56,19 @@ def test_new_database_directory_requests_private_permissions(tmp_path: Path):
     with connect(path) as db:
         db.execute("SELECT 1")
     assert path.parent.stat().st_mode & 0o777 == 0o700
+
+
+def test_existing_database_permissions_are_tightened(tmp_path: Path):
+    path = tmp_path / "existing.db"
+    path.touch(mode=0o644)
+    with connect(path) as db:
+        db.execute("SELECT 1")
+    if os.name == "posix":
+        assert path.stat().st_mode & 0o777 == 0o600
+
+
+def test_database_path_must_not_be_a_directory(tmp_path: Path):
+    path = tmp_path / "database-dir"
+    path.mkdir()
+    with pytest.raises((ValueError, IsADirectoryError)):
+        connect(path)
