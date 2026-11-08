@@ -172,7 +172,7 @@ def test_checkpoint_round_trip_preserves_claim_ids_and_resume_revalidates(tmp_pa
     saved_finding = checkpoint.state["responses"][0]["findings"][0]
     assert saved_finding["claim_ids"] == ["claim:margin"]
 
-    with pytest.raises(ValueError, match="not found"):
+    with pytest.raises(ValueError, match="evidence registry does not match"):
         orchestrator.resume(
             first.workflow_id,
             WorkflowRequest("evaluate pilot", max_specialists=2),
