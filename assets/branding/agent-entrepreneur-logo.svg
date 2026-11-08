@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="720" viewBox="0 0 2400 720" role="img" aria-labelledby="title desc">
+<title id="title">Agent Entrepreneur</title><desc id="desc">White geometric A mark with a violet forward slash and Agent Entrepreneur wordmark.</desc>
+<defs><linearGradient id="violet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D946EF"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>
+<g fill="#FFFFFF">
+<path d="M95 590 330 95 565 590H455L330 320 205 590Z"/>
+</g>
+<path d="m265 455 240-125-50 90-240 125Z" fill="url(#violet)"/>
+<rect x="640" y="150" width="8" height="435" rx="4" fill="#FFFFFF" opacity=".78"/>
+<g fill="#FFFFFF" font-family="Inter,Arial,Helvetica,sans-serif" font-weight="700">
+<text x="735" y="330" font-size="160">Agent</text><text x="735" y="510" font-size="160">Entrepreneur</text>
+</g>
+<rect x="740" y="560" width="190" height="10" rx="5" fill="url(#violet)"/>
+<text x="975" y="580" fill="#D9D9E3" font-family="Inter,Arial,Helvetica,sans-serif" font-size="48" letter-spacing="1.5">AN OPEN-SOURCE AI SYSTEM FOR ENTREPRENEURS</text>
+</svg>
