@@ -264,11 +264,20 @@ def _validate_findings(
     findings: Sequence[SpecialistFinding],
     claim_registry: dict[str, EvidenceClaim],
 ) -> None:
+    """Validate provenance links, not semantic entailment.
+
+    Claim status and evidence level are reviewer-assigned judgments. Resolving
+    claim/source IDs proves traceability only; it does not independently prove
+    that source content entails a specialist's wording.
+    """
     for finding in findings:
+        if not finding.statement.strip():
+            raise ValueError("finding statement must not be empty")
         if finding.evidence_status in ("supported", "partial") and not finding.claim_ids:
             raise ValueError("supported or partial findings require validated claim IDs")
         if len(set(finding.claim_ids)) != len(finding.claim_ids):
             raise ValueError("finding claim IDs must be unique")
+        referenced_sources: set[str] = set()
         for claim_id in finding.claim_ids:
             claim = claim_registry.get(claim_id)
             if claim is None:
@@ -277,3 +286,20 @@ def _validate_findings(
                 raise ValueError(f"claim {claim_id} has status {claim.status} and cannot support a finding")
             if claim.evidence_level == "unverified":
                 raise ValueError(f"claim {claim_id} has unverified evidence and cannot support a finding")
+            referenced_sources.update(source.source_id for source in claim.sources)
+        if finding.evidence_status in ("supported", "partial"):
+            if not finding.evidence_refs:
+                raise ValueError("supported or partial findings require traceable source IDs")
+            unknown_sources = set(finding.evidence_refs) - referenced_sources
+            if unknown_sources:
+                raise ValueError(
+                    "finding source references are not attached to its cited claims: "
+                    + ", ".join(sorted(unknown_sources))
+                )
+        elif finding.evidence_refs and finding.claim_ids:
+            unknown_sources = set(finding.evidence_refs) - referenced_sources
+            if unknown_sources:
+                raise ValueError(
+                    "finding source references are not attached to its cited claims: "
+                    + ", ".join(sorted(unknown_sources))
+                )
