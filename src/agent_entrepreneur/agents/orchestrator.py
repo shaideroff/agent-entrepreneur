@@ -54,6 +54,9 @@ class Orchestrator:
         specialists: Sequence[SpecialistAssignment],
         executor: Executor,
         checkpoint_store: CheckpointStore | None = None,
+        *,
+        workflow_id: str | None = None,
+        prior_responses: Sequence[SpecialistResponse] = (),
     ) -> WorkflowResult:
         if not request.objective.strip():
             raise ValueError("objective must not be empty")
@@ -66,10 +69,12 @@ class Orchestrator:
             raise ValueError("at least one specialist is required")
         if len(selected) > request.max_steps:
             raise ValueError("specialist count exceeds the workflow step limit")
-        workflow_id = str(uuid.uuid4())
-        responses: list[SpecialistResponse] = []
+        if len(prior_responses) > len(selected):
+            raise ValueError("prior response count exceeds selected specialist count")
+        workflow_id = workflow_id or str(uuid.uuid4())
+        responses: list[SpecialistResponse] = list(prior_responses)
         failures: list[str] = []
-        for index, specialist in enumerate(selected, start=1):
+        for index, specialist in enumerate(selected[len(responses):], start=len(responses) + 1):
             assignment = SpecialistAssignment(
                 specialist_id=specialist.specialist_id,
                 specialist_title=specialist.specialist_title,
@@ -140,6 +145,29 @@ class Orchestrator:
         return result
 
 
+    def resume(
+        self,
+        workflow_id: str,
+        request: WorkflowRequest,
+        specialists: Sequence[SpecialistAssignment],
+        executor: Executor,
+        checkpoint_store: CheckpointStore,
+    ) -> WorkflowResult:
+        checkpoint = checkpoint_store.resume(workflow_id)
+        if checkpoint is None:
+            raise ValueError(f"workflow checkpoint not found: {workflow_id}")
+        if checkpoint.status == "completed":
+            raise ValueError("completed workflows cannot be resumed")
+        raw_responses = checkpoint.state.get("responses", [])
+        if not isinstance(raw_responses, list):
+            raise ValueError("checkpoint responses are invalid")
+        prior = tuple(_response_from_state(item) for item in raw_responses)
+        return self.run(
+            request, specialists, executor, checkpoint_store,
+            workflow_id=workflow_id, prior_responses=prior,
+        )
+
+
 def _unique(values: Iterable[str]) -> tuple[str, ...]:
     seen: set[str] = set()
     result: list[str] = []
@@ -178,3 +206,37 @@ def _result_state(result: WorkflowResult) -> dict[str, object]:
         "limitations": list(result.limitations),
         "steps_completed": result.steps_completed,
     }
+
+
+def _response_from_state(value: object) -> SpecialistResponse:
+    if not isinstance(value, dict):
+        raise ValueError("checkpoint response must be an object")
+    findings_raw = value.get("findings", [])
+    if not isinstance(findings_raw, list):
+        raise ValueError("checkpoint findings must be a list")
+    findings: list[SpecialistFinding] = []
+    for item in findings_raw:
+        if not isinstance(item, dict):
+            raise ValueError("checkpoint finding must be an object")
+        refs = item.get("evidence_refs", [])
+        if not isinstance(refs, list):
+            raise ValueError("checkpoint evidence_refs must be a list")
+        findings.append(SpecialistFinding(
+            statement=str(item.get("statement", "")),
+            evidence_refs=tuple(str(ref) for ref in refs),
+            evidence_status=item.get("evidence_status", "unverified"),
+        ))
+    def strings(key: str) -> tuple[str, ...]:
+        raw = value.get(key, [])
+        if not isinstance(raw, list):
+            raise ValueError(f"checkpoint {key} must be a list")
+        return tuple(str(item) for item in raw)
+    return SpecialistResponse(
+        specialist_id=str(value.get("specialist_id", "")),
+        findings=tuple(findings),
+        recommendations=strings("recommendations"),
+        risks=strings("risks"),
+        challenges=strings("challenges"),
+        unknowns=strings("unknowns"),
+        limitations=strings("limitations"),
+    )
