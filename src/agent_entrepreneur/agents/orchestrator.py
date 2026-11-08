@@ -82,6 +82,8 @@ class Orchestrator:
             raise ValueError("evidence claim IDs must be unique")
         workflow_id = workflow_id or str(uuid.uuid4())
         responses: list[SpecialistResponse] = list(prior_responses)
+        for prior_response in responses:
+            _validate_findings(prior_response.findings, claim_registry)
         failures: list[str] = []
         for index, specialist in enumerate(selected[len(responses):], start=len(responses) + 1):
             assignment = SpecialistAssignment(
@@ -162,6 +164,8 @@ class Orchestrator:
         specialists: Sequence[SpecialistAssignment],
         executor: Executor,
         checkpoint_store: CheckpointStore,
+        *,
+        evidence_claims: Sequence[EvidenceClaim] = (),
     ) -> WorkflowResult:
         checkpoint = checkpoint_store.resume(workflow_id)
         if checkpoint is None:
@@ -174,7 +178,7 @@ class Orchestrator:
         prior = tuple(_response_from_state(item) for item in raw_responses)
         return self.run(
             request, specialists, executor, checkpoint_store,
-            workflow_id=workflow_id, prior_responses=prior,
+            workflow_id=workflow_id, prior_responses=prior, evidence_claims=evidence_claims,
         )
 
 
