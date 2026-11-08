@@ -1,5 +1,7 @@
 # Agent Entrepreneur
 
+**Version 1.0.0** · Apache-2.0 · [Changelog](CHANGELOG.md)
+
 **A local-first, model-independent MCP server for entrepreneurial intelligence.**
 
 Agent Entrepreneur helps a connected AI client structure business context, prepare market research, analyse supplied metrics, evaluate decisions, create execution plans and review outcomes. Its knowledge registry and specialist catalogue provide evidence-linked entrepreneurial reference material without impersonating real people.
