@@ -23,5 +23,4 @@ jobs:
       - run: ruff check .
       - run: mypy src
       - run: pytest -q
-      - run: python -m agent_entrepreneur.architecture_graph --write
-      - run: cat docs/architecture-dependencies.json
+      - run: python -m agent_entrepreneur.architecture_graph --check
