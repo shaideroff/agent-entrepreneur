@@ -29,10 +29,11 @@ def test_rejects_unsafe_remote_http_binding(monkeypatch: pytest.MonkeyPatch, tmp
         Settings.from_env()
 
 
-def test_allows_remote_http_only_with_explicit_opt_in(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+def test_rejects_remote_http_even_with_legacy_opt_in(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     configure_http(monkeypatch, tmp_path, "192.0.2.10")
     monkeypatch.setenv("AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP", "true")
-    assert Settings.from_env().allow_remote_http is True
+    with pytest.raises(ValueError, match="authentication is not configured"):
+        Settings.from_env()
 
 
 @pytest.mark.parametrize("host", ["", " bad host ", "example..com", "https://example.com", "[::1]", "bad_host"])
