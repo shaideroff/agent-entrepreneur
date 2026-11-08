@@ -1,3 +1,8 @@
+import json
+from pathlib import Path
+
+import pytest
+
 from agent_entrepreneur.knowledge.registry import KnowledgeRepository
 
 
@@ -40,3 +45,24 @@ def test_profile_validator_rejects_invalid_confidence_and_region():
     errors = KnowledgeRepository.validate_profile(profile)
     assert any("confidence" in error for error in errors)
     assert any("region" in error for error in errors)
+
+
+
+def test_repository_rejects_duplicate_profile_ids(tmp_path: Path):
+    profiles = KnowledgeRepository().search_profiles()[:2]
+    profiles[1]["id"] = profiles[0]["id"]
+    seed_file = tmp_path / "duplicate-profiles.json"
+    seed_file.write_text(json.dumps(profiles), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="duplicate entrepreneur profile id"):
+        KnowledgeRepository(seed_file)
+
+
+def test_repository_rejects_invalid_seed_before_serving_it(tmp_path: Path):
+    profile = dict(KnowledgeRepository().search_profiles()[1])
+    profile["sources"] = [dict(profile["sources"][0], url="http://insecure.example")]
+    seed_file = tmp_path / "invalid-profile.json"
+    seed_file.write_text(json.dumps([profile]), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="requires an HTTPS URL"):
+        KnowledgeRepository(seed_file)
