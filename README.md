@@ -45,6 +45,10 @@ The server also exposes entrepreneur and specialist catalogue resources plus reu
 
 The initial curated entrepreneur registry contains 18 profiles across eight regions and more than 12 expertise domains. The 100-profile global registry remains a research expansion target, not a claim that 100 profiles are already verified. Profiles carry attribution, evidence levels, confidence, update dates and source metadata; unresearched methods, decisions and outcomes remain empty rather than being invented.
 
+## Explore entrepreneurs
+
+Discover the [public entrepreneur directory](docs/entrepreneur-discovery.md): 18 source-linked research profiles across eight regions, with evidence labels, research domains and limitations. These are reference profiles—not 18 completed AI agents. The directory explains what is currently documented, what remains unverified, and how the v1.1 roadmap will develop deeper, case-based experience dossiers.
+
 ## Requirements and install
 
 Python 3.11+ and an MCP-compatible AI client.
