@@ -56,6 +56,12 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "founder_execution_review",
             }
 
+            invalid_result = await session.call_tool(
+                "understand_business",
+                {"industry": "software", "geography": "global"},
+            )
+            assert invalid_result.isError is True
+
             result = await session.call_tool(
                 "understand_business",
                 {"name": "Protocol Test Co", "industry": "software", "geography": "global"},
