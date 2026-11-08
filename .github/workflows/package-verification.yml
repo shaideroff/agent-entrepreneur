@@ -36,6 +36,45 @@ jobs:
       - name: Smoke-test installed package and CLI entry point
         run: |
           /tmp/agent-entrepreneur-venv/bin/python -c "from importlib.metadata import entry_points; from pathlib import Path; from agent_entrepreneur.config import Settings; from agent_entrepreneur.server import create_server; entry = next(ep for ep in entry_points(group='console_scripts') if ep.name == 'agent-entrepreneur'); assert entry.value == 'agent_entrepreneur.server:main'; server = create_server(Settings(database_path=Path('/tmp/agent-entrepreneur-smoke.sqlite3'))); assert callable(server.run)"
+      - name: Exercise installed wheel over real MCP STDIO transport
+        run: |
+          /tmp/agent-entrepreneur-venv/bin/python - <<'PY'
+          import asyncio
+          import json
+          import os
+          from pathlib import Path
+          import tempfile
+
+          from mcp.client.session import ClientSession
+          from mcp.client.stdio import StdioServerParameters, stdio_client
+
+          async def main() -> None:
+              executable = "/tmp/agent-entrepreneur-venv/bin/agent-entrepreneur"
+              with tempfile.TemporaryDirectory() as directory:
+                  env = {
+                      **os.environ,
+                      "AGENT_ENTREPRENEUR_TRANSPORT": "stdio",
+                      "AGENT_ENTREPRENEUR_DB": str(Path(directory) / "installed-wheel.sqlite3"),
+                  }
+                  params = StdioServerParameters(command=executable, args=[], env=env)
+                  async with stdio_client(params) as (read_stream, write_stream):
+                      async with ClientSession(read_stream, write_stream) as session:
+                          initialized = await session.initialize()
+                          assert initialized.serverInfo.name == "Agent Entrepreneur"
+                          tools = await session.list_tools()
+                          names = {tool.name for tool in tools.tools}
+                          assert "understand_business" in names
+                          assert "review_outcomes" in names
+                          result = await session.call_tool(
+                              "understand_business",
+                              {"name": "Installed Wheel Smoke Test", "industry": "software", "geography": "global"},
+                          )
+                          assert result.isError is False
+                          payload = json.loads(result.content[0].text)
+                          assert payload["business"]["name"] == "Installed Wheel Smoke Test"
+
+          asyncio.run(main())
+          PY
       - name: Upload distribution artifacts
         uses: actions/upload-artifact@v4
         with:
