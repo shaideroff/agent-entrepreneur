@@ -72,7 +72,7 @@ Labels are triage aids, not blanket validation of every claim. Each substantive 
 
 The core server does not itself browse the live web, call an LLM, execute code, contact customers or perform transactions. `research_market` reports when no research provider is configured rather than inventing current findings. The specialist orchestration module prepares bounded specialist tasks; the connected client performs the reasoning.
 
-See [MCP client setup](docs/client-setup.md), [SQLite backup and restore](docs/backup-and-restore.md), [SECURITY.md](SECURITY.md), [docs/security-model.md](docs/security-model.md) and [docs/knowledge-and-evidence.md](docs/knowledge-and-evidence.md).
+See [MCP client setup](docs/client-setup.md), [specialist workflow protocol](docs/specialist-workflows.md), [SQLite backup and restore](docs/backup-and-restore.md), [SECURITY.md](SECURITY.md), [docs/security-model.md](docs/security-model.md) and [docs/knowledge-and-evidence.md](docs/knowledge-and-evidence.md).
 
 ## Licence
 
