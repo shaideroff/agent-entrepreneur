@@ -38,13 +38,13 @@ def _relative_name(package: str, level: int, module: str | None) -> str:
     return ".".join(prefix)
 
 
-def _resolve_import(current: str, node: ast.AST, known: set[str]) -> set[str]:
+def _resolve_import(current: str, node: ast.AST, known: set[str], *, is_package: bool) -> set[str]:
     if isinstance(node, ast.Import):
         return {alias.name for alias in node.names if alias.name in known}
     if not isinstance(node, ast.ImportFrom):
         return set()
 
-    package = current if _is_package_module(current) else current.rpartition(".")[0]
+    package = current if is_package else current.rpartition(".")[0]
     try:
         base = _relative_name(package, node.level, node.module) if node.level else (node.module or "")
     except ValueError:
@@ -77,7 +77,7 @@ def build_graph(repository_root: Path) -> dict[str, Any]:
         except (OSError, SyntaxError) as exc:
             raise ValueError(f"cannot parse module {path}: {exc}") from exc
         for node in ast.walk(tree):
-            for target in _resolve_import(module, node, known):
+            for target in _resolve_import(module, node, known, is_package=path.name == "__init__.py"):
                 if target != module:
                     edges.add((module, target))
 
