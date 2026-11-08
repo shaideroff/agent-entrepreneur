@@ -13,15 +13,15 @@
     "attribution": "Founder-contributed methodology; claims require independent corroboration before promotion.",
     "sources": [
       {
-        "source_id": "s-haider-built-from-zero-source-1",
-        "url": "user-provided: founder methodology supplied in project context",
-        "title": "S Haider public reference",
+        "source_id": "s-haider-built-from-zero-founder-note",
+        "url": null,
+        "title": "Founder-contributed Built from Zero methodology",
         "publisher": "S Haider",
         "source_type": "founder_contributed",
         "accessed_at": "2026-11-09",
-        "supports": "Traceable reference for the profile of S Haider.",
+        "supports": "User-provided methodology description; not independently corroborated.",
         "limitations": [
-          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+          "This is founder-contributed material, not an independently verified biography or outcome record."
         ]
       }
     ],
