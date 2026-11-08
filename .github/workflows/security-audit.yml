@@ -25,7 +25,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e '.[dev]' pip-audit pip-licenses
       - name: Audit installed dependencies for known vulnerabilities
-        run: pip-audit --local --strict
+        run: pip-audit --local --skip-editable --strict
       - name: Generate dependency licence inventory
         run: pip-licenses --format=json --with-urls --with-license-file --output-file=dependency-licenses.json
       - name: Upload licence inventory
