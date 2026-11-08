@@ -12,3 +12,9 @@ def test_specialist_plan_is_bounded():
 def test_external_action_requires_approval():
     assert approval_required("publish_content").required
     assert not approval_required("prepare_draft").required
+
+
+def test_seed_profiles_pass_registry_structure_validation():
+    repository = KnowledgeRepository()
+    for profile in repository.search_profiles():
+        assert repository.validate_profile(profile) == []
