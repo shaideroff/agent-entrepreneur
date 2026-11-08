@@ -124,3 +124,94 @@ Evaluate:
 - Preserve contradictory evidence and source limitations. Do not discard a contradiction merely because it conflicts with the preferred recommendation.
 - Do not invent citations, access dates, sample sizes, metrics or confidence scores.
 - Store lawful metadata and concise original summaries; do not ingest copyrighted books, paid courses or substantial transcripts.
+
+
+## 7. Technology and AI Entrepreneurship
+
+**Question:** Does the technology or AI investment solve a real business problem with acceptable reliability, cost and risk?
+
+Evaluate:
+1. User workflow and measurable problem before selecting a technology.
+2. Build-versus-buy, open-source suitability and vendor lock-in.
+3. Data rights, privacy, security and model/tool boundaries.
+4. Evaluation quality, failure modes, human fallback and observability.
+5. Total cost of ownership, inference costs and operational burden.
+6. Integration complexity, maintainability and technical debt.
+7. Defensibility grounded in distribution, data rights, workflow depth or execution—not AI novelty alone.
+
+**Required gate:** define a baseline, measurable quality threshold, cost ceiling, security review and rollback path before production adoption.
+
+## 8. Marketing and Brand Building
+
+**Question:** Can the business earn qualified attention and convert it into durable customer demand?
+
+Evaluate:
+1. Audience, category and differentiated positioning.
+2. Customer insight and message-market fit.
+3. Channel economics and attribution limits.
+4. Creative testing, frequency and conversion quality.
+5. Brand trust, reputation and consistency.
+6. Retention, referrals and customer lifetime value.
+7. Claims substantiation and advertising/compliance constraints.
+
+**Required gate:** define the target cohort, channel, budget cap, conversion metric, incrementality caveat and stop threshold. Reach and impressions alone are not business outcomes.
+
+## 9. Manufacturing and Industrial Business
+
+**Question:** Can the product be manufactured safely, consistently and profitably at the required quality and volume?
+
+Evaluate:
+1. Product specification, bill of materials and design for manufacturability.
+2. Supplier qualification, concentration and lead-time risk.
+3. Process capability, yield, scrap and rework.
+4. Quality assurance, traceability and corrective action.
+5. Capacity utilisation, tooling and capital expenditure.
+6. Compliance, worker safety and environmental obligations.
+7. Landed cost, inventory and working-capital exposure.
+
+**Required gate:** require a verified sample or pilot run, quality acceptance criteria, supplier due diligence and contribution economics before committing to scale.
+
+## 10. Leadership and Organisation
+
+**Question:** Does the organisation have the accountability, capability and operating cadence to deliver its objectives?
+
+Evaluate:
+1. Decision rights, ownership and accountability.
+2. Role clarity, capability gaps and succession risk.
+3. Incentive alignment and performance measures.
+4. Communication cadence and escalation paths.
+5. Hiring priorities versus automation or process redesign.
+6. Culture, psychological safety and conflict resolution.
+7. Governance, compliance and founder/key-person dependency.
+
+**Required gate:** identify one accountable owner, the decision authority, measurable outcome and review cadence for every critical initiative.
+
+## 11. Consumer and D2C Business
+
+**Question:** Can the business acquire, serve and retain consumers with attractive contribution economics?
+
+Evaluate:
+1. Consumer segment, need state and purchase occasion.
+2. Product-market fit, quality and repeat-purchase behaviour.
+3. Pricing, gross margin, discounting and returns.
+4. Channel mix across direct, retail and marketplaces.
+5. Fulfilment, service levels and reverse logistics.
+6. Cohort retention, subscription/replenishment and loyalty.
+7. Consumer protection, product claims and data privacy.
+
+**Required gate:** use cohort-level contribution margin after fulfilment, discounts, returns and acquisition costs; define a repeat-purchase or retention threshold before scaling spend.
+
+## 12. Investment and Fundraising
+
+**Question:** Is external capital appropriate, and can the business support a credible, well-governed financing process?
+
+Evaluate:
+1. Capital need, use of funds and milestone linkage.
+2. Financing alternatives, dilution and control implications.
+3. Investor fit, mandate and value-add claims.
+4. Financial model assumptions and downside sensitivities.
+5. Data-room quality, legal readiness and cap-table accuracy.
+6. Runway, burn multiple and future financing risk.
+7. Conflicts, related-party transactions and disclosure obligations.
+
+**Required gate:** require a documented use-of-funds plan, verified financial baseline, downside runway, reviewed cap table and qualified legal/financial advice before signing or accepting binding terms.
