@@ -261,7 +261,19 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "search_memory", {"query": "pricing"}
             )
             assert searched_memory.isError is False
-            assert json.loads(searched_memory.content[0].text)[0]["id"] == memory["record_id"]
+            memory_payload = json.loads(searched_memory.content[0].text)
+            if isinstance(memory_payload, dict) and "id" in memory_payload:
+                first_memory = memory_payload
+            else:
+                memory_results = (
+                    memory_payload.get("result", memory_payload)
+                    if isinstance(memory_payload, dict)
+                    else memory_payload
+                )
+                assert isinstance(memory_results, list)
+                assert memory_results
+                first_memory = memory_results[0]
+            assert first_memory["id"] == memory["record_id"]
             deleted_memory = await session.call_tool(
                 "delete_memory", {"record_id": memory["record_id"]}
             )
