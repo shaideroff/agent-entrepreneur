@@ -54,8 +54,8 @@
       {
         "source_id": "warren-buffett-source-1",
         "url": "https://www.berkshirehathaway.com/letters/letters.html",
-        "title": "Warren Buffett public reference",
-        "publisher": "Warren Buffett",
+        "title": "Berkshire Hathaway shareholder letters",
+        "publisher": "Berkshire Hathaway Inc.",
         "source_type": "primary",
         "accessed_at": "2026-11-09",
         "supports": "Traceable reference for the profile of Warren Buffett.",
@@ -93,8 +93,8 @@
       {
         "source_id": "jeff-bezos-source-1",
         "url": "https://www.aboutamazon.com/news/company-news/2016-letter-to-shareholders",
-        "title": "Jeff Bezos public reference",
-        "publisher": "Jeff Bezos",
+        "title": "Jeffrey P. Bezos — Executive Chair biography",
+        "publisher": "Amazon Investor Relations",
         "source_type": "primary",
         "accessed_at": "2026-11-09",
         "supports": "Traceable reference for the profile of Jeff Bezos.",
@@ -135,8 +135,8 @@
       {
         "source_id": "sara-blakely-source-1",
         "url": "https://www.spanx.com/",
-        "title": "Sara Blakely public reference",
-        "publisher": "Sara Blakely",
+        "title": "SPANX public company reference",
+        "publisher": "SPANX",
         "source_type": "primary",
         "accessed_at": "2026-11-09",
         "supports": "Traceable reference for the profile of Sara Blakely.",
@@ -279,7 +279,7 @@
         "url": "https://www.ey.com/en_gl/weoy/class-of-2026/india",
         "title": "EY World Entrepreneur of the Year 2026 finalist — India",
         "publisher": "EY",
-        "source_type": "primary",
+        "source_type": "independent_secondary",
         "accessed_at": "2026-11-09",
         "supports": "Founder identity and high-level company history and portfolio.",
         "limitations": [
@@ -626,7 +626,7 @@
         "url": "https://www.businesshalloffame.org/marcos-galperin",
         "title": "Marcos Galperin — 2022 Laureate",
         "publisher": "Global Business Hall of Fame",
-        "source_type": "primary",
+        "source_type": "independent_secondary",
         "accessed_at": "2026-11-09",
         "supports": "Founder role and high-level company history.",
         "limitations": [
