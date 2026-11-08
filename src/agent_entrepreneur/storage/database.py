@@ -4,6 +4,7 @@ import os
 import sqlite3
 from pathlib import Path
 from types import TracebackType
+from typing import Literal
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -36,11 +37,12 @@ class ManagedConnection(sqlite3.Connection):
         exc_type: type[BaseException] | None,
         exc_value: BaseException | None,
         traceback: TracebackType | None,
-    ) -> bool:
+    ) -> Literal[False]:
         try:
-            return super().__exit__(exc_type, exc_value, traceback)
+            super().__exit__(exc_type, exc_value, traceback)
         finally:
             self.close()
+        return False
 
 
 def connect(path: Path) -> sqlite3.Connection:
