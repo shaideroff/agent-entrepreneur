@@ -12,7 +12,7 @@
 
 Agent Entrepreneur helps a connected AI client structure business context, prepare market research, analyse supplied metrics, evaluate decisions, create execution plans and review outcomes. Its knowledge registry and specialist catalogue provide evidence-linked entrepreneurial reference material without impersonating real people.
 
-> **Status: v1.0 release work in progress.** Agent Entrepreneur is an MCP server, not a bundled chat client or autonomous hosted agent service. The connected MCP host supplies model reasoning and any external research tools. Release readiness is gated on fresh CI, protocol, package and security verification.
+> **Release status: v1.0.0 development baseline; stable release certification is pending.** Agent Entrepreneur is an MCP server, not a bundled chat client or autonomous hosted agent service. The connected MCP host supplies model reasoning and any external research tools. A package version is not, by itself, proof of a tagged stable release. See the [release and compatibility status](docs/client-setup.md) before deployment.
 
 ## Support the project
 
@@ -47,7 +47,7 @@ The initial curated entrepreneur registry contains 18 profiles across eight regi
 
 ## Explore entrepreneurs
 
-Discover the [public entrepreneur directory](docs/entrepreneur-discovery.md): 18 source-linked research profiles across eight regions, with evidence labels, research domains and limitations. These are reference profiles—not 18 completed AI agents. The directory explains what is currently documented, what remains unverified, and how the v1.1 roadmap will develop deeper, case-based experience dossiers.
+Discover the [public entrepreneur directory](docs/entrepreneur-discovery.md): 18 research profiles across eight regions, with research domains and links to public source material. These are reference profiles—not 18 completed AI agents. The v1.1 roadmap develops selected profiles into deeper, case-based experience dossiers; incomplete dossiers remain Preview rather than being presented as operational agents.
 
 ## Requirements and install
 
@@ -83,20 +83,15 @@ ruff format --check .
 mypy src
 ```
 
-## Evidence levels
+## Evidence and attribution
 
-- **A:** strong primary evidence plus independent corroboration.
-- **B:** credible, traceable documentation; corroboration may be incomplete.
-- **C:** emerging or limited public evidence; verify before relying on claims.
-- **unverified:** discovery candidate or founder-contributed material not independently corroborated.
-
-Labels are triage aids, not blanket validation of every claim. Each substantive claim should be tied to its own source. S Haider's founder-contributed `Built from Zero` material is attributed and marked unverified until corroborated.
+Evidence is assessed at the level of individual claims, not applied as a blanket judgement to an entire entrepreneur profile. Research dossiers distinguish documented facts, interpretations, assumptions, disputed claims and unknowns. Every material claim used in an active experience dossier must have traceable source provenance, limitations and relevant counter-evidence. Founder-supplied material is attributed to its source and is not represented as independent corroboration. Public directory entries introduce research subjects; they do not imply endorsement, affiliation or that a completed AI agent exists.
 
 ## Limitations
 
 The core server does not itself browse the live web, call an LLM, execute code, contact customers or perform transactions. `research_market` reports when no research provider is configured rather than inventing current findings. The specialist orchestration module prepares bounded specialist tasks; the connected client performs the reasoning.
 
-See [MCP client setup](docs/client-setup.md), [specialist workflow protocol](docs/specialist-workflows.md), [SQLite backup and restore](docs/backup-and-restore.md), [SECURITY.md](SECURITY.md), [docs/security-model.md](docs/security-model.md) and [docs/knowledge-and-evidence.md](docs/knowledge-and-evidence.md).
+See [MCP client setup and client compatibility status](docs/client-setup.md), [specialist workflow protocol](docs/specialist-workflows.md), [SQLite backup and restore](docs/backup-and-restore.md), [SECURITY.md](SECURITY.md), [docs/security-model.md](docs/security-model.md) and [docs/knowledge-and-evidence.md](docs/knowledge-and-evidence.md).
 
 ## Licence
 
