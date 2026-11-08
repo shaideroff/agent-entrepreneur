@@ -32,7 +32,7 @@ def test_rejects_unsafe_remote_http_binding(monkeypatch: pytest.MonkeyPatch, tmp
 def test_rejects_remote_http_even_with_legacy_opt_in(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     configure_http(monkeypatch, tmp_path, "192.0.2.10")
     monkeypatch.setenv("AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP", "true")
-    with pytest.raises(ValueError, match="authentication is not configured"):
+    with pytest.raises(ValueError, match="authentication is configured"):
         Settings.from_env()
 
 
