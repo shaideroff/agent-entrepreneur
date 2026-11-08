@@ -23,9 +23,9 @@ jobs:
       - name: Install project and audit tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[dev]' pip-audit pip-licenses
+          python -m pip install 'mcp>=1.9,<2' 'pydantic>=2.7,<3' 'pytest>=8.0' 'pytest-cov>=5.0' 'ruff>=0.6' 'mypy>=1.10' pip-audit pip-licenses
       - name: Audit installed dependencies for known vulnerabilities
-        run: pip-audit --local --skip-editable --strict
+        run: pip-audit --local --strict
       - name: Generate dependency licence inventory
         run: pip-licenses --format=json --with-urls --with-license-file --output-file=dependency-licenses.json
       - name: Upload licence inventory
