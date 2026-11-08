@@ -172,6 +172,16 @@ def test_checkpoint_round_trip_preserves_claim_ids_and_resume_revalidates(tmp_pa
     saved_finding = checkpoint.state["responses"][0]["findings"][0]
     assert saved_finding["claim_ids"] == ["claim:margin"]
 
+    with pytest.raises(ValueError, match="not found"):
+        orchestrator.resume(
+            first.workflow_id,
+            WorkflowRequest("evaluate pilot", max_specialists=2),
+            specialists,
+            lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
+            store,
+            evidence_claims=(),
+        )
+
     resumed = orchestrator.resume(
         first.workflow_id,
         WorkflowRequest("evaluate pilot", max_specialists=2),
@@ -182,13 +192,3 @@ def test_checkpoint_round_trip_preserves_claim_ids_and_resume_revalidates(tmp_pa
     )
     assert resumed.status == "completed"
     assert resumed.findings[0].claim_ids == ("claim:margin",)
-
-    with pytest.raises(ValueError, match="not found"):
-        orchestrator.resume(
-            first.workflow_id,
-            WorkflowRequest("evaluate pilot", max_specialists=2),
-            specialists,
-            lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
-            store,
-            evidence_claims=(),
-        )
