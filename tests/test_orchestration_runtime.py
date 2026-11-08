@@ -1,9 +1,11 @@
 from datetime import date
 from pathlib import Path
+import sqlite3
 
 import pytest
 
 from agent_entrepreneur.agents.models import (
+    WorkflowCheckpoint,
     SpecialistFinding,
     SpecialistResponse,
     WorkflowRequest,
@@ -158,3 +160,63 @@ def test_partial_workflow_resumes_without_repeating_completed_specialists(tmp_pa
     assert resumed.steps_completed == 2
     assert len(resumed.findings) == 2
     assert resumed_calls == [specialists[1].specialist_id]
+
+
+
+def test_checkpoint_rejects_non_object_state_on_save(tmp_path: Path):
+    store = CheckpointStore(tmp_path / "invalid-state.db")
+    with pytest.raises(ValueError, match="state must be an object"):
+        store.save(WorkflowCheckpoint("workflow-1", "partial", []))  # type: ignore[arg-type]
+
+
+def test_checkpoint_rejects_corrupt_json_on_resume(tmp_path: Path):
+    path = tmp_path / "corrupt.db"
+    store = CheckpointStore(path)
+    store.save(WorkflowCheckpoint("workflow-1", "partial", {"objective": "test"}))
+    with sqlite3.connect(path) as db:
+        db.execute(
+            "UPDATE workflow_runs SET state_json = ? WHERE id = ?",
+            ("{not-json", "workflow-1"),
+        )
+    with pytest.raises(ValueError, match="JSON is corrupt"):
+        store.resume("workflow-1")
+
+
+def test_checkpoint_rejects_non_object_json_on_resume(tmp_path: Path):
+    path = tmp_path / "wrong-shape.db"
+    store = CheckpointStore(path)
+    store.save(WorkflowCheckpoint("workflow-1", "partial", {"objective": "test"}))
+    with sqlite3.connect(path) as db:
+        db.execute(
+            "UPDATE workflow_runs SET state_json = ? WHERE id = ?",
+            ('["not", "an", "object"]', "workflow-1"),
+        )
+    with pytest.raises(ValueError, match="must be an object"):
+        store.resume("workflow-1")
+
+
+def test_resume_rejects_a_different_objective(tmp_path: Path):
+    specialists = plan_specialists("market entry", ["finance", "operations"], max_specialists=2)
+    store = CheckpointStore(tmp_path / "objective.db")
+    first = Orchestrator().run(
+        WorkflowRequest("market entry", max_specialists=2),
+        specialists,
+        lambda assignment: (
+            (_ for _ in ()).throw(RuntimeError("stop"))
+            if assignment.step_number == 2
+            else SpecialistResponse(
+                specialist_id=assignment.specialist_id,
+                findings=(SpecialistFinding("Initial work saved."),),
+            )
+        ),
+        store,
+    )
+    assert first.status == "partial"
+    with pytest.raises(ValueError, match="objective must match"):
+        Orchestrator().resume(
+            first.workflow_id,
+            WorkflowRequest("different objective", max_specialists=2),
+            specialists,
+            lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
+            store,
+        )
