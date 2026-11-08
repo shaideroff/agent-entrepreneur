@@ -53,8 +53,9 @@ def test_supported_finding_requires_a_resolved_claim_not_just_source_ref():
         evidence_refs=("https://example.com/ledger",),
         evidence_status="supported",
     )
-    with pytest.raises(ValueError, match="claim"):
-        run_finding(finding)
+    result = run_finding(finding)
+    assert result.status == "failed"
+    assert "claim IDs" in (result.error or "")
 
 
 def test_supported_finding_resolves_claim_and_preserves_claim_id():
@@ -72,23 +73,62 @@ def test_supported_finding_resolves_claim_and_preserves_claim_id():
 def test_contested_claim_cannot_support_a_supported_finding():
     finding = SpecialistFinding(
         "The pilot contribution margin was positive.",
+        evidence_refs=("source:ledger",),
         evidence_status="supported",
         claim_ids=("claim:margin",),
     )
-    with pytest.raises(ValueError, match="contested"):
-        run_finding(finding, (claim(status="contested"),))
+    result = run_finding(finding, (claim(status="contested"),))
+    assert result.status == "failed"
+    assert "contested" in (result.error or "")
 
 
 def test_unknown_claim_id_is_rejected():
     finding = SpecialistFinding(
         "The pilot contribution margin was positive.",
+        evidence_refs=("source:ledger",),
         evidence_status="supported",
         claim_ids=("claim:missing",),
     )
-    with pytest.raises(ValueError, match="not found"):
-        run_finding(finding, (claim(),))
+    result = run_finding(finding, (claim(),))
+    assert result.status == "failed"
+    assert "not found" in (result.error or "")
 
 
 def test_unverified_finding_remains_valid_without_claim_record():
     result = run_finding(SpecialistFinding("Margin needs validation."))
     assert result.findings[0].evidence_status == "unverified"
+
+
+
+def test_finding_rejects_source_not_attached_to_cited_claim():
+    finding = SpecialistFinding(
+        "The pilot contribution margin was positive.",
+        evidence_refs=("source:unrelated",),
+        evidence_status="supported",
+        claim_ids=("claim:margin",),
+    )
+    result = run_finding(finding, (claim(),))
+    assert result.status == "failed"
+    assert "not attached" in (result.error or "")
+
+
+def test_supported_finding_requires_source_reference():
+    finding = SpecialistFinding(
+        "The pilot contribution margin was positive.",
+        evidence_status="supported",
+        claim_ids=("claim:margin",),
+    )
+    result = run_finding(finding, (claim(),))
+    assert result.status == "failed"
+    assert "source IDs" in (result.error or "")
+
+
+def test_duplicate_claim_ids_in_registry_are_rejected():
+    specialists = plan_specialists("evaluate pilot", ["finance"], max_specialists=1)
+    result = Orchestrator().run(
+        WorkflowRequest("evaluate pilot"),
+        specialists,
+        lambda assignment: SpecialistResponse(specialist_id=assignment.specialist_id),
+        evidence_claims=(claim(), claim()),
+    )
+    assert result.status == "failed" or result.error is not None
