@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import stat
 import sqlite3
 from pathlib import Path
 from types import TracebackType
@@ -17,16 +18,32 @@ CREATE TABLE IF NOT EXISTS evidence_records (id TEXT PRIMARY KEY, profile_id TEX
 
 
 def _prepare_database_file(path: Path) -> None:
-    """Create a private SQLite file on POSIX and reject a database symlink."""
-    if path.is_symlink():
-        raise ValueError("database path must not be a symbolic link")
-    if os.name == "posix":
+    """Ensure a regular, owner-private database file without following POSIX symlinks."""
+    if os.name != "posix":
+        if path.is_symlink():
+            raise ValueError("database path must not be a symbolic link")
+        if path.exists() and not path.is_file():
+            raise ValueError("database path must be a regular file")
+        return
+
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_RDWR | nofollow
+    try:
+        descriptor = os.open(path, flags | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
         try:
-            descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
-        except FileExistsError:
-            os.chmod(path, 0o600)
-        else:
-            os.close(descriptor)
+            descriptor = os.open(path, flags)
+        except OSError as exc:
+            if exc.errno in {getattr(os, "ELOOP", 40), getattr(os, "EMLINK", 31)}:
+                raise ValueError("database path must not be a symbolic link") from exc
+            raise
+    try:
+        file_stat = os.fstat(descriptor)
+        if not stat.S_ISREG(file_stat.st_mode):
+            raise ValueError("database path must be a regular file")
+        os.fchmod(descriptor, 0o600)
+    finally:
+        os.close(descriptor)
 
 
 class ManagedConnection(sqlite3.Connection):
