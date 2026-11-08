@@ -11,10 +11,9 @@ This directory contains the repository-hosted Agent Entrepreneur identity assets
 
 ## Global banner
 
-- `agent-entrepreneur-global-banner.jpg` — optimized raster artwork for GitHub README, social previews and web use.
-- `agent-entrepreneur-global-banner.svg` — SVG wrapper that references the adjacent JPEG to preserve the original photographic artwork.
-- Canvas: 1280 × 427 (3:1).
-- The README embeds the JPEG directly for reliable GitHub rendering, especially on mobile. The SVG is provided as an alternate web asset; it is not a vector-traced illustration.
+- `agent-entrepreneur-global-banner.jpg` — optimized raster artwork embedded directly in the GitHub README for reliable rendering on desktop and mobile.
+- `agent-entrepreneur-global-banner.svg` — SVG wrapper that references the adjacent JPEG; use it where an SVG container is required.
+- Artwork canvas: 800 × 267 px (approximately 3:1). The JPEG is optimized for repository display; retain the original high-resolution source separately for print or large-format use.
 - The artwork places S Haider as Founder & Builder alongside a global entrepreneur portrait gallery and the Research, Analyze, Plan, Execute, Learn workflow.
 
 ## Attribution and representation
