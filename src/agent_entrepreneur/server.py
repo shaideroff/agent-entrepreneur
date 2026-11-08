@@ -10,9 +10,14 @@ from mcp.server.fastmcp import FastMCP
 from agent_entrepreneur.agents.models import (
     SpecialistFinding,
     SpecialistResponse,
+    WorkflowCheckpoint,
     WorkflowRequest,
 )
-from agent_entrepreneur.agents.orchestrator import Orchestrator, plan_specialists
+from agent_entrepreneur.agents.orchestrator import (
+    Orchestrator,
+    plan_specialists,
+    workflow_fingerprint,
+)
 from agent_entrepreneur.config import Settings
 from agent_entrepreneur.domain.models import (
     EvidenceReference,
@@ -250,8 +255,27 @@ def create_server(settings: Settings) -> FastMCP:
         if not objective.strip():
             raise ValueError("objective must not be empty")
         specialists = plan_specialists(objective, domains, max_specialists=max_specialists)
+        workflow_id = str(uuid.uuid4())
+        request = WorkflowRequest(
+            objective=objective,
+            context=context,
+            untrusted_material=tuple(untrusted_material or []),
+            max_specialists=max_specialists,
+        )
+        checkpoints.save(
+            WorkflowCheckpoint(
+                workflow_id=workflow_id,
+                status="running",
+                state={
+                    "objective": objective,
+                    "planned_request_fingerprint": workflow_fingerprint(request, specialists, ()),
+                    "completed_steps": 0,
+                    "responses": [],
+                },
+            )
+        )
         return {
-            "workflow_id": str(uuid.uuid4()),
+            "workflow_id": workflow_id,
             "objective": objective,
             "context": context,
             "untrusted_material": untrusted_material or [],
@@ -286,17 +310,28 @@ def create_server(settings: Settings) -> FastMCP:
         if not workflow_id.strip() or not objective.strip():
             raise ValueError("workflow_id and objective must not be empty")
         specialists = plan_specialists(objective, domains, max_specialists=max_specialists)
-        expected_ids = [item.specialist_id for item in specialists]
-        responses = _parse_specialist_responses(specialist_responses)
-        if set(responses) != set(expected_ids):
-            raise ValueError("specialist responses must match the planned specialist IDs exactly")
-        claims = _parse_evidence_claims(evidence_claims)
         request = WorkflowRequest(
             objective=objective,
             context=context,
             untrusted_material=tuple(untrusted_material or []),
             max_specialists=max_specialists,
         )
+        checkpoint = checkpoints.resume(workflow_id)
+        if checkpoint is None:
+            raise ValueError("workflow plan not found; call plan_specialist_workflow first")
+        planned_fingerprint = checkpoint.state.get("planned_request_fingerprint")
+        if (
+            not isinstance(planned_fingerprint, str)
+            or planned_fingerprint != workflow_fingerprint(request, specialists, ())
+        ):
+            raise ValueError("completion request or specialist plan does not match the original plan")
+        if checkpoint.state.get("responses"):
+            raise ValueError("workflow already has completed steps; use resume_specialist_workflow")
+        expected_ids = [item.specialist_id for item in specialists]
+        responses = _parse_specialist_responses(specialist_responses)
+        if set(responses) != set(expected_ids):
+            raise ValueError("specialist responses must match the planned specialist IDs exactly")
+        claims = _parse_evidence_claims(evidence_claims)
         result = orchestrator.run(
             request,
             specialists,
@@ -322,9 +357,21 @@ def create_server(settings: Settings) -> FastMCP:
         if not workflow_id.strip() or not objective.strip():
             raise ValueError("workflow_id and objective must not be empty")
         specialists = plan_specialists(objective, domains, max_specialists=max_specialists)
+        request = WorkflowRequest(
+            objective=objective,
+            context=context,
+            untrusted_material=tuple(untrusted_material or []),
+            max_specialists=max_specialists,
+        )
         checkpoint = checkpoints.resume(workflow_id)
         if checkpoint is None:
             raise ValueError(f"workflow checkpoint not found: {workflow_id}")
+        planned_fingerprint = checkpoint.state.get("planned_request_fingerprint")
+        if (
+            isinstance(planned_fingerprint, str)
+            and planned_fingerprint != workflow_fingerprint(request, specialists, ())
+        ):
+            raise ValueError("resume request or specialist plan does not match the original plan")
         completed_raw = checkpoint.state.get("responses", [])
         if not isinstance(completed_raw, list):
             raise ValueError("checkpoint responses are invalid")
@@ -339,12 +386,6 @@ def create_server(settings: Settings) -> FastMCP:
         if set(responses) != remaining_ids:
             raise ValueError("resume responses must match the unfinished specialist IDs exactly")
         claims = _parse_evidence_claims(evidence_claims)
-        request = WorkflowRequest(
-            objective=objective,
-            context=context,
-            untrusted_material=tuple(untrusted_material or []),
-            max_specialists=max_specialists,
-        )
         result = orchestrator.resume(
             workflow_id,
             request,
