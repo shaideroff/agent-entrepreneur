@@ -1,0 +1,176 @@
+{
+  "edges": [
+    {
+      "source": "agent_entrepreneur.agents.orchestrator",
+      "target": "agent_entrepreneur.agents.models"
+    },
+    {
+      "source": "agent_entrepreneur.agents.orchestrator",
+      "target": "agent_entrepreneur.agents.registry"
+    },
+    {
+      "source": "agent_entrepreneur.agents.orchestrator",
+      "target": "agent_entrepreneur.knowledge.evidence"
+    },
+    {
+      "source": "agent_entrepreneur.agents.orchestrator",
+      "target": "agent_entrepreneur.workflows.checkpoints"
+    },
+    {
+      "source": "agent_entrepreneur.memory.service",
+      "target": "agent_entrepreneur.storage.database"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.agents.models"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.agents.orchestrator"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.agents.registry"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.config"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.domain.models"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.knowledge.evidence"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.knowledge.registry"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.memory.service"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.services.core"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.workflows.checkpoints"
+    },
+    {
+      "source": "agent_entrepreneur.services.core",
+      "target": "agent_entrepreneur.domain.models"
+    },
+    {
+      "source": "agent_entrepreneur.workflows.checkpoints",
+      "target": "agent_entrepreneur.agents.models"
+    },
+    {
+      "source": "agent_entrepreneur.workflows.checkpoints",
+      "target": "agent_entrepreneur.storage.database"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "agent_entrepreneur",
+      "path": "src/agent_entrepreneur/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.agents",
+      "path": "src/agent_entrepreneur/agents/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.agents.models",
+      "path": "src/agent_entrepreneur/agents/models.py"
+    },
+    {
+      "id": "agent_entrepreneur.agents.orchestrator",
+      "path": "src/agent_entrepreneur/agents/orchestrator.py"
+    },
+    {
+      "id": "agent_entrepreneur.agents.registry",
+      "path": "src/agent_entrepreneur/agents/registry.py"
+    },
+    {
+      "id": "agent_entrepreneur.architecture_graph",
+      "path": "src/agent_entrepreneur/architecture_graph.py"
+    },
+    {
+      "id": "agent_entrepreneur.config",
+      "path": "src/agent_entrepreneur/config.py"
+    },
+    {
+      "id": "agent_entrepreneur.domain",
+      "path": "src/agent_entrepreneur/domain/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.domain.models",
+      "path": "src/agent_entrepreneur/domain/models.py"
+    },
+    {
+      "id": "agent_entrepreneur.knowledge",
+      "path": "src/agent_entrepreneur/knowledge/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.knowledge.evidence",
+      "path": "src/agent_entrepreneur/knowledge/evidence.py"
+    },
+    {
+      "id": "agent_entrepreneur.knowledge.registry",
+      "path": "src/agent_entrepreneur/knowledge/registry.py"
+    },
+    {
+      "id": "agent_entrepreneur.memory",
+      "path": "src/agent_entrepreneur/memory/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.memory.service",
+      "path": "src/agent_entrepreneur/memory/service.py"
+    },
+    {
+      "id": "agent_entrepreneur.security",
+      "path": "src/agent_entrepreneur/security/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.security.approvals",
+      "path": "src/agent_entrepreneur/security/approvals.py"
+    },
+    {
+      "id": "agent_entrepreneur.server",
+      "path": "src/agent_entrepreneur/server.py"
+    },
+    {
+      "id": "agent_entrepreneur.services",
+      "path": "src/agent_entrepreneur/services/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.services.core",
+      "path": "src/agent_entrepreneur/services/core.py"
+    },
+    {
+      "id": "agent_entrepreneur.storage",
+      "path": "src/agent_entrepreneur/storage/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.storage.backup",
+      "path": "src/agent_entrepreneur/storage/backup.py"
+    },
+    {
+      "id": "agent_entrepreneur.storage.database",
+      "path": "src/agent_entrepreneur/storage/database.py"
+    },
+    {
+      "id": "agent_entrepreneur.workflows",
+      "path": "src/agent_entrepreneur/workflows/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.workflows.checkpoints",
+      "path": "src/agent_entrepreneur/workflows/checkpoints.py"
+    }
+  ],
+  "package": "agent_entrepreneur",
+  "schema_version": 1
+}

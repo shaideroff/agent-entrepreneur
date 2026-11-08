@@ -1,0 +1,49 @@
+name: Security audit
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-audit:
+    name: Python dependency and licence inventory
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project and audit tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'mcp>=1.9,<2' 'pydantic>=2.7,<2.12' 'pytest>=8.0' 'pytest-cov>=5.0' 'ruff>=0.6' 'mypy>=1.10' pip-audit pip-licenses
+      - name: Audit installed dependencies for known vulnerabilities
+        run: pip-audit --local --strict
+      - name: Generate dependency licence inventory
+        run: pip-licenses --format=json --with-urls --with-license-file --output-file=dependency-licenses.json
+      - name: Upload licence inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-licence-inventory
+          path: dependency-licenses.json
+          if-no-files-found: error
+          retention-days: 30
+
+  secret-scan:
+    name: Git history secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan repository history for exposed secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

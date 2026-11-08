@@ -1,0 +1,766 @@
+[
+  {
+    "id": "s-haider-built-from-zero",
+    "name": "S Haider",
+    "region": "South Asia",
+    "domains": [
+      "bootstrapping",
+      "venture building",
+      "early-stage execution"
+    ],
+    "evidence_level": "unverified",
+    "summary": "Founder-contributed Built from Zero methodology: start with available resources, validate a real customer problem, build a first solution, sell, systemise and scale. This is a methodology attribution, not an independently verified public biography.",
+    "attribution": "Founder-contributed methodology; claims require independent corroboration before promotion.",
+    "sources": [
+      {
+        "source_id": "s-haider-built-from-zero-founder-note",
+        "url": null,
+        "title": "Founder-contributed Built from Zero methodology",
+        "publisher": "S Haider",
+        "source_type": "founder_contributed",
+        "accessed_at": "2026-11-09",
+        "supports": "User-provided methodology description; not independently corroborated.",
+        "limitations": [
+          "This is founder-contributed material, not an independently verified biography or outcome record."
+        ]
+      }
+    ],
+    "ventures": [
+      "Built from Zero (founder-contributed methodology)"
+    ],
+    "expertise": [
+      "bootstrapping",
+      "venture building",
+      "early-stage execution"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "low",
+    "updated_at": "2026-11-09"
+  },
+  {
+    "id": "warren-buffett",
+    "name": "Warren Buffett",
+    "region": "North America",
+    "domains": [
+      "capital allocation",
+      "investment"
+    ],
+    "evidence_level": "B",
+    "summary": "Publicly documented investor and capital allocator; use primary shareholder letters and filings to support specific principles.",
+    "attribution": "Reference profile; not an endorsement or imitation.",
+    "sources": [
+      {
+        "source_id": "warren-buffett-source-1",
+        "url": "https://www.berkshirehathaway.com/letters/letters.html",
+        "title": "Berkshire Hathaway shareholder letters",
+        "publisher": "Berkshire Hathaway Inc.",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Traceable reference for the profile of Warren Buffett.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ],
+    "ventures": [
+      "Berkshire Hathaway"
+    ],
+    "expertise": [
+      "capital allocation",
+      "investment"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09"
+  },
+  {
+    "id": "jeff-bezos",
+    "name": "Jeff Bezos",
+    "region": "North America",
+    "domains": [
+      "customer experience",
+      "operations",
+      "scaling"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder reference for studying customer focus, long-term operating mechanisms and scaling decisions through public shareholder letters.",
+    "attribution": "Reference profile; tie claims to individual cited documents.",
+    "sources": [
+      {
+        "source_id": "jeff-bezos-source-1",
+        "url": "https://www.aboutamazon.com/news/company-news/2016-letter-to-shareholders",
+        "title": "Jeffrey P. Bezos — Executive Chair biography",
+        "publisher": "Amazon Investor Relations",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Traceable reference for the profile of Jeff Bezos.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ],
+    "ventures": [
+      "Amazon",
+      "Blue Origin",
+      "The Washington Post"
+    ],
+    "expertise": [
+      "customer experience",
+      "operations",
+      "scaling"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09"
+  },
+  {
+    "id": "sara-blakely",
+    "name": "Sara Blakely",
+    "region": "North America",
+    "domains": [
+      "bootstrapping",
+      "consumer products",
+      "brand building"
+    ],
+    "evidence_level": "C",
+    "summary": "Research profile for studying consumer product entrepreneurship and capital-efficient brand development; verify individual claims before use.",
+    "attribution": "Reference profile; not an endorsement.",
+    "sources": [
+      {
+        "source_id": "sara-blakely-source-1",
+        "url": "https://www.spanx.com/",
+        "title": "SPANX public company reference",
+        "publisher": "SPANX",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Traceable reference for the profile of Sara Blakely.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ],
+    "ventures": [
+      "Spanx"
+    ],
+    "expertise": [
+      "bootstrapping",
+      "consumer products",
+      "brand building"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "low",
+    "updated_at": "2026-11-09"
+  },
+  {
+    "id": "markus-villig",
+    "name": "Markus Villig",
+    "region": "Europe",
+    "domains": [
+      "technology",
+      "mobility",
+      "sales",
+      "market expansion"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder and CEO of Bolt. Bolt's leadership biography describes how he launched the company in 2013, built its first ride-hailing software and recruited its initial drivers in Tallinn.",
+    "attribution": "Bolt published profile; reference material, not endorsement.",
+    "ventures": [
+      "Bolt"
+    ],
+    "expertise": [
+      "technology",
+      "mobility",
+      "sales",
+      "market expansion"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "markus-villig-source-1",
+        "url": "https://bolt.eu/en-gb/company/leadership/",
+        "title": "Bolt leadership team",
+        "publisher": "Bolt",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder and CEO role; company founding and early product and driver recruitment history.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "julian-hearn",
+    "name": "Julian Hearn",
+    "region": "Europe",
+    "domains": [
+      "bootstrapping",
+      "consumer business",
+      "marketing",
+      "brand building"
+    ],
+    "evidence_level": "C",
+    "summary": "Founder of Huel. His first-person company biography describes bootstrapping Huel and his earlier business; financial and performance claims should be checked against independent filings before use.",
+    "attribution": "Huel published profile; reference material, not endorsement.",
+    "ventures": [
+      "Huel",
+      "Mash up Media"
+    ],
+    "expertise": [
+      "bootstrapping",
+      "consumer business",
+      "marketing",
+      "brand building"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "low",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "julian-hearn-source-1",
+        "url": "https://huel.com/pages/julian-hearn",
+        "title": "Julian Hearn's Bio",
+        "publisher": "Huel",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder identity and founder-reported account of building Huel.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "deepinder-goyal",
+    "name": "Deepinder Goyal",
+    "region": "South Asia",
+    "domains": [
+      "consumer business",
+      "technology",
+      "product",
+      "market expansion"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder of Zomato, now Eternal. EY's 2026 World Entrepreneur of the Year finalist profile documents the company's evolution into a multi-business consumer technology platform.",
+    "attribution": "EY published profile; reference material, not endorsement.",
+    "ventures": [
+      "Zomato",
+      "Eternal",
+      "Blinkit"
+    ],
+    "expertise": [
+      "consumer business",
+      "technology",
+      "product",
+      "market expansion"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "deepinder-goyal-source-1",
+        "url": "https://www.ey.com/en_gl/weoy/class-of-2026/india",
+        "title": "EY World Entrepreneur of the Year 2026 finalist — India",
+        "publisher": "EY",
+        "source_type": "independent_secondary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder identity and high-level company history and portfolio.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "anand-deshpande",
+    "name": "Anand Deshpande",
+    "region": "South Asia",
+    "domains": [
+      "technology",
+      "software",
+      "leadership",
+      "product"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder, Chairman and Managing Director of Persistent Systems. The company's board biography describes its growth from a Pune startup into a global digital engineering business.",
+    "attribution": "Persistent Systems published profile; reference material, not endorsement.",
+    "ventures": [
+      "Persistent Systems"
+    ],
+    "expertise": [
+      "technology",
+      "software",
+      "leadership",
+      "product"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "anand-deshpande-source-1",
+        "url": "https://www.persistent.com/company-overview/board-of-directors/anand-deshpande/",
+        "title": "Dr. Anand Deshpande — Board of Directors",
+        "publisher": "Persistent Systems",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder and leadership role; company history as described by the company.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tony-fernandes",
+    "name": "Tony Fernandes",
+    "region": "East and Southeast Asia",
+    "domains": [
+      "consumer business",
+      "operations",
+      "market expansion",
+      "finance"
+    ],
+    "evidence_level": "B",
+    "summary": "Co-founder of AirAsia. AirAsia's newsroom biography describes the 2001 acquisition and relaunch of the airline and its development as a low-cost carrier.",
+    "attribution": "AirAsia Newsroom published profile; reference material, not endorsement.",
+    "ventures": [
+      "AirAsia",
+      "Capital A"
+    ],
+    "expertise": [
+      "consumer business",
+      "operations",
+      "market expansion",
+      "finance"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "tony-fernandes-source-1",
+        "url": "https://newsroom.airasia.com/leadership/tony-fernandes",
+        "title": "Tony Fernandes — Leadership",
+        "publisher": "AirAsia Newsroom",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Co-founder role and AirAsia acquisition and relaunch history.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lei-jun",
+    "name": "Lei Jun",
+    "region": "East and Southeast Asia",
+    "domains": [
+      "technology",
+      "product",
+      "consumer business",
+      "investment"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder, Chairman and CEO of Xiaomi. Xiaomi's investor-relations biography documents his earlier leadership at Kingsoft and founding of Joyo.com.",
+    "attribution": "Xiaomi Corporation published profile; reference material, not endorsement.",
+    "ventures": [
+      "Xiaomi",
+      "Kingsoft",
+      "Joyo.com"
+    ],
+    "expertise": [
+      "technology",
+      "product",
+      "consumer business",
+      "investment"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "lei-jun-source-1",
+        "url": "https://xiaomi.gcs-web.com/board-member-management/lei-jun",
+        "title": "Lei Jun — Board Member and Management",
+        "publisher": "Xiaomi Corporation",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder and executive roles and company history.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mohamed-alabbar",
+    "name": "Mohamed Alabbar",
+    "region": "Middle East",
+    "domains": [
+      "strategy",
+      "market expansion",
+      "consumer business",
+      "operations"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder and Chairman of Emaar Properties. Emaar's board biography documents his role and the group's international real-estate, retail and hospitality interests.",
+    "attribution": "Emaar Properties published profile; reference material, not endorsement.",
+    "ventures": [
+      "Emaar Properties",
+      "Africa Middle East Resources"
+    ],
+    "expertise": [
+      "strategy",
+      "market expansion",
+      "consumer business",
+      "operations"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "mohamed-alabbar-source-1",
+        "url": "https://in.emaar.com/en/about-emaar/board-of-directors/",
+        "title": "Board of Directors",
+        "publisher": "Emaar Properties",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder and chairman role and broad business interests.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mohamed-bin-issa-al-jaber",
+    "name": "Mohamed Bin Issa Al Jaber",
+    "region": "Middle East",
+    "domains": [
+      "manufacturing",
+      "industrial business",
+      "operations",
+      "investment"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder of MBI International Holdings. The group's founder profile documents ventures across construction, hospitality, urban development, food and oil and gas.",
+    "attribution": "MBI International Holdings published profile; reference material, not endorsement.",
+    "ventures": [
+      "MBI International Holdings",
+      "Jadawel",
+      "JJW Hotels & Resorts",
+      "AJWA Group"
+    ],
+    "expertise": [
+      "manufacturing",
+      "industrial business",
+      "operations",
+      "investment"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "mohamed-bin-issa-al-jaber-source-1",
+        "url": "https://www.mbiinternational.com/founders-profile/",
+        "title": "Founder's Profile",
+        "publisher": "MBI International Holdings",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder identity and company portfolio as described by the group.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mo-ibrahim",
+    "name": "Mo Ibrahim",
+    "region": "Africa",
+    "domains": [
+      "technology",
+      "telecommunications",
+      "investment",
+      "leadership"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder of Mobile Systems International and Celtel International, and Founder and Chair of the Mo Ibrahim Foundation. The foundation biography documents his telecommunications and investment career.",
+    "attribution": "Mo Ibrahim Foundation published profile; reference material, not endorsement.",
+    "ventures": [
+      "Mobile Systems International",
+      "Celtel International",
+      "Satya Capital",
+      "Mo Ibrahim Foundation"
+    ],
+    "expertise": [
+      "technology",
+      "telecommunications",
+      "investment",
+      "leadership"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "mo-ibrahim-source-1",
+        "url": "https://mo.ibrahim.foundation/about-us/council/mo-ibrahim",
+        "title": "Mo Ibrahim — Founder and Chair",
+        "publisher": "Mo Ibrahim Foundation",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder roles and career history.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "aliko-dangote",
+    "name": "Aliko Dangote",
+    "region": "Africa",
+    "domains": [
+      "manufacturing",
+      "industrial business",
+      "operations",
+      "capital allocation"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder and Group President of Dangote Group. The company biography describes his progression from trading into large-scale manufacturing and the group's industrial footprint.",
+    "attribution": "Dangote Industries Limited published profile; reference material, not endorsement.",
+    "ventures": [
+      "Dangote Group",
+      "Dangote Cement"
+    ],
+    "expertise": [
+      "manufacturing",
+      "industrial business",
+      "operations",
+      "capital allocation"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "aliko-dangote-source-1",
+        "url": "https://www.dangote.com/about-us/",
+        "title": "About Us",
+        "publisher": "Dangote Industries Limited",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder role and company history.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "marcos-galperin",
+    "name": "Marcos Galperin",
+    "region": "Latin America",
+    "domains": [
+      "technology",
+      "consumer business",
+      "finance",
+      "market expansion"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder of Mercado Libre. The Global Business Hall of Fame profile documents the company's founding and development as an e-commerce and fintech ecosystem in Latin America.",
+    "attribution": "Global Business Hall of Fame published profile; reference material, not endorsement.",
+    "ventures": [
+      "Mercado Libre"
+    ],
+    "expertise": [
+      "technology",
+      "consumer business",
+      "finance",
+      "market expansion"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "marcos-galperin-source-1",
+        "url": "https://www.businesshalloffame.org/marcos-galperin",
+        "title": "Marcos Galperin — 2022 Laureate",
+        "publisher": "Global Business Hall of Fame",
+        "source_type": "independent_secondary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder role and high-level company history.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "david-velez",
+    "name": "David Vélez",
+    "region": "Latin America",
+    "domains": [
+      "finance",
+      "technology",
+      "consumer business",
+      "investment",
+      "growth"
+    ],
+    "evidence_level": "B",
+    "summary": "Founder, Chairman and CEO of Nubank. Nubank's investor-relations biography documents his prior investment experience and founding of the digital financial services company in 2013.",
+    "attribution": "Nubank Investor Relations published profile; reference material, not endorsement.",
+    "ventures": [
+      "Nubank"
+    ],
+    "expertise": [
+      "finance",
+      "technology",
+      "consumer business",
+      "investment",
+      "growth"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "david-velez-source-1",
+        "url": "https://nu.com/en/investors/governance/management-team/",
+        "title": "Management Team — David Vélez",
+        "publisher": "Nubank Investor Relations",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Founder, Chairman and CEO role and professional background.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "melanie-perkins",
+    "name": "Melanie Perkins",
+    "region": "Oceania",
+    "domains": [
+      "product",
+      "technology",
+      "consumer business",
+      "brand building"
+    ],
+    "evidence_level": "B",
+    "summary": "Co-founder and CEO of Canva. Canva's newsroom profile and company updates document her leadership and the company's design-product evolution.",
+    "attribution": "Canva Newsroom published profile; reference material, not endorsement.",
+    "ventures": [
+      "Canva"
+    ],
+    "expertise": [
+      "product",
+      "technology",
+      "consumer business",
+      "brand building"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "melanie-perkins-source-1",
+        "url": "https://www.canva.com/newsroom/news/author/melanie-perkins/",
+        "title": "Melanie Perkins — Co-Founder and CEO",
+        "publisher": "Canva Newsroom",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Co-founder and CEO role and company-published updates.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mike-cannon-brookes",
+    "name": "Mike Cannon-Brookes",
+    "region": "Oceania",
+    "domains": [
+      "technology",
+      "software",
+      "leadership",
+      "investment"
+    ],
+    "evidence_level": "B",
+    "summary": "Co-founder and CEO of Atlassian. Atlassian's investor-relations biography documents his co-founding role and executive history.",
+    "attribution": "Atlassian Investor Relations published profile; reference material, not endorsement.",
+    "ventures": [
+      "Atlassian"
+    ],
+    "expertise": [
+      "technology",
+      "software",
+      "leadership",
+      "investment"
+    ],
+    "methods": [],
+    "decisions": [],
+    "outcomes": [],
+    "confidence": "medium",
+    "updated_at": "2026-11-09",
+    "sources": [
+      {
+        "source_id": "mike-cannon-brookes-source-1",
+        "url": "https://investors.atlassian.com/governance/management-team---board-of-directors/default.aspx",
+        "title": "Board of Directors — Mike Cannon-Brookes",
+        "publisher": "Atlassian Investor Relations",
+        "source_type": "primary",
+        "accessed_at": "2026-11-09",
+        "supports": "Co-founder and executive leadership role.",
+        "limitations": [
+          "This source verifies only the stated profile facts; it does not validate every business method or outcome attributed to the person."
+        ]
+      }
+    ]
+  }
+]

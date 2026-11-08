@@ -1,0 +1,98 @@
+name: Package verification
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-install:
+    name: Build and install distribution (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build twine
+      - name: Build wheel and source distribution
+        run: python -m build
+      - name: Validate distribution metadata
+        run: python -m twine check --strict dist/*
+      - name: Install wheel in a clean virtual environment
+        run: |
+          python -m venv /tmp/agent-entrepreneur-venv
+          /tmp/agent-entrepreneur-venv/bin/python -m pip install --upgrade pip
+          /tmp/agent-entrepreneur-venv/bin/python -m pip install dist/*.whl
+      - name: Smoke-test installed package and CLI entry point
+        run: |
+          /tmp/agent-entrepreneur-venv/bin/python -c "from importlib.metadata import entry_points; from pathlib import Path; from agent_entrepreneur import __version__; from agent_entrepreneur.config import Settings; from agent_entrepreneur.server import create_server; assert __version__ == '1.0.0'; entry = next(ep for ep in entry_points(group='console_scripts') if ep.name == 'agent-entrepreneur'); assert entry.value == 'agent_entrepreneur.server:main'; server = create_server(Settings(database_path=Path('/tmp/agent-entrepreneur-smoke.sqlite3'))); assert callable(server.run)"
+      - name: Exercise installed wheel over real MCP STDIO transport
+        run: |
+          /tmp/agent-entrepreneur-venv/bin/python - <<'PY'
+          import asyncio
+          import json
+          import os
+          from pathlib import Path
+          import tempfile
+
+          from mcp.client.session import ClientSession
+          from mcp.client.stdio import StdioServerParameters, stdio_client
+
+          async def main() -> None:
+              executable = "/tmp/agent-entrepreneur-venv/bin/agent-entrepreneur"
+              with tempfile.TemporaryDirectory() as directory:
+                  env = {
+                      **os.environ,
+                      "AGENT_ENTREPRENEUR_TRANSPORT": "stdio",
+                      "AGENT_ENTREPRENEUR_DB": str(Path(directory) / "installed-wheel.sqlite3"),
+                  }
+                  params = StdioServerParameters(command=executable, args=[], env=env)
+                  async with stdio_client(params) as (read_stream, write_stream):
+                      async with ClientSession(read_stream, write_stream) as session:
+                          initialized = await session.initialize()
+                          assert initialized.serverInfo.name == "Agent Entrepreneur"
+                          tools = await session.list_tools()
+                          names = {tool.name for tool in tools.tools}
+                          expected = {
+                              "understand_business",
+                              "research_market",
+                              "analyse_business",
+                              "evaluate_decision",
+                              "create_execution_plan",
+                              "review_outcomes",
+                              "plan_specialist_workflow",
+                              "complete_specialist_workflow",
+                              "resume_specialist_workflow",
+                              "search_entrepreneurs",
+                              "save_memory",
+                              "search_memory",
+                              "delete_memory",
+                          }
+                          assert expected <= names
+                          result = await session.call_tool(
+                              "understand_business",
+                              {"name": "Installed Wheel Smoke Test", "industry": "software", "geography": "global"},
+                          )
+                          assert result.isError is False
+                          payload = json.loads(result.content[0].text)
+                          assert payload["business"]["name"] == "Installed Wheel Smoke Test"
+
+          asyncio.run(main())
+          PY
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-distributions-${{ matrix.python-version }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,92 @@
+import os
+import sqlite3
+from pathlib import Path
+
+import pytest
+
+from agent_entrepreneur.storage.database import connect
+
+
+def test_context_managed_connection_closes_after_transaction(tmp_path: Path):
+    path = tmp_path / "managed.db"
+    with connect(path) as db:
+        db.execute("SELECT 1")
+    with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+        db.execute("SELECT 1")
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file permissions only")
+def test_database_file_is_created_with_private_permissions(tmp_path: Path):
+    path = tmp_path / "private" / "data.sqlite3"
+    with connect(path) as db:
+        db.execute("SELECT 1")
+    assert path.stat().st_mode & 0o777 == 0o600
+
+
+def test_database_symlink_is_rejected(tmp_path: Path):
+    target = tmp_path / "target.db"
+    target.touch()
+    link = tmp_path / "linked.db"
+    try:
+        link.symlink_to(target)
+    except (OSError, NotImplementedError):
+        pytest.skip("symbolic links are not available")
+    with pytest.raises(ValueError, match="symbolic link"):
+        connect(link)
+
+
+def test_context_managed_connection_rolls_back_on_exception(tmp_path: Path):
+    path = tmp_path / "rollback.db"
+    with pytest.raises(RuntimeError, match="force rollback"):
+        with connect(path) as db:
+            db.execute(
+                "INSERT INTO memory(id, scope, content) VALUES (?, ?, ?)",
+                ("memory-1", "private", "must not persist"),
+            )
+            raise RuntimeError("force rollback")
+
+    with connect(path) as db:
+        row = db.execute("SELECT id FROM memory WHERE id = ?", ("memory-1",)).fetchone()
+    assert row is None
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX directory permissions only")
+def test_new_database_directory_requests_private_permissions(tmp_path: Path):
+    path = tmp_path / "private-dir" / "nested" / "data.sqlite3"
+    with connect(path) as db:
+        db.execute("SELECT 1")
+    assert path.parent.stat().st_mode & 0o777 == 0o700
+
+
+def test_existing_database_permissions_are_tightened(tmp_path: Path):
+    path = tmp_path / "existing.db"
+    path.touch(mode=0o644)
+    with connect(path) as db:
+        db.execute("SELECT 1")
+    if os.name == "posix":
+        assert path.stat().st_mode & 0o777 == 0o600
+
+
+def test_database_path_must_not_be_a_directory(tmp_path: Path):
+    path = tmp_path / "database-dir"
+    path.mkdir()
+    with pytest.raises((ValueError, IsADirectoryError)):
+        connect(path)
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file permissions only")
+def test_active_rollback_journal_uses_private_permissions(tmp_path: Path):
+    path = tmp_path / "journal.db"
+    db = connect(path)
+    try:
+        db.execute("BEGIN")
+        db.execute(
+            "INSERT INTO memory(id, scope, content) VALUES (?, ?, ?)",
+            ("journal-test", "private", "x" * 100_000),
+        )
+        journal = path.with_name(path.name + "-journal")
+        assert journal.exists()
+        assert journal.stat().st_mode & 0o777 == 0o600
+    finally:
+        db.rollback()
+        db.close()
+

@@ -1,0 +1,36 @@
+name: MCP protocol compatibility
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  protocol:
+    name: MCP SDK ${{ matrix.mcp-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mcp-version: ["1.9.0", "latest"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install project with selected MCP SDK version
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${{ matrix.mcp-version }}" = "latest" ]; then
+            python -m pip install -e '.[dev]'
+          else
+            python -m pip install -e '.[dev]' "mcp==${{ matrix.mcp-version }}"
+          fi
+      - name: Run in-memory and real STDIO protocol integration tests
+        run: python -m pytest -q -o addopts="" tests/test_mcp_protocol.py
+      - name: Lint protocol tests
+        run: ruff check tests/test_mcp_protocol.py
