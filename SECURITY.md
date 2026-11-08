@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Security fixes currently apply to the active development branch; no stable release is available.
+Security fixes apply to the active development branch. The v1.0.0 release candidate is not considered a stable release until it is merged and tagged.
 
 ## Reporting
 
@@ -11,7 +11,7 @@ Do not publish exploit details in a public issue. Use the repository owner's pri
 ## Security boundaries
 
 - STDIO is the default transport; HTTP is opt-in and loopback-bound by default.
-- Non-loopback HTTP requires explicit opt-in and authenticated TLS protection at deployment.
+- Non-loopback HTTP binding is disabled, including when the legacy remote opt-in variable is set. Remote authentication and TLS deployment are not implemented.
 - No arbitrary shell execution or unrestricted filesystem access is exposed.
 - Memory writes require explicit consent.
 - Private memory and public knowledge are separate.
