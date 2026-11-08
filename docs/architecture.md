@@ -30,7 +30,7 @@ The MCP workflow tools are:
 - `complete_specialist_workflow`: accept one structured response per planned specialist, validate provenance and persist progress.
 - `resume_specialist_workflow`: validate the original request and ordered plan, reload completed work, and execute only unfinished specialists.
 
-Checkpoint identity is bound to a SHA-256 fingerprint of the objective, context, untrusted material, execution limits and ordered specialist assignments. A mismatched request or plan is rejected. Legacy empty checkpoints can resume only when their objective matches and no specialist output has been completed. Recovery is at-least-once: an interrupted specialist may be invoked again if it had not yet been checkpointed. Executor callbacks must therefore be analysis-only and side-effect-free.
+Checkpoint identity is bound to a SHA-256 fingerprint of the objective, context, untrusted material, execution limits, ordered specialist assignments and canonicalised evidence claim/source registry. A mismatched request or plan is rejected. Legacy empty checkpoints can resume only when their objective matches and no specialist output has been completed. Recovery is at-least-once: an interrupted specialist may be invoked again if it had not yet been checkpointed. Executor callbacks must therefore be analysis-only and side-effect-free.
 
 ## Knowledge and evidence
 
