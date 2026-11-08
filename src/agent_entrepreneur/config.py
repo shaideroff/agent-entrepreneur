@@ -3,11 +3,12 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal, cast
 
 @dataclass(frozen=True, slots=True)
 class Settings:
     database_path: Path
-    transport: str = "stdio"
+    transport: Literal["stdio", "streamable-http"] = "stdio"
     host: str = "127.0.0.1"
     port: int = 8765
     allow_remote_http: bool = False
@@ -16,9 +17,10 @@ class Settings:
     def from_env(cls) -> "Settings":
         default_dir = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share"))
         database_path = Path(os.environ.get("AGENT_ENTREPRENEUR_DB", default_dir / "agent-entrepreneur" / "data.sqlite3"))
-        transport = os.environ.get("AGENT_ENTREPRENEUR_TRANSPORT", "stdio").lower()
-        if transport not in {"stdio", "streamable-http"}:
+        transport_raw = os.environ.get("AGENT_ENTREPRENEUR_TRANSPORT", "stdio").lower()
+        if transport_raw not in {"stdio", "streamable-http"}:
             raise ValueError("AGENT_ENTREPRENEUR_TRANSPORT must be 'stdio' or 'streamable-http'")
+        transport = cast(Literal["stdio", "streamable-http"], transport_raw)
         host = os.environ.get("AGENT_ENTREPRENEUR_HOST", "127.0.0.1")
         port = int(os.environ.get("AGENT_ENTREPRENEUR_PORT", "8765"))
         allow_remote = os.environ.get("AGENT_ENTREPRENEUR_ALLOW_REMOTE_HTTP", "false").lower() == "true"
