@@ -111,7 +111,7 @@ class Orchestrator:
                         status="running",
                         state={
                             "objective": request.objective,
-                    "request_fingerprint": request_fingerprint,
+                            "request_fingerprint": request_fingerprint,
                             "completed_steps": index,
                             "specialists_consulted": [item.specialist_id for item in responses],
                             "responses": [_response_state(item) for item in responses],
@@ -152,7 +152,7 @@ class Orchestrator:
                 status=checkpoint_status,
                 state={
                     "objective": request.objective,
-                            "request_fingerprint": request_fingerprint,
+                    "request_fingerprint": request_fingerprint,
                     "completed_steps": len(responses),
                     "specialists_consulted": [item.specialist_id for item in responses],
                     "responses": [_response_state(item) for item in responses],
@@ -180,13 +180,22 @@ class Orchestrator:
         selected = tuple(specialists[:request.max_specialists])
         expected_fingerprint = _request_fingerprint(request, selected)
         saved_fingerprint = checkpoint.state.get("request_fingerprint")
-        if not isinstance(saved_fingerprint, str) or saved_fingerprint != expected_fingerprint:
-            raise ValueError(
-                "resume request or specialist plan does not match the saved workflow"
-            )
         raw_responses = checkpoint.state.get("responses", [])
         if not isinstance(raw_responses, list):
             raise ValueError("checkpoint responses are invalid")
+        if saved_fingerprint is None and not raw_responses:
+            # Older empty checkpoints contain no completed specialist output to reuse.
+            saved_objective = checkpoint.state.get("objective")
+            if saved_objective != request.objective:
+                raise ValueError("resume objective must match the saved workflow objective")
+        elif (
+            not isinstance(saved_fingerprint, str)
+            or saved_fingerprint != expected_fingerprint
+        ):
+            raise ValueError(
+                "resume objective must match; request or specialist plan does not match "
+                "the saved workflow"
+            )
         prior = tuple(_response_from_state(item) for item in raw_responses)
         return self.run(
             request, specialists, executor, checkpoint_store,
