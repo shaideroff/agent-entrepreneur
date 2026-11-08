@@ -21,6 +21,6 @@ def test_server_registers_six_tools_resources_and_prompts(monkeypatch):
     from pathlib import Path
     from agent_entrepreneur.config import Settings
     module.create_server(Settings(database_path=Path("/tmp/agent-entrepreneur-test.db")))
-    assert registered["tools"] == ["understand_business", "research_market", "analyse_business_model", "evaluate_decision_options", "create_execution_plan", "review_outcomes"]
+    assert registered["tools"] == ["understand_business", "research_market", "analyse_business", "evaluate_decision", "create_execution_plan", "review_outcomes"]
     assert len(registered["resources"]) == 2
     assert len(registered["prompts"]) == 3
