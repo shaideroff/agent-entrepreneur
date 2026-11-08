@@ -90,4 +90,4 @@ A successful connection only confirms MCP protocol connectivity. The host perfor
 
 STDIO is the supported default. Local Streamable HTTP is loopback-only. Non-loopback HTTP binding is disabled until an authenticated remote deployment is implemented and tested. Do not expose the server to a network by changing the bind host or relying on the legacy remote opt-in setting.
 
-Client-specific configuration locations and compatibility vary by client release. The repository's protocol tests validate the MCP STDIO contract against MCP SDK 1.9.0 and the latest SDK in CI; they do not certify every third-party host/version combination.
+Use the [specialist workflow protocol](specialist-workflows.md) for the plan/complete/resume lifecycle, structured findings and provenance requirements. Client-specific configuration locations and compatibility vary by client release. The repository's protocol tests validate the MCP STDIO contract against MCP SDK 1.9.0 and the latest SDK in CI; they do not certify every third-party host/version combination.
