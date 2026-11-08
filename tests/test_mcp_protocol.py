@@ -233,7 +233,10 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "search_entrepreneurs", {"query": "Canva", "region": "Oceania"}
             )
             assert profile_result.isError is False
-            profiles = json.loads(profile_result.content[0].text)
+            profiles_payload = json.loads(profile_result.content[0].text)
+            # MCP SDK versions may wrap list tool results in a structured result object.
+            profiles = profiles_payload.get("result", profiles_payload) if isinstance(profiles_payload, dict) else profiles_payload
+            assert isinstance(profiles, list)
             assert profiles[0]["name"] == "Melanie Perkins"
 
             denied_memory = await session.call_tool(
