@@ -2,6 +2,10 @@
 
 <p align="center"><img src="assets/branding/agent-entrepreneur-logo.svg" alt="Agent Entrepreneur — An Open-Source AI System for Entrepreneurs" width="760" /></p>
 
+<p align="center"><img src="assets/branding/agent-entrepreneur-global-banner.jpg" alt="Agent Entrepreneur global banner featuring S Haider as Founder and Builder, with a global entrepreneur portrait gallery and the Research, Analyze, Plan, Execute, Learn workflow." width="100%" /></p>
+
+<p align="center"><sub>Editorial brand artwork. Portraits are illustrative and do not imply endorsement, partnership or affiliation.</sub></p>
+
 **Version 1.0.0** · Apache-2.0 · [Changelog](CHANGELOG.md)
 
 **A local-first, model-independent MCP server for entrepreneurial intelligence.**
