@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import sqlite3
 from pathlib import Path
+from types import TracebackType
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -30,7 +31,12 @@ def _prepare_database_file(path: Path) -> None:
 class ManagedConnection(sqlite3.Connection):
     """Commit or roll back on context exit, then always release the file handle."""
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> bool:
         try:
             return super().__exit__(exc_type, exc_value, traceback)
         finally:
