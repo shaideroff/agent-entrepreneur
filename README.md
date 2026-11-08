@@ -19,7 +19,7 @@ Agent Entrepreneur helps a connected AI client structure business context, prepa
 
 ## Capabilities
 
-Six core MCP tools: `understand_business`, `research_market`, `analyse_business`, `evaluate_decision`, `create_execution_plan`, `review_outcomes`.
+Six core business tools: `understand_business`, `research_market`, `analyse_business`, `evaluate_decision`, `create_execution_plan`, and `review_outcomes`. Additional MCP tools expose the specialist workflow lifecycle (`plan_specialist_workflow`, `complete_specialist_workflow`, `resume_specialist_workflow`), searchable entrepreneur profiles (`search_entrepreneurs`), and consent-gated local memory (`save_memory`, `search_memory`, `delete_memory`). The connected MCP client performs model reasoning and submits structured specialist responses; the server validates provenance, checkpoints work and consolidates results.
 
 The server also exposes entrepreneur and specialist catalogue resources plus reusable business-diagnosis, market-entry and founder-execution prompts. The specialist catalogue contains 12 analytical disciplines: Founder & Bootstrapping; Technology & AI Entrepreneurship; Product & Innovation; Sales & Revenue Growth; Marketing & Brand Building; Finance & Capital Allocation; Operations & Supply Chain; Manufacturing & Industrial Business; Leadership & Organisation; Strategy & Market Expansion; Consumer & D2C Business; and Investment & Fundraising.
 
