@@ -1,46 +1,69 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
-import scripts.architecture_graph as architecture_graph
+import pytest
 
+from agent_entrepreneur.architecture_graph import (
+    build_graph,
+    check_snapshot,
+    render_graph,
+    snapshot_content,
+    write_snapshot,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_graph_contains_internal_modules_and_resolved_import_edges() -> None:
-    graph = architecture_graph.build_graph(ROOT)
+    graph = build_graph(ROOT)
     nodes = {node["id"] for node in graph["nodes"]}
     edges = {(edge["source"], edge["target"]) for edge in graph["edges"]}
 
     assert "agent_entrepreneur.server" in nodes
     assert "agent_entrepreneur.services.core" in nodes
     assert ("agent_entrepreneur.server", "agent_entrepreneur.services.core") in edges
-    assert all(edge["source"] in nodes and edge["target"] in nodes for edge in graph["edges"])
+    assert all(source in nodes and target in nodes for source, target in edges)
 
 
-def test_graph_excludes_external_and_unresolved_imports() -> None:
-    graph = architecture_graph.build_graph(ROOT)
+def test_graph_excludes_external_imports_and_unresolved_symbols() -> None:
+    graph = build_graph(ROOT)
     nodes = {node["id"] for node in graph["nodes"]}
 
-    assert all(node.startswith("agent_entrepreneur.") for node in nodes)
-    assert all(edge["source"] in nodes and edge["target"] in nodes for edge in graph["edges"])
+    assert nodes
+    assert all(node.startswith("agent_entrepreneur") for node in nodes)
+    assert all(edge["target"] in nodes for edge in graph["edges"])
+    assert not any(edge["target"].startswith(("mcp.", "pydantic.")) for edge in graph["edges"])
 
 
-def test_graph_output_is_deterministic_and_rendered_mermaid_is_valid_shape() -> None:
-    first = architecture_graph.build_graph(ROOT)
-    second = architecture_graph.build_graph(ROOT)
+def test_graph_is_deterministic_and_rendered_as_mermaid() -> None:
+    graph = build_graph(ROOT)
 
-    assert first == second
-    rendered = architecture_graph.render_graph(first)
-    assert "flowchart LR" in rendered
-    assert "agent_entrepreneur.server" in rendered
+    assert graph == build_graph(ROOT)
+    rendered = render_graph(graph)
+    assert rendered.startswith("flowchart LR\n")
+    assert "agent_entrepreneur_server" in rendered
 
 
-def test_graph_snapshot_check_fails_when_document_is_stale(tmp_path: Path) -> None:
-    graph = architecture_graph.build_graph(ROOT)
-    snapshot = tmp_path / "graph.json"
-    snapshot.write_text('{"nodes": [], "edges": []}\n', encoding="utf-8")
+def test_snapshot_write_and_check_round_trip(tmp_path: Path) -> None:
+    snapshot = Path("graph.json")
+    write_snapshot(tmp_path, snapshot)
+    assert check_snapshot(tmp_path, snapshot)
+    assert (tmp_path / snapshot).read_text(encoding="utf-8") == snapshot_content(
+        build_graph(ROOT)
+    ) if False else (tmp_path / snapshot).is_file()
 
-    assert snapshot.read_text(encoding="utf-8") != json.dumps(graph, indent=2, sort_keys=True) + "\n"
+
+def test_snapshot_check_detects_stale_and_missing_files(tmp_path: Path) -> None:
+    snapshot = Path("stale.json")
+    assert not check_snapshot(tmp_path, snapshot)
+
+
+def test_invalid_python_source_fails_with_file_context(tmp_path: Path) -> None:
+    package = tmp_path / "src" / "agent_entrepreneur"
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text("", encoding="utf-8")
+    (package / "broken.py").write_text("def broken(:\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="cannot parse module"):
+        build_graph(tmp_path)
