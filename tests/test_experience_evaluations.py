@@ -11,6 +11,9 @@ ROOT = Path(__file__).parent / "evaluations" / "experience_agents"
 def test_pilot_evaluation_suite_covers_required_scenarios_for_each_agent() -> None:
     suite = json.loads((ROOT / "pilot_eval_cases.json").read_text(encoding="utf-8"))
     assert suite["suite_version"] == "1.0.0"
+    assert len(suite["cases"]) == len(suite["agents"]) * 6
+    assert len({case["case_id"] for case in suite["cases"]}) == len(suite["cases"])
+    assert all(case["required_traits"] for case in suite["cases"])
     expected = {
         "in_domain",
         "out_of_domain",
