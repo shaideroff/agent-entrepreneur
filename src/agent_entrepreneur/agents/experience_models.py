@@ -94,10 +94,11 @@ class ExperienceDossier(BaseModel):
         if len(set(case_ids)) != len(case_ids):
             raise ValueError("Decision case identifiers must be unique within a dossier")
         referenced = {
-            source_id
-            for item in [*self.principles, *self.decision_cases]
-            for source_id in item.source_ids
+            source_id for item in self.principles for source_id in item.source_ids
         }
+        referenced.update(
+            source_id for item in self.decision_cases for source_id in item.source_ids
+        )
         missing = referenced - source_ids
         if missing:
             raise ValueError(f"Unknown source identifiers: {sorted(missing)}")
