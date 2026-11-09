@@ -10,7 +10,7 @@ All 12 catalogue entries currently have lifecycle status `preview`. This is inte
 
 ### `prepare_experience_agent_work_packet`
 
-Inputs: an agent ID, objective, optional business context and constraints. For a catalogue entry with a validated dossier, returns a structured work packet containing the dossier, source IDs, host instructions and required response fields. The first-party Built from Zero dossier is available in Preview mode. Other entries without a dossier return `not_ready`; the system does not invent dossiers to make the directory appear complete.
+Inputs: an agent ID, objective, optional business context and constraints. For a catalogue entry with a validated dossier, returns a structured work packet containing the dossier, source IDs, host instructions and required response fields. The first-party Built from Zero dossier and a public-source Jeff Bezos dossier are available in Preview mode. Other entries without a dossier return `not_ready`; the system does not invent dossiers to make the directory appear complete.
 
 ### `discover_experience_agents`
 
