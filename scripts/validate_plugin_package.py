@@ -122,7 +122,7 @@ def validate_tree(root: Path) -> dict[str, int]:
     negative = cases.get("negative_cases", [])
     if len(positive) < 5 or len(negative) < 3:
         fail("reviewer case pack needs at least five positive and three negative cases")
-    for required in ("README.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
+    for required in ("README.md", "INSTALL.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
         if not (root / required).is_file():
             fail(f"missing release file: {required}")
     return {"skills": len(skill_dirs), "positive_cases": len(positive), "negative_cases": len(negative), "assets": len(assets)}
