@@ -10,6 +10,13 @@ from mcp.client.session import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 
+def _decode_tool_payload(result):
+    payload = json.loads(result.content[0].text)
+    if isinstance(payload, dict) and "result" in payload:
+        return payload["result"]
+    return payload
+
+
 @pytest.fixture
 def anyio_backend() -> str:
     return "asyncio"
@@ -59,14 +66,14 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "discover_experience_agents", {"query": "Built from Zero"}
             )
             assert discovered.isError is False
-            directory_payload = json.loads(discovered.content[0].text)
+            directory_payload = _decode_tool_payload(discovered)
             assert directory_payload[0]["agent_id"] == "built_from_zero"
 
             founder_profile = await session.call_tool(
                 "get_experience_agent_profile", {"agent_id": "built_from_zero"}
             )
             assert founder_profile.isError is False
-            founder_payload = json.loads(founder_profile.content[0].text)
+            founder_payload = _decode_tool_payload(founder_profile)
             assert founder_payload["dossier"]["agent_id"] == "built_from_zero"
 
             lead_route = await session.call_tool(
@@ -74,7 +81,7 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 {"objective": "Evaluate a hyperlocal mobility marketplace."},
             )
             assert lead_route.isError is False
-            lead_payload = json.loads(lead_route.content[0].text)
+            lead_payload = _decode_tool_payload(lead_route)
             assert "markus_villig" in {
                 item["agent_id"] for item in lead_payload["selected_agents"]
             }
@@ -84,7 +91,7 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 {"agent_id": "jeff_bezos", "objective": "Assess customer-led scale."},
             )
             assert work_packet.isError is False
-            assert json.loads(work_packet.content[0].text)["status"] == "preview_work_packet"
+            assert _decode_tool_payload(work_packet)["status"] == "preview_work_packet"
 
             council = await session.call_tool(
                 "synthesize_experience_agent_council",
@@ -105,7 +112,7 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 },
             )
             assert council.isError is False
-            council_payload = json.loads(council.content[0].text)
+            council_payload = _decode_tool_payload(council)
             assert council_payload["challenges"][0]["severity"] == "high"
 
             resources = await session.list_resources()
