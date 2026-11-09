@@ -1,0 +1,78 @@
+name: Free local model evaluation — six experience-agent dossiers
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/experience-agent-local-model-eval.yml"
+      - "scripts/run_local_model_evaluation.py"
+      - "tests/evaluations/experience_agents/pilot_eval_prompts.json"
+      - "tests/evaluations/experience_agents/pilot_eval_cases.json"
+      - "src/agent_entrepreneur/agents/dossiers/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-model-eval-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  local-model-evaluation:
+    name: Qwen3.5 generation + Granite cross-model triage
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      OLLAMA_HOST: http://127.0.0.1:11434
+      GENERATOR_MODEL: qwen3.5:4b
+      JUDGE_MODEL: granite3.3:2b
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Ollama runtime
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --retry-delay 2 \
+            -o ollama-linux-amd64.tar.zst \
+            https://github.com/ollama/ollama/releases/download/v0.40.14/ollama-linux-amd64.tar.zst
+          echo "993e83d08c3d13d17c55009a3e2664c8a25445e644aec3a68bef5abb6abce67d  ollama-linux-amd64.tar.zst" | sha256sum -c -
+          command -v zstd >/dev/null || (sudo apt-get update && sudo apt-get install -y zstd)
+          sudo tar --zstd -xf ollama-linux-amd64.tar.zst -C /usr
+          ollama --version
+      - name: Start loopback-only Ollama service
+        run: |
+          set -euo pipefail
+          OLLAMA_HOST=127.0.0.1:11434 ollama serve > "${RUNNER_TEMP}/ollama.log" 2>&1 &
+          echo $! > "${RUNNER_TEMP}/ollama.pid"
+          for attempt in $(seq 1 120); do
+            if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat "${RUNNER_TEMP}/ollama.log"
+          exit 1
+      - name: Pull pinned model tags
+        run: |
+          ollama pull qwen3.5:4b
+          ollama pull granite3.3:2b
+          curl -fsS http://127.0.0.1:11434/api/tags > "${RUNNER_TEMP}/ollama-model-tags.json"
+      - name: Execute all 36 prompts and cross-model judge
+        run: |
+          python scripts/run_local_model_evaluation.py --output-dir "${RUNNER_TEMP}/experience-agent-evaluation"
+          python scripts/experience_agent_eval_report.py "${RUNNER_TEMP}/experience-agent-evaluation/evaluation-run-manifest.json" --output "${RUNNER_TEMP}/experience-agent-evaluation/report.md"
+          cp "${RUNNER_TEMP}/ollama-model-tags.json" "${RUNNER_TEMP}/experience-agent-evaluation/"
+      - name: Upload generated outputs and evaluation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experience-agent-local-model-evaluation-${{ github.run_id }}
+          path: ${{ runner.temp }}/experience-agent-evaluation/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Stop local inference service
+        if: always()
+        run: |
+          if [ -f "${RUNNER_TEMP}/ollama.pid" ]; then
+            kill "$(cat "${RUNNER_TEMP}/ollama.pid")" || true
+          fi
