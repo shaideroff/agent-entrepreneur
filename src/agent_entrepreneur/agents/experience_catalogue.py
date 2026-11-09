@@ -153,14 +153,23 @@ def recommend_experience_agents(
                 **agent.model_dump(mode="json"),
                 "matched_domains": matched,
                 "selection_rationale": (
-                    "Selected because its published experience domains match the supplied "
-                    "task domains; the agent remains Preview."
+                    "Selected because published experience domains match explicit task domains "
+                    "or deterministic objective-keyword hints; the agent remains Preview."
                 ),
             }
             for _, agent, matched in selected
         ],
         "unmatched_domains": sorted(
-            terms - {domain.casefold() for _, _, matched in selected for domain in matched}
+            terms - {
+                term
+                for term in terms
+                if any(
+                    agent_domain.casefold() == term
+                    or term in aliases.get(agent_domain, set())
+                    for _, agent, _ in selected
+                    for agent_domain in agent.domains
+                )
+            }
         ),
         "execution_boundary": (
             "The server recommends catalogue entries only. The connected MCP host supplies "
