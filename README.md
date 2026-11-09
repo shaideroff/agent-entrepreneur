@@ -96,8 +96,3 @@ See [MCP client setup and client compatibility status](docs/client-setup.md), [s
 ## Licence
 
 Apache-2.0. See [LICENSE](LICENSE).
-
-
-## ChatGPT and Codex Plugin
-
-A Skills-only companion package is being prepared under [plugins/agent-entrepreneur](plugins/agent-entrepreneur/). It provides business diagnosis, market research, decision evaluation, and execution planning/review workflows. This package does not bundle a hosted MCP service; the separate Python/MCP server remains a distinct distribution. See its [release status](plugins/agent-entrepreneur/RELEASE-STATUS.md) before installing or submitting it.
