@@ -98,7 +98,7 @@ def test_unexecuted_model_manifest_cannot_be_mistaken_for_a_pass() -> None:
         assert record["trait_results"] == []
         assert record["rubric_results"] == []
 
-def test_evaluation_report_marks_empty_run_as_not_run(tmp_path: Path) -> None:
+def test_evaluation_report_marks_empty_run_as_not_run() -> None:
     manifest_path = ROOT / "pilot_eval_run_manifest.template.json"
     result = subprocess.run(
         [sys.executable, "scripts/experience_agent_eval_report.py", str(manifest_path)],
