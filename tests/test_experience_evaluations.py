@@ -39,3 +39,8 @@ def test_each_pilot_dossier_meets_minimum_structural_release_gates() -> None:
         assert all(set(item["source_ids"]) <= source_ids for item in dossier["principles"])
         assert all(set(item["source_ids"]) <= source_ids for item in dossier["decision_cases"])
         assert dossier["non_affiliation_notice"]
+        assert dossier["owner"]
+        assert dossier["reviewer"] == "Independent review pending"
+        assert dossier["last_verified_at"] == "2026-11-09"
+        assert dossier["next_review_at"]
+        assert dossier["evaluation_refs"] == ["experience-agent-pilot-structural-v1"]
