@@ -11,7 +11,11 @@ from mcp.client.stdio import StdioServerParameters, stdio_client
 
 
 def _decode_tool_payload(result):
-    payload = json.loads(result.content[0].text)
+    blocks = [block for block in result.content if hasattr(block, "text")]
+    decoded = [json.loads(block.text) for block in blocks]
+    if len(decoded) > 1:
+        return decoded
+    payload = decoded[0]
     if isinstance(payload, dict) and "result" in payload:
         return payload["result"]
     return payload
