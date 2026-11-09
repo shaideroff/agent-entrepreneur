@@ -164,7 +164,7 @@ def main() -> None:
         artifact = dist_dir / "agent-entrepreneur-1.0.0.zip"
         artifact.write_bytes(first.read_bytes())
         checksum = artifact.with_suffix(".zip.sha256")
-        checksum.write_text(f"{hash_one}  {artifact.name}\\n", encoding="utf-8")
+        checksum.write_text(f"{hash_one}  {artifact.name}\n", encoding="utf-8")
         print(f"PASS: {stats['skills']} Skills; {stats['positive_cases']} positive and {stats['negative_cases']} negative reviewer cases; {stats['assets']} SVG asset checks")
         print(f"PASS: deterministic ZIP SHA256 {hash_one}")
         print("PASS: fresh extraction revalidated")
