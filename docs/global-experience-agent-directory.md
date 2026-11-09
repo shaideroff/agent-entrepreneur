@@ -23,6 +23,10 @@ Input: `agent_id`.
 
 Returns one catalogue entry. Unknown IDs produce a validation error.
 
+### `synthesize_experience_agent_council`
+
+Inputs include the objective, one to five host-produced agent contributions, a recommendation, agreements, disagreements and unresolved questions. The server validates the contribution structure and known agent IDs, then returns one synthesis object that preserves disagreement. It does not generate or independently verify the contributions.
+
 ### `recommend_experience_agent_council`
 
 Inputs:
