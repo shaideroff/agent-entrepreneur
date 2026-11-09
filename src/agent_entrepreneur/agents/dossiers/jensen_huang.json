@@ -64,7 +64,8 @@
       "outcome": "NVIDIA's filing describes CUDA and related software as foundational to its accelerated-computing platform and later AI workloads. This is the company's own account of its strategy and outcomes.",
       "source_ids": [
         "jh-sec-2024-10k",
-        "jh-nvidia-cnbc-2023"
+        "jh-nvidia-cnbc-2023",
+        "jh-cuda-guide"
       ],
       "evidence_status": "partially_supported",
       "limitations": [
@@ -104,6 +105,15 @@
       "accessed_at": "2026-11-09",
       "source_type": "secondary",
       "notes": "Summarises an interview with Jensen Huang about the company's shift from graphics to general-purpose GPU computing and CUDA."
+    },
+    {
+      "source_id": "jh-cuda-guide",
+      "title": "CUDA Programming Guide — Introduction",
+      "url": "https://docs.nvidia.com/cuda/archive/13.4.3/cuda-programming-guide/01-introduction/introduction.html",
+      "publisher": "NVIDIA Documentation",
+      "accessed_at": "2026-11-10",
+      "source_type": "primary",
+      "notes": "NVIDIA's technical documentation states that CUDA was introduced in 2006 to enable computational workloads to use GPU throughput independent of graphics APIs."
     }
   ],
   "counter_evidence": [
