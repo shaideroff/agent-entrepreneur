@@ -12,7 +12,6 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1] / "plugins" / "agent-entrepreneur"
-MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
 
 
 def fail(message: str) -> None:
@@ -34,10 +33,11 @@ def safe_relative(root: Path, value: str) -> Path:
 
 
 def validate_tree(root: Path) -> dict[str, int]:
-    manifest_path = root / ".codex-plugin" / "plugin.json"
+    manifest_dir = root / ".codex-plugin"
+    manifest_path = manifest_dir / "plugin.json"
     if not manifest_path.is_file():
         fail("missing .codex-plugin/plugin.json")
-    manifest_dir_files = [p.name for p in (root / ".codex-plugin").iterdir() if p.is_file()]
+    manifest_dir_files = sorted(p.name for p in manifest_dir.iterdir() if p.is_file())
     if manifest_dir_files != ["plugin.json"]:
         fail(".codex-plugin must contain plugin.json only")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -46,10 +46,11 @@ def validate_tree(root: Path) -> dict[str, int]:
             fail(f"manifest missing {field}")
     if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", manifest["name"]):
         fail("plugin name must be kebab-case")
-    if not re.fullmatch(r"\\d+\\.\\d+\\.\\d+", manifest["version"]):
+    if not re.fullmatch(r"\d+\.\d+\.\d+", manifest["version"]):
         fail("plugin version must be strict semver")
     interface = manifest["interface"]
-    for field in ("displayName", "shortDescription", "longDescription", "developerName", "category", "websiteURL", "privacyPolicyURL", "termsOfServiceURL", "composerIcon", "logo"):
+    required_fields = ("displayName", "shortDescription", "longDescription", "developerName", "category", "websiteURL", "privacyPolicyURL", "termsOfServiceURL", "composerIcon", "logo")
+    for field in required_fields:
         if not interface.get(field):
             fail(f"interface missing {field}")
     if len(interface["shortDescription"]) > 30:
@@ -65,13 +66,17 @@ def validate_tree(root: Path) -> dict[str, int]:
     for asset in assets:
         try:
             tree = ET.parse(asset)
-        except ET.ParseError as exc:
+        except (ET.ParseError, OSError) as exc:
             fail(f"invalid SVG/XML at {asset.relative_to(root)}: {exc}")
         svg = tree.getroot()
         if not svg.tag.endswith("svg"):
             fail(f"asset is not SVG: {asset.relative_to(root)}")
         viewbox = svg.attrib.get("viewBox", "").split()
-        if len(viewbox) != 4 or float(viewbox[2]) != float(viewbox[3]):
+        try:
+            square = len(viewbox) == 4 and float(viewbox[2]) == float(viewbox[3])
+        except ValueError:
+            square = False
+        if not square:
             fail(f"asset must have square numeric viewBox: {asset.relative_to(root)}")
         for node in svg.iter():
             if node.tag.split("}")[-1].lower() in {"script", "image", "foreignobject"}:
@@ -80,7 +85,12 @@ def validate_tree(root: Path) -> dict[str, int]:
                 if key.lower().endswith("href") and not value.startswith("#"):
                     fail(f"external SVG reference in {asset.relative_to(root)}")
 
-    skills_dir = safe_relative(root, manifest["skills"].rstrip("/"))
+    skills_value = manifest["skills"]
+    if not isinstance(skills_value, str) or not skills_value.startswith("./") or ".." in Path(skills_value).parts:
+        fail("skills path must be a safe package-relative path")
+    skills_dir = (root / skills_value.rstrip("/")).resolve()
+    if root.resolve() not in skills_dir.parents or not skills_dir.is_dir():
+        fail("skills path must resolve to a directory inside the package")
     skill_dirs = sorted(p for p in skills_dir.iterdir() if p.is_dir())
     if not skill_dirs:
         fail("no Skill directories found")
@@ -90,14 +100,14 @@ def validate_tree(root: Path) -> dict[str, int]:
         if not skill_file.is_file():
             fail(f"missing SKILL.md in {skill_dir.name}")
         content = skill_file.read_text(encoding="utf-8")
-        if not content.startswith("---\\n"):
+        if not content.startswith("---\n"):
             fail(f"missing YAML frontmatter in {skill_file}")
-        end = content.find("\\n---", 4)
+        end = content.find("\n---", 4)
         if end < 0:
             fail(f"unterminated YAML frontmatter in {skill_file}")
         frontmatter = content[4:end]
-        name_match = re.search(r"^name:\\s*(.+)$", frontmatter, re.M)
-        desc_match = re.search(r"^description:\\s*(.+)$", frontmatter, re.M)
+        name_match = re.search(r"^name:\s*(.+)$", frontmatter, re.M)
+        desc_match = re.search(r"^description:\s*(.+)$", frontmatter, re.M)
         if not name_match or not desc_match:
             fail(f"Skill requires name and description: {skill_file}")
         name = name_match.group(1).strip()
@@ -108,12 +118,14 @@ def validate_tree(root: Path) -> dict[str, int]:
             fail(f"empty Skill description: {skill_file}")
 
     cases = json.loads((root / "submission" / "reviewer-cases.json").read_text(encoding="utf-8"))
-    if len(cases.get("positive_cases", [])) < 5 or len(cases.get("negative_cases", [])) < 3:
+    positive = cases.get("positive_cases", [])
+    negative = cases.get("negative_cases", [])
+    if len(positive) < 5 or len(negative) < 3:
         fail("reviewer case pack needs at least five positive and three negative cases")
     for required in ("README.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
         if not (root / required).is_file():
             fail(f"missing release file: {required}")
-    return {"skills": len(skill_dirs), "positive_cases": len(cases["positive_cases"]), "negative_cases": len(cases["negative_cases"]), "assets": len(assets)}
+    return {"skills": len(skill_dirs), "positive_cases": len(positive), "negative_cases": len(negative), "assets": len(assets)}
 
 
 def make_zip(root: Path, destination: Path) -> str:
