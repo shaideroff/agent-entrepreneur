@@ -31,6 +31,7 @@ def test_each_pilot_dossier_meets_minimum_structural_release_gates() -> None:
         dossier = get_experience_agent(agent_id)["dossier"]
         assert dossier["principles"]
         assert dossier["decision_cases"]
+        assert all(case["decision_date"] for case in dossier["decision_cases"])
         assert dossier["sources"]
         assert dossier["counter_evidence"]
         assert dossier["transfer_conditions"]
