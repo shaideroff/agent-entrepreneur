@@ -62,5 +62,6 @@
     "status": "pending_owner_selection",
     "guidance": "Select only countries or regions where the verified publisher, product support process, and legal terms are ready. Do not infer worldwide availability."
   },
-  "submissionStatus": "not_submitted"
+  "submissionStatus": "not_submitted",
+  "reviewerResultsTemplatePath": "submission/reviewer-results.template.json"
 }
