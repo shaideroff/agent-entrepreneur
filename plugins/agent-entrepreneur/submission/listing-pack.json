@@ -51,7 +51,7 @@
   "missingOrBlocking": [
     "Verify developer identity and Apps Management write access in the OpenAI Platform.",
     "Ensure privacy, terms and support URLs resolve from the default branch after merge.",
-    "Execute the internal five-positive/three-negative golden-case QA suite on the exact packaged Skill tree; this is an additional quality gate, not an MCP reviewer requirement for this Skills-only package.",
+    "Execute and record all five positive and three negative test cases against the exact packaged Skill tree. These are required submission materials for Skills-only and MCP-backed plugins.",
     "Run Plugin Autopilot package validation, deterministic packaging and clean-extraction validation.",
     "Smoke-install and test in the supported ChatGPT and Codex surfaces available to the publisher.",
     "Submit through the official Plugin submission portal and wait for approval before publication."
