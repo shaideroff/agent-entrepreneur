@@ -24,7 +24,7 @@
 
 ## Not claimed
 
-- GitHub Actions generated a Plugin ZIP and the repository's custom package validator passed on Python 3.11 and 3.12. The archive was built twice per runtime, compared byte-for-byte, extracted to a clean directory and revalidated. The Python 3.11 and 3.12 inner Plugin ZIPs were byte-identical (SHA256 at the validated commit: c9ecea9a300dc6546eae9adc63182b7b2b30389d20fed033b10f190432e00b30). Rebuild after any package-content change.
+- GitHub Actions generated a Plugin ZIP and the repository's custom package validator passed on Python 3.11 and 3.12. The archive was built twice per runtime, compared byte-for-byte, extracted to a clean directory and revalidated. The Python 3.11 and 3.12 inner Plugin ZIPs were byte-identical. The current archive SHA256 is recorded in the PR description and release checksum sidecar; rebuild after any package-content change.
 - No ChatGPT/Codex app install smoke test has been run. CI clean-extraction validation passed.
 - Reviewer cases have not been executed.
 - The OpenAI Platform identity verification state is unknown.
