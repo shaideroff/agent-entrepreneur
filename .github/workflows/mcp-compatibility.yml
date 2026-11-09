@@ -1,7 +1,7 @@
 name: MCP protocol compatibility
 on:
   push:
-    branches: [main, "feat/**"]
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
