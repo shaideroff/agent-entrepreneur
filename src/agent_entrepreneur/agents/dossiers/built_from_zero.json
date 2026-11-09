@@ -40,7 +40,24 @@
       ]
     }
   ],
-  "decision_cases": [],
+  "decision_cases": [
+    {
+      "case_id": "bfz-case-001",
+      "title": "Testing a zero-upfront college-fest retail experiment",
+      "context": "In 2017, during the founder's first year of college, S Haider organised a three-day college-fest selling experiment. The initial model relied on credit/consignment rather than purchasing inventory upfront; friends helped with final-day selling.",
+      "decision": "Test demand in a time-bounded campus event using supplier/partner inventory access and direct selling, then use a low-cost promotional stunt to attract attention rather than committing to a permanent retail setup.",
+      "outcome": "The founder's account records approximately ₹2,500 in sales on day two and approximately ₹55,000 in final sales/proceeds by the end of the event, with roughly ten friends helping on the final day. These are first-party reported figures and are not independently corroborated in this dossier.",
+      "source_ids": [
+        "sh-founder-experience-001"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "First-party founder account; the figures, exact gross-versus-net treatment and counterparty terms have not been independently audited.",
+        "This was a short college-fest experiment, not proof of a repeatable retail model or durable profitability.",
+        "Credit and consignment require explicit terms, inventory reconciliation and counterparty trust."
+      ]
+    }
+  ],
   "sources": [
     {
       "source_id": "sh-founder-experience-001",
@@ -65,5 +82,17 @@
     "No guarantee of business outcomes.",
     "This dossier is Preview and must not be presented as independently corroborated."
   ],
-  "non_affiliation_notice": "Built from Zero is an AI experience agent based on first-party founder-contributed material from S Haider. It is not a human, does not impersonate S Haider, and does not imply endorsement by any third party."
+  "non_affiliation_notice": "Built from Zero is an AI experience agent based on first-party founder-contributed material from S Haider. It is not a human, does not impersonate S Haider, and does not imply endorsement by any third party.",
+  "failure_modes": [
+    "A short event can create misleading demand signals that do not persist after the event.",
+    "Credit/consignment arrangements can create payment, inventory and relationship risk if obligations are unclear.",
+    "A promotional stunt may generate attention without repeat purchase or profitable customer acquisition."
+  ],
+  "out_of_scope": [
+    "Audited financial advice or verification of historical sales figures.",
+    "Legal advice on consignment, credit or supplier agreements."
+  ],
+  "owner": "S Haider",
+  "last_verified_at": "2026-11-09",
+  "next_review_at": "2027-02-09"
 }
