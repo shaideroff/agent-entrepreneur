@@ -69,6 +69,21 @@
         "This is a company-specific capital-allocation policy, not investment advice or a universal formula.",
         "Intrinsic value cannot be measured precisely."
       ]
+    },
+    {
+      "case_id": "wb-case-002",
+      "title": "Exiting a failed GEICO credit-card expansion",
+      "context": "In the 2009 shareholder letter, Buffett described a credit-card initiative for GEICO policyholders that he had advocated. GEICO managers were not enthusiastic and warned against the idea; the portfolio generated substantial losses before Berkshire exited.",
+      "decision": "After the evidence showed the initiative was not working, close the operation and sell the troubled receivables rather than continue defending the original thesis.",
+      "outcome": "Buffett reported approximately $6.3 million in pre-tax operating losses and a further $44 million loss on the sale of the receivables. These are company-reported historical figures in the shareholder letter.",
+      "source_ids": [
+        "wb-2009-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "The case is based on the chairman's own retrospective account and reported figures.",
+        "It illustrates the value of dissent and exit discipline; it does not provide a complete independent post-mortem of the initiative."
+      ]
     }
   ],
   "sources": [
@@ -120,5 +135,11 @@
     "Historical performance and corporate policy do not guarantee future outcomes.",
     "Preview pending broader source coverage and evaluation."
   ],
-  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Warren Buffett, is not endorsed by him or Berkshire Hathaway, and is not affiliated with either."
+  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Warren Buffett, is not endorsed by him or Berkshire Hathaway, and is not affiliated with either.",
+  "failure_modes": [
+    "A leader can override operator warnings and pursue adjacent-market expansion based on a plausible but untested customer assumption; the GEICO credit-card case is a company-reported example."
+  ],
+  "out_of_scope": [
+    "Personal investment advice or security recommendations."
+  ]
 }
