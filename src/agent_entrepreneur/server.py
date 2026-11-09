@@ -7,6 +7,11 @@ from typing import Any, Literal, cast
 
 from mcp.server.fastmcp import FastMCP
 
+from agent_entrepreneur.agents.experience_catalogue import (
+    get_experience_agent,
+    list_experience_agents,
+    recommend_experience_agents,
+)
 from agent_entrepreneur.agents.models import (
     SpecialistFinding,
     SpecialistResponse,
@@ -398,6 +403,33 @@ def create_server(settings: Settings) -> FastMCP:
             evidence_claims=claims,
         )
         return _workflow_result_payload(result)
+
+    @mcp.tool()
+    def discover_experience_agents(
+        query: str = "", domain: str = "", status: str = ""
+    ) -> list[dict[str, Any]]:
+        """Browse the public named experience-agent directory and filter by capability."""
+        if len(query) > 300 or len(domain) > 100:
+            raise ValueError("query or domain exceeds its allowed length")
+        if status and status not in {"active", "preview", "retired"}:
+            raise ValueError("status must be active, preview or retired")
+        return list_experience_agents(query=query, domain=domain, status=status)
+
+    @mcp.tool()
+    def get_experience_agent_profile(agent_id: str) -> dict[str, Any]:
+        """Read one experience-agent profile, lifecycle status and non-affiliation notice."""
+        if not agent_id.strip() or len(agent_id) > 100:
+            raise ValueError("agent_id must contain 1 to 100 characters")
+        return get_experience_agent(agent_id)
+
+    @mcp.tool()
+    def recommend_experience_agent_council(
+        objective: str, domains: list[str], max_agents: int = 4
+    ) -> dict[str, Any]:
+        """Recommend a bounded council from explicit task domains; this does not run agents."""
+        if len(objective) > 4000 or len(domains) > 30:
+            raise ValueError("objective or domain list exceeds its allowed size")
+        return recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
 
     @mcp.tool()
     def search_entrepreneurs(
