@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "plugin": "agent-entrepreneur",
   "plugin_version": "1.0.0",
-  "package_sha256": "pending_final_package_hash",
+  "package_sha256": null,
   "overall_status": "NOT_RUN",
   "execution_policy": "Do not mark a case PASS without an actual supported-host execution, observed behavior, timestamp, output reference, and reviewer record.",
   "records": [
