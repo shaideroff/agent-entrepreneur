@@ -29,7 +29,7 @@ Returns one catalogue entry. Unknown IDs produce a validation error.
 
 ### `prepare_experience_agent_council_work`
 
-Inputs: objective, optional capability domains, council limit, business context and constraints. Returns the Lead routing result, one independent dossier-grounded work packet per selected agent, ready/not-ready IDs and an explicit council protocol. The protocol requires independent contributions before cross-challenge, claim-level source mapping, preservation of disagreement and a reversible decision gate. The connected host performs all reasoning and challenge generation.
+Inputs: objective, optional capability domains, council limit, business context and constraints, and optional explicit `selected_agent_ids`. If IDs are supplied, the user-selected council is preserved and validated (one to five unique known IDs); otherwise the Lead heuristic selects the shortlist. Returns the Lead routing result, one independent dossier-grounded work packet per selected agent, ready/not-ready IDs and an explicit council protocol. The protocol requires independent contributions before cross-challenge, claim-level source mapping, preservation of disagreement and a reversible decision gate. The connected host performs all reasoning and challenge generation.
 
 ### `synthesize_experience_agent_council`
 
