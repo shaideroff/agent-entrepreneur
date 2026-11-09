@@ -441,8 +441,9 @@ def create_server(settings: Settings) -> FastMCP:
         agreements: list[str] | None = None,
         disagreements: list[str] | None = None,
         unresolved_questions: list[str] | None = None,
+        challenges: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
-        """Validate host-produced agent contributions and preserve disagreement in synthesis."""
+        """Validate host-produced contributions and adversarial challenges; preserve disagreement."""
         if len(objective) > 4000 or len(recommendation) > 8000:
             raise ValueError("objective or recommendation exceeds its allowed length")
         if len(contributions) > 5:
@@ -454,6 +455,7 @@ def create_server(settings: Settings) -> FastMCP:
             agreements=agreements,
             disagreements=disagreements,
             unresolved_questions=unresolved_questions,
+            challenges=challenges,
         )
 
     @mcp.tool()
