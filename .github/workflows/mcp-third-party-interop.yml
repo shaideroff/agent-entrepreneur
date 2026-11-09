@@ -58,3 +58,27 @@ jobs:
           path: ${{ runner.temp }}/experience-agent-performance.json
           if-no-files-found: error
           retention-days: 14
+
+  mcp-inspector-client:
+    name: MCP Inspector CLI v2.14.0
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.23.4"
+      - name: Install Agent Entrepreneur
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+      - name: Install pinned MCP Inspector CLI
+        run: npm install --no-save @modelcontextprotocol/inspector@2.14.0
+      - name: Exercise all six tools through independent Inspector CLI
+        env:
+          AGENT_ENTREPRENEUR_TRANSPORT: stdio
+          AGENT_ENTREPRENEUR_DB: ${{ runner.temp }}/agent-entrepreneur-inspector.sqlite3
+        run: bash tests/interop/inspector_cli_smoke.sh
