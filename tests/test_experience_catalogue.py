@@ -20,6 +20,8 @@ def test_public_catalogue_does_not_claim_preview_agents_are_live() -> None:
     agents = list_experience_agents(status="preview")
     assert len(agents) == 12
     assert all("Preview" in item["availability_note"] for item in agents)
+    assert all("controlled evaluation only" in item["availability_note"] for item in agents)
+    assert all("not an Active or production-validated agent" in item["availability_note"] for item in agents)
 
 
 def test_built_from_zero_is_first_party_founder_experience() -> None:
