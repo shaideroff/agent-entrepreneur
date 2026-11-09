@@ -190,13 +190,35 @@ def prepare_experience_council_work(
     max_agents: int = 4,
     business_context: str = "",
     constraints: list[str] | None = None,
+    selected_agent_ids: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Prepare independent dossier-grounded work packets for a bounded Lead-selected council."""
+    """Prepare independent dossier-grounded packets for a Lead- or user-selected council."""
     if len(business_context) > 8000:
         raise ValueError("business_context must not exceed 8000 characters")
     if len(constraints or []) > 30:
         raise ValueError("constraints must contain no more than 30 items")
-    routing = recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
+    if selected_agent_ids is not None:
+        if not 1 <= len(selected_agent_ids) <= 5:
+            raise ValueError("user-selected council must contain between 1 and 5 agents")
+        if len(set(selected_agent_ids)) != len(selected_agent_ids):
+            raise ValueError("user-selected council agent IDs must be unique")
+        profiles = {item["agent_id"]: item for item in list_experience_agents()}
+        unknown = sorted(set(selected_agent_ids) - set(profiles))
+        if unknown:
+            raise ValueError(f"unknown experience agent IDs: {unknown}")
+        routing = {
+            "objective": objective,
+            "selection_mode": "user_selected",
+            "selected_agents": [
+                {**profiles[agent_id], "selection_rationale": "Explicitly selected by the user."}
+                for agent_id in selected_agent_ids
+            ],
+            "unmatched_domains": [],
+            "council_limit": 5,
+            "execution_boundary": "The user selected this council; the connected host supplies reasoning.",
+        }
+    else:
+        routing = recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
     packets = [
         prepare_experience_agent_work_packet(
             item["agent_id"],
