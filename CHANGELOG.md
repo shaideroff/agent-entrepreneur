@@ -7,7 +7,7 @@
 - Add dossier-grounded individual and Lead-selected council work packets, deterministic Lead shortlist routing, claim-level contribution evidence mapping and structured council synthesis with host-supplied adversarial challenge validation.
 - Add dossier governance metadata, fail-closed loading and structural evaluation fixtures for six scenario classes per pilot.
 - Preserve model-independent operation, local-first transport and non-impersonation safeguards.
-- Release remains uncertified pending CI, package, security, MCP compatibility and client runtime verification.
+- CI, package build/install, real MCP STDIO smoke, security audit and MCP SDK compatibility checks are being verified on Python 3.11 and 3.12; third-party client end-to-end verification, independent dossier review, generative model evaluation, secure remote deployment and stable release certification remain separate gates.
 
 ## 1.0.0 — 2026-11-09
 
