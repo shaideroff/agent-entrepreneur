@@ -8,6 +8,20 @@
 
 **Tech Stack:** Python 3.11+, Pydantic v2, MCP SDK 1.x, SQLite/current storage abstractions, JSON package data, pytest, Ruff and mypy.
 
+## Implementation status (2026-11-09)
+
+This plan is the approved target architecture; the implementation is being delivered incrementally on PR #14. The current branch contains:
+- Typed Pydantic experience-agent, dossier, challenge and council contracts.
+- Twelve-entry public catalogue; six versioned Preview dossiers (Built from Zero, Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky).
+- Claim/source linkage, unique identifier validation and fail-closed handling for missing configured dossiers.
+- MCP discovery, profile, work-packet, deterministic Lead shortlist and host-supplied council challenge/synthesis tools.
+- Structural evaluation fixtures covering six scenario classes for each pilot.
+- Updated public docs and package-data inclusion.
+
+**Not yet certified:** independent agent execution, semantic/model-based Lead reasoning, automatic challenge generation, scenario-based evaluation of a connected model, third-party client end-to-end runs, secure remote hosting, full CI verification and stable release certification. The server intentionally remains local-first and does not expose unauthenticated remote HTTP.
+
+The task checkboxes below are a historical implementation checklist; they are not evidence that tests ran. Mark a verification step complete only after its command or CI check has actually passed.
+
 ## Global Constraints
 
 - Preserve the v1.0 MCP foundation and all existing tool names, input/output contracts and behaviour.
