@@ -9,6 +9,7 @@ import stat
 import tempfile
 import zipfile
 from pathlib import Path
+from urllib.parse import urlparse
 from xml.etree import ElementTree as ET
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1] / "plugins" / "agent-entrepreneur"
@@ -53,12 +54,35 @@ def validate_tree(root: Path) -> dict[str, int]:
     for field in required_fields:
         if not interface.get(field):
             fail(f"interface missing {field}")
+    if len(interface["displayName"]) > 30:
+        fail("displayName exceeds 30 characters")
     if len(interface["shortDescription"]) > 30:
         fail("shortDescription exceeds 30 characters")
     if len(interface["longDescription"]) > 4000:
         fail("longDescription exceeds 4000 characters")
-    if not isinstance(interface.get("defaultPrompt"), list) or not interface["defaultPrompt"]:
-        fail("defaultPrompt must be a non-empty list")
+    if len(interface["developerName"]) > 80:
+        fail("developerName exceeds 80 characters")
+    categories = {"Productivity", "Creativity", "Developer Tools", "Business & Operations", "Data & Analytics", "Communication", "Education & Research", "Security", "Finance", "Healthcare", "Travel", "Entertainment", "Other"}
+    if interface["category"] not in categories:
+        fail("unsupported directory category")
+    for field in ("brandColor", "brandColorDark"):
+        color = interface.get(field)
+        if color is not None and not re.fullmatch(r"#[0-9A-Fa-f]{6}", color):
+            fail(f"{field} must be a six-digit hex color")
+    for field in ("websiteURL", "privacyPolicyURL", "termsOfServiceURL"):
+        parsed = urlparse(interface[field])
+        if parsed.scheme != "https" or not parsed.netloc:
+            fail(f"{field} must be a public HTTPS URL")
+    for field in ("homepage", "repository"):
+        parsed = urlparse(manifest.get(field, ""))
+        if parsed.scheme != "https" or not parsed.netloc:
+            fail(f"{field} must be a public HTTPS URL")
+    if not isinstance(manifest.get("author"), dict) or not manifest["author"].get("name"):
+        fail("author.name is required")
+    if not isinstance(interface.get("capabilities"), list) or not interface["capabilities"] or any(not isinstance(x, str) or not x.strip() for x in interface["capabilities"]):
+        fail("capabilities must be a non-empty list of strings")
+    if not isinstance(interface.get("defaultPrompt"), list) or not interface["defaultPrompt"] or any(not isinstance(x, str) or not x.strip() for x in interface["defaultPrompt"]):
+        fail("defaultPrompt must be a non-empty list of strings")
 
     assets = [safe_relative(root, interface["composerIcon"]), safe_relative(root, interface["logo"])]
     for variant in ("assets/logo-light.svg", "assets/logo-dark.svg"):
