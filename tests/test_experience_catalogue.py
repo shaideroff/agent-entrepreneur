@@ -137,3 +137,55 @@ def test_preview_agent_without_dossier_does_not_receive_fake_work_packet() -> No
     )
     assert packet["status"] == "not_ready"
     assert "No validated dossier" in packet["reason"]
+
+
+def test_lead_routing_infers_domains_from_objective_without_model_claim() -> None:
+    result = recommend_experience_agents(
+        "Evaluate a hyperlocal mobility marketplace and dispatch model."
+    )
+    selected = {item["agent_id"] for item in result["selected_agents"]}
+    assert "markus_villig" in selected
+    assert result["selection_mode"] == "lead_keyword_and_domain_match"
+    assert "Deterministic keyword routing" in result["lead_routing_note"]
+
+
+def test_council_challenge_round_preserves_structured_adversarial_review() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    result = synthesize_experience_council(
+        "Should we scale now?",
+        [
+            {"agent_id": "built_from_zero", "recommendations": ["Validate one market first."]},
+            {"agent_id": "jeff_bezos", "recommendations": ["Invest in scalable mechanisms."]},
+        ],
+        recommendation="Run a bounded pilot with explicit scale gates.",
+        challenges=[{
+            "challenger_agent_id": "built_from_zero",
+            "target_agent_id": "jeff_bezos",
+            "challenged_statement": "Invest in scalable mechanisms.",
+            "rationale": "The current demand and delivery process are not yet repeatable.",
+            "evidence_refs": ["bfz-001"],
+            "severity": "high",
+        }],
+    )
+    assert result["challenges"][0]["severity"] == "high"
+    assert "does not independently run" in result["challenge_boundary"]
+
+
+def test_council_challenge_rejects_non_council_participant() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    with pytest.raises(ValueError, match="participants must belong"):
+        synthesize_experience_council(
+            "Objective",
+            [{"agent_id": "built_from_zero"}],
+            recommendation="Proceed cautiously.",
+            challenges=[{
+                "challenger_agent_id": "jeff_bezos",
+                "target_agent_id": "built_from_zero",
+                "challenged_statement": "Test",
+                "rationale": "Counterpoint",
+            }],
+        )
+
