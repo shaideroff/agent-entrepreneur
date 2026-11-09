@@ -441,8 +441,9 @@ def create_server(settings: Settings) -> FastMCP:
         max_agents: int = 4,
         business_context: str = "",
         constraints: list[str] | None = None,
+        selected_agent_ids: list[str] | None = None,
     ) -> dict[str, Any]:
-        """Prepare independent work packets for a bounded Lead-selected experience-agent council."""
+        """Prepare independent work packets for a Lead- or user-selected experience-agent council."""
         if len(objective) > 4000 or len(domains or []) > 30:
             raise ValueError("objective or domain list exceeds its allowed size")
         return prepare_experience_council_work(
@@ -451,6 +452,7 @@ def create_server(settings: Settings) -> FastMCP:
             max_agents=max_agents,
             business_context=business_context,
             constraints=constraints,
+            selected_agent_ids=selected_agent_ids,
         )
 
     @mcp.tool()
