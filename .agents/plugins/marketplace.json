@@ -1,0 +1,20 @@
+{
+  "name": "agent-entrepreneur",
+  "interface": {
+    "displayName": "Agent Entrepreneur"
+  },
+  "plugins": [
+    {
+      "name": "agent-entrepreneur",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agent-entrepreneur"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
