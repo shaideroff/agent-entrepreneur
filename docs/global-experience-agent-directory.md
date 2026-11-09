@@ -10,7 +10,7 @@ All 12 catalogue entries currently have lifecycle status `preview`. This is inte
 
 ### `prepare_experience_agent_work_packet`
 
-Inputs: an agent ID, objective, optional business context and constraints. For a catalogue entry with a validated dossier, returns a structured work packet containing the dossier, source IDs, host instructions and required response fields. The first-party Built from Zero dossier and a public-source Jeff Bezos dossier are available in Preview mode. Other entries without a dossier return `not_ready`; the system does not invent dossiers to make the directory appear complete.
+Inputs: an agent ID, objective, optional business context and constraints. For a catalogue entry with a validated dossier, returns a structured work packet containing the dossier, source IDs, host instructions and required response fields. Six pilot dossiers are available in Preview mode: first-party Built from Zero, plus public-source dossiers for Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky. Other entries without a dossier return `not_ready`; the system does not invent dossiers to make the directory appear complete.
 
 ### `discover_experience_agents`
 
@@ -54,6 +54,10 @@ Returns a deterministic domain match, the selected entries, rationale, unmatched
 10. Mohamed Alabbar — Real Estate & Large-Scale Development
 11. Indra Nooyi — Strategic Transformation & Leadership
 12. Tony Fernandes — Low-Cost Operations & Market Expansion
+
+## Initial pilot coverage
+
+The six initial pilot dossiers cover founder-led bootstrapping (Built from Zero), consumer brand creation (Sara Blakely), customer obsession and scale (Jeff Bezos), capital allocation (Warren Buffett), deep-technology platforms (Jensen Huang), and marketplace trust and experience design (Brian Chesky). Each dossier contains source-linked principles, at least one documented decision case, counter-evidence, transfer conditions and limitations. All remain Preview pending adversarial review and evaluation.
 
 ## Built from Zero attribution
 
