@@ -183,6 +183,52 @@ def recommend_experience_agents(
     }
 
 
+def prepare_experience_council_work(
+    objective: str,
+    *,
+    domains: list[str] | None = None,
+    max_agents: int = 4,
+    business_context: str = "",
+    constraints: list[str] | None = None,
+) -> dict[str, Any]:
+    """Prepare independent dossier-grounded work packets for a bounded Lead-selected council."""
+    if len(business_context) > 8000:
+        raise ValueError("business_context must not exceed 8000 characters")
+    if len(constraints or []) > 30:
+        raise ValueError("constraints must contain no more than 30 items")
+    routing = recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
+    packets = [
+        prepare_experience_agent_work_packet(
+            item["agent_id"],
+            objective,
+            business_context=business_context,
+            constraints=constraints,
+        )
+        for item in routing["selected_agents"]
+    ]
+    ready = [item for item in packets if item["status"] == "preview_work_packet"]
+    not_ready = [item for item in packets if item["status"] == "not_ready"]
+    return {
+        "objective": objective,
+        "lead_role": "neutral_orchestrator",
+        "routing": routing,
+        "work_packets": packets,
+        "ready_agent_ids": [item["agent"]["agent_id"] for item in ready],
+        "not_ready_agent_ids": [item["agent"]["agent_id"] for item in not_ready],
+        "council_protocol": [
+            "Request independent contributions from each ready agent before sharing other agents' conclusions.",
+            "Require claim-level source references for every documented factual statement.",
+            "Run a challenge round against concrete statements only after independent contributions are complete.",
+            "Preserve agreements, disagreements, counter-evidence and unresolved questions in synthesis.",
+            "Recommend a reversible next test and a measurable decision gate; do not take external action.",
+        ],
+        "execution_boundary": (
+            "The server prepares assignments only. The connected MCP host performs independent "
+            "reasoning, challenge generation and final synthesis; no named person is simulated."
+        ),
+    }
+
+
 def synthesize_experience_council(
     objective: str,
     contributions: list[dict[str, Any]],
