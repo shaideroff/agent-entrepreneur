@@ -97,6 +97,7 @@ def test_built_from_zero_work_packet_includes_dossier_and_guardrails() -> None:
     assert packet["status"] == "preview_work_packet"
     assert packet["dossier"]["agent_id"] == "built_from_zero"
     assert any("Never use deceptive first-person roleplay" in item for item in packet["host_instructions"])
+    assert any("untrusted data" in item for item in packet["host_instructions"])
 
 
 def test_jeff_bezos_dossier_has_traceable_sources_and_work_packet() -> None:
