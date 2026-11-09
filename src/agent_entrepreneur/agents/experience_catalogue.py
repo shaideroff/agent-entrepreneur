@@ -77,11 +77,12 @@ def get_experience_agent(agent_id: str) -> dict[str, Any]:
             dossier_ref = record.get("dossier_ref")
             if dossier_ref:
                 dossier_path = Path(__file__).parent / dossier_ref
-                if dossier_path.is_file():
-                    dossier = ExperienceDossier.model_validate_json(dossier_path.read_text(encoding="utf-8"))
-                    if dossier.agent_id != agent_id:
-                        raise ValueError("dossier agent_id does not match its catalogue entry")
-                    record["dossier"] = dossier.validate_source_references().model_dump(mode="json")
+                if not dossier_path.is_file():
+                    raise FileNotFoundError(f"Configured experience dossier is missing: {dossier_path}")
+                dossier = ExperienceDossier.model_validate_json(dossier_path.read_text(encoding="utf-8"))
+                if dossier.agent_id != agent_id:
+                    raise ValueError("dossier agent_id does not match its catalogue entry")
+                record["dossier"] = dossier.validate_source_references().model_dump(mode="json")
             return record
     raise ValueError(f"unknown experience agent: {agent_id}")
 
