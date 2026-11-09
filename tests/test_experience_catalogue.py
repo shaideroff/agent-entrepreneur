@@ -114,6 +114,21 @@ def test_jeff_bezos_dossier_has_traceable_sources_and_work_packet() -> None:
     assert packet["dossier"]["agent_id"] == "jeff_bezos"
 
 
+def test_five_pilot_dossiers_load_with_valid_source_references() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
+
+    pilot_ids = ["built_from_zero", "sara_blakely", "jeff_bezos", "warren_buffett", "jensen_huang", "brian_chesky"]
+    for agent_id in pilot_ids:
+        profile = get_experience_agent(agent_id)
+        dossier = profile["dossier"]
+        source_ids = {source["source_id"] for source in dossier["sources"]}
+        assert source_ids
+        assert dossier["principles"]
+        assert all(set(item["source_ids"]) <= source_ids for item in dossier["principles"])
+        packet = prepare_experience_agent_work_packet(agent_id, "Assess a strategic decision.")
+        assert packet["status"] == "preview_work_packet"
+
+
 def test_preview_agent_without_dossier_does_not_receive_fake_work_packet() -> None:
     from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
 
