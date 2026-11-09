@@ -53,6 +53,7 @@ class DecisionCaseRecord(BaseModel):
 
     case_id: str = Field(min_length=1)
     title: str = Field(min_length=1)
+    decision_date: str | None = None
     context: str = Field(min_length=1)
     decision: str = Field(min_length=1)
     outcome: str | None = None
