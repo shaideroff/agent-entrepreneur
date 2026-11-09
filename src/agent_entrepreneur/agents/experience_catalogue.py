@@ -12,6 +12,8 @@ from agent_entrepreneur.agents.experience_models import (
     ExperienceAgentRecord,
     ExperienceAgentStatus,
     ExperienceDossier,
+    ExperienceAgentResponse,
+    CouncilSynthesis,
 )
 
 CATALOGUE: tuple[ExperienceAgentRecord, ...] = (
@@ -124,4 +126,43 @@ def recommend_experience_agents(
             "reasoning; no named person is simulated and no agent execution is claimed."
         ),
         "council_limit": max_agents,
+    }
+
+
+def synthesize_experience_council(
+    objective: str,
+    contributions: list[dict[str, Any]],
+    *,
+    agreements: list[str] | None = None,
+    disagreements: list[str] | None = None,
+    unresolved_questions: list[str] | None = None,
+    recommendation: str,
+) -> dict[str, Any]:
+    """Validate host-produced contributions and preserve disagreement in one synthesis."""
+    if not objective.strip() or not recommendation.strip():
+        raise ValueError("objective and recommendation must not be empty")
+    if not 1 <= len(contributions) <= 5:
+        raise ValueError("council must contain between 1 and 5 agent contributions")
+    parsed = [ExperienceAgentResponse.model_validate(item) for item in contributions]
+    ids = [item.agent_id for item in parsed]
+    if len(set(ids)) != len(ids):
+        raise ValueError("council contributions must have unique agent_id values")
+    known_ids = {item.agent_id for item in CATALOGUE}
+    unknown = sorted(set(ids) - known_ids)
+    if unknown:
+        raise ValueError(f"unknown experience agent IDs: {unknown}")
+    result = CouncilSynthesis(
+        objective=objective,
+        contributions=parsed,
+        agreements=agreements or [],
+        disagreements=disagreements or [],
+        unresolved_questions=unresolved_questions or [],
+        recommendation=recommendation,
+    )
+    return {
+        **result.model_dump(mode="json"),
+        "synthesis_boundary": (
+            "Contributions were supplied by the connected MCP host and validated for structure. "
+            "The server does not independently generate, verify or endorse agent reasoning."
+        ),
     }
