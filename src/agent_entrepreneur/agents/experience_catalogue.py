@@ -14,6 +14,7 @@ from agent_entrepreneur.agents.experience_models import (
     ExperienceDossier,
     ExperienceAgentResponse,
     CouncilSynthesis,
+    CouncilChallenge,
 )
 
 CATALOGUE: tuple[ExperienceAgentRecord, ...] = (
@@ -173,6 +174,7 @@ def synthesize_experience_council(
     agreements: list[str] | None = None,
     disagreements: list[str] | None = None,
     unresolved_questions: list[str] | None = None,
+    challenges: list[dict[str, Any]] | None = None,
     recommendation: str,
 ) -> dict[str, Any]:
     """Validate host-produced contributions and preserve disagreement in one synthesis."""
@@ -188,9 +190,17 @@ def synthesize_experience_council(
     unknown = sorted(set(ids) - known_ids)
     if unknown:
         raise ValueError(f"unknown experience agent IDs: {unknown}")
+    parsed_challenges = [CouncilChallenge.model_validate(item) for item in (challenges or [])]
+    council_ids = set(ids)
+    for challenge in parsed_challenges:
+        if challenge.challenger_agent_id not in council_ids or challenge.target_agent_id not in council_ids:
+            raise ValueError("challenge participants must belong to the selected council")
+        if challenge.challenger_agent_id == challenge.target_agent_id:
+            raise ValueError("an agent cannot challenge its own contribution")
     result = CouncilSynthesis(
         objective=objective,
         contributions=parsed,
+        challenges=parsed_challenges,
         agreements=agreements or [],
         disagreements=disagreements or [],
         unresolved_questions=unresolved_questions or [],
@@ -198,9 +208,14 @@ def synthesize_experience_council(
     )
     return {
         **result.model_dump(mode="json"),
+        "challenge_boundary": (
+            "Challenges are adversarial review inputs supplied by the connected MCP host. "
+            "The server validates participants and structure; it does not independently run "
+            "a reasoning round or verify challenge evidence."
+        ),
         "synthesis_boundary": (
-            "Contributions were supplied by the connected MCP host and validated for structure. "
-            "The server does not independently generate, verify or endorse agent reasoning."
+            "Contributions and challenges were supplied by the connected MCP host and validated "
+            "for structure. The server does not independently generate, verify or endorse reasoning."
         ),
     }
 
