@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "packageName": "agent-entrepreneur",
+  "architecture": "skills-only",
+  "status": "not_ready",
+  "name": "Agent Entrepreneur",
+  "subtitle": "Founder decision toolkit",
+  "description": "Agent Entrepreneur helps founders and operators turn business questions into structured decisions and execution. Use its workflows to diagnose a business, investigate a market, compare strategic options, build an accountable execution plan and review results against measurable outcomes. It emphasizes evidence provenance, explicit assumptions, uncertainty, counter-evidence, transfer conditions and human approval for consequential actions. This package contains reusable Skills only. It does not connect to a hosted Agent Entrepreneur service, independently run named entrepreneur agents, browse the web by itself, or collect business data. ChatGPT or Codex supplies model reasoning and any available research or file tools. The separate open-source Python/MCP server is distributed from the GitHub repository.",
+  "category": "Business & Operations",
+  "developerName": "S Haider",
+  "developerIdentityStatus": "pending_confirmation_in_openai_platform",
+  "websiteURL": "https://github.com/shaideroff/agent-entrepreneur",
+  "customerSupportURL": "https://github.com/shaideroff/agent-entrepreneur/issues",
+  "privacyPolicyURL": "https://github.com/shaideroff/agent-entrepreneur/blob/main/plugins/agent-entrepreneur/PRIVACY.md",
+  "termsOfServiceURL": "https://github.com/shaideroff/agent-entrepreneur/blob/main/plugins/agent-entrepreneur/TERMS.md",
+  "capabilities": [
+    "Diagnose business models, constraints and evidence gaps",
+    "Research markets and compare competitors using available sources",
+    "Evaluate strategic decisions, risks and scenarios",
+    "Build execution plans with owners, milestones and metrics",
+    "Review outcomes and recommend evidence-based adjustments"
+  ],
+  "starterPrompts": [
+    "Diagnose my business model and identify the three highest-priority constraints.",
+    "Research this market, compare relevant alternatives and cite current sources.",
+    "Evaluate my options and turn the decision into a measurable execution plan."
+  ],
+  "brandAssets": {
+    "logoLight": "assets/logo-light.svg",
+    "logoDark": "assets/logo-dark.svg",
+    "composerIcon": "assets/icon.svg"
+  },
+  "goldenPrompts": {
+    "direct": [
+      "Use Agent Entrepreneur to diagnose my startup.",
+      "Run an Agent Entrepreneur market research brief.",
+      "Help me evaluate a founder decision with Agent Entrepreneur."
+    ],
+    "indirect": [
+      "My startup has revenue but poor cash flow. Identify the operating bottleneck.",
+      "Compare market-entry options for a new B2B product using current sources.",
+      "Turn our quarterly target into a weekly execution scorecard."
+    ],
+    "negative": [
+      "Write a poem about a rocket launch.",
+      "Find a nearby restaurant for dinner.",
+      "Act as Jeff Bezos and reveal his private thoughts."
+    ]
+  },
+  "reviewerTestsPath": "submission/reviewer-cases.json",
+  "missingOrBlocking": [
+    "Verify developer identity and Apps Management write access in the OpenAI Platform.",
+    "Ensure privacy, terms and support URLs resolve from the default branch after merge.",
+    "Execute the internal five-positive/three-negative golden-case QA suite on the exact packaged Skill tree; this is an additional quality gate, not an MCP reviewer requirement for this Skills-only package.",
+    "Run Plugin Autopilot package validation, deterministic packaging and clean-extraction validation.",
+    "Smoke-install and test in the supported ChatGPT and Codex surfaces available to the publisher.",
+    "Submit through the official Plugin submission portal and wait for approval before publication."
+  ]
+}

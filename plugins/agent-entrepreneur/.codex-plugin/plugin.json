@@ -1,0 +1,38 @@
+{
+  "name": "agent-entrepreneur",
+  "version": "1.0.0",
+  "description": "Evidence-aware founder workflows for business diagnosis, market research, decision evaluation, execution planning and outcome review. The connected ChatGPT or Codex host supplies reasoning and any live research tools.",
+  "author": {"name": "S Haider", "url": "https://github.com/shaideroff"},
+  "homepage": "https://github.com/shaideroff/agent-entrepreneur",
+  "repository": "https://github.com/shaideroff/agent-entrepreneur",
+  "license": "Apache-2.0",
+  "keywords": ["entrepreneurship", "founders", "business strategy", "market research", "decision analysis", "execution planning"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Entrepreneur",
+    "shortDescription": "Founder decision toolkit",
+    "longDescription": "Agent Entrepreneur helps founders and operators turn business questions into structured decisions and execution. Use its workflows to diagnose a business, investigate a market, compare strategic options, build an accountable execution plan and review results against measurable outcomes. It emphasizes evidence provenance, explicit assumptions, uncertainty, counter-evidence, transfer conditions and human approval for consequential actions. This package contains reusable Skills only. It does not connect to a hosted Agent Entrepreneur service, independently run named entrepreneur agents, browse the web by itself, or collect business data. ChatGPT or Codex supplies model reasoning and any available research or file tools. The separate open-source Python/MCP server is distributed from the GitHub repository.",
+    "developerName": "S Haider",
+    "category": "Business & Operations",
+    "brandColorDark": "#E5B65F",
+    "capabilities": [
+      "Diagnose business models, constraints and evidence gaps",
+      "Research markets and compare competitors using available sources",
+      "Evaluate strategic decisions, risks and scenarios",
+      "Build execution plans with owners, milestones and metrics",
+      "Review outcomes and recommend evidence-based adjustments"
+    ],
+    "websiteURL": "https://github.com/shaideroff/agent-entrepreneur",
+    "supportURL": "https://github.com/shaideroff/agent-entrepreneur/issues",
+    "privacyPolicyURL": "https://github.com/shaideroff/agent-entrepreneur/blob/main/plugins/agent-entrepreneur/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/shaideroff/agent-entrepreneur/blob/main/plugins/agent-entrepreneur/TERMS.md",
+    "defaultPrompt": [
+      "Diagnose my business model and identify the three highest-priority constraints.",
+      "Research this market, compare relevant alternatives and cite current sources.",
+      "Evaluate my options and turn the decision into a measurable execution plan."
+    ],
+    "brandColor": "#123B35",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/logo-light.svg"
+  }
+}
