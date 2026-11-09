@@ -77,8 +77,9 @@ def strip_thinking(text: str) -> str:
 def generate(model: str, prompt: str, *, schema: dict[str, Any] | None = None) -> tuple[str, dict[str, Any]]:
     payload: dict[str, Any] = {
         "model": model,
-        "prompt": prompt,
+        "messages": [{"role": "user", "content": prompt}],
         "stream": False,
+        "think": False,
         "keep_alive": "30m",
         "options": {
             "temperature": 0.1 if schema else 0.2,
@@ -90,8 +91,9 @@ def generate(model: str, prompt: str, *, schema: dict[str, Any] | None = None) -
     }
     if schema is not None:
         payload["format"] = schema
-    result = request_json("/api/generate", payload)
-    response = strip_thinking(str(result.get("response", "")))
+    result = request_json("/api/chat", payload)
+    message = result.get("message", {})
+    response = strip_thinking(str(message.get("content", "")))
     if not response:
         raise RuntimeError(f"{model} returned an empty response")
     return response, result
