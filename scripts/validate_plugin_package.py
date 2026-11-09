@@ -93,14 +93,14 @@ def validate_tree(root: Path) -> dict[str, int]:
     capabilities = interface.get("capabilities")
     if not isinstance(capabilities, list) or not capabilities or len(capabilities) > 20:
         fail("capabilities must be a non-empty list containing at most 20 entries")
-    if any(not isinstance(x, str) or not x.strip() or len(x) > 120 or "\\n" in x or "\\r" in x for x in capabilities):
+    if any(not isinstance(x, str) or not x.strip() or len(x) > 120 or "\n" in x or "\r" in x for x in capabilities):
         fail("each capability must be a non-empty one-line string <=120 characters")
     prompts = interface.get("defaultPrompt")
     if not isinstance(prompts, list) or not prompts or len(prompts) > 3:
         fail("defaultPrompt must contain one to three prompts")
     normalized_prompts = set()
     for prompt in prompts:
-        if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 128 or "\\n" in prompt or "\\r" in prompt:
+        if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 128 or "\n" in prompt or "\r" in prompt:
             fail("each defaultPrompt must be a non-empty one-line string <=128 characters")
         if re.search(r"(?<![A-Za-z0-9._%+-])@[A-Za-z0-9_-]+", prompt):
             fail("defaultPrompt must not contain app @mentions")
@@ -189,7 +189,8 @@ def validate_tree(root: Path) -> dict[str, int]:
                 fail(f"operating-system metadata is not allowed: {relative}")
             if item.suffix.lower() in {".pyc", ".pyo"}:
                 fail(f"Python bytecode is not allowed: {relative}")
-            if re.fullmatch(r"(?:\\.env(?:\\..*)?|auth\\.json|credentials?(?:\\..*)?|secrets?(?:\\..*)?|\\.npmrc|\\.pypirc)", item.name, re.I):
+            name = item.name.lower()
+            if name in {".npmrc", ".pypirc", "auth.json"} or name.startswith((".env", "credential", "secret")):
                 fail(f"secret-shaped file is not allowed: {relative}")
     return {"skills": len(skill_dirs), "positive_cases": len(positive), "negative_cases": len(negative), "assets": len(assets)}
 
