@@ -94,5 +94,9 @@
   ],
   "owner": "S Haider",
   "last_verified_at": "2026-11-09",
-  "next_review_at": "2027-02-09"
+  "next_review_at": "2027-02-09",
+  "evaluation_refs": [
+    "experience-agent-pilot-structural-v1"
+  ],
+  "reviewer": "Independent review pending"
 }
