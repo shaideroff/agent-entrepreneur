@@ -93,7 +93,8 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             )
             assert lead_council.isError is False
             lead_council_payload = _decode_tool_payload(lead_council)
-            assert "markus_villig" in lead_council_payload["ready_agent_ids"]
+            assert "brian_chesky" in lead_council_payload["ready_agent_ids"]
+            assert "markus_villig" in lead_council_payload["not_ready_agent_ids"]
             assert lead_council_payload["council_protocol"]
 
             work_packet = await session.call_tool(
