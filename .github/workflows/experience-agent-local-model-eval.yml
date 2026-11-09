@@ -62,6 +62,13 @@ jobs:
           python scripts/run_local_model_evaluation.py --output-dir "${RUNNER_TEMP}/experience-agent-evaluation"
           python scripts/experience_agent_eval_report.py "${RUNNER_TEMP}/experience-agent-evaluation/evaluation-run-manifest.json" --output "${RUNNER_TEMP}/experience-agent-evaluation/report.md"
           cp "${RUNNER_TEMP}/ollama-model-tags.json" "${RUNNER_TEMP}/experience-agent-evaluation/"
+      - name: Generate partial coverage report when model execution is incomplete
+        if: always()
+        run: |
+          MANIFEST="${RUNNER_TEMP}/experience-agent-evaluation/evaluation-run-manifest.json"
+          if [ -f "$MANIFEST" ]; then
+            python scripts/experience_agent_eval_report.py "$MANIFEST" --output "${RUNNER_TEMP}/experience-agent-evaluation/report.md" || true
+          fi
       - name: Upload generated outputs and evaluation evidence
         if: always()
         uses: actions/upload-artifact@v4
