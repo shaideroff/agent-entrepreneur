@@ -197,6 +197,7 @@ def prepare_experience_council_work(
         raise ValueError("business_context must not exceed 8000 characters")
     if len(constraints or []) > 30:
         raise ValueError("constraints must contain no more than 30 items")
+    routing: dict[str, Any]
     if selected_agent_ids is not None:
         if not 1 <= len(selected_agent_ids) <= 5:
             raise ValueError("user-selected council must contain between 1 and 5 agents")
