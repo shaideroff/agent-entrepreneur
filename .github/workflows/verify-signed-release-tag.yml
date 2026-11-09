@@ -1,0 +1,48 @@
+name: Verify signed release tags
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-tag:
+    name: Require annotated, GitHub-verified release tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify annotated tag signature and target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          REF_JSON="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG_NAME")"
+          OBJECT_TYPE="$(printf '%s' "$REF_JSON" | jq -r '.object.type')"
+          TAG_SHA="$(printf '%s' "$REF_JSON" | jq -r '.object.sha')"
+          if [ "$OBJECT_TYPE" != "tag" ]; then
+            echo "Release tags must be annotated and signed; lightweight tags are rejected."
+            exit 1
+          fi
+
+          TAG_JSON="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$TAG_SHA")"
+          VERIFIED="$(printf '%s' "$TAG_JSON" | jq -r '.verification.verified')"
+          if [ "$VERIFIED" != "true" ]; then
+            echo "GitHub did not verify the release tag signature."
+            printf '%s' "$TAG_JSON" | jq '.verification'
+            exit 1
+          fi
+
+          TARGET_SHA="$(printf '%s' "$TAG_JSON" | jq -r '.object.sha')"
+          CHECKED_OUT_SHA="$(git rev-parse "$TAG_NAME^{}")"
+          if [ "$TARGET_SHA" != "$CHECKED_OUT_SHA" ]; then
+            echo "Tag target mismatch."
+            exit 1
+          fi
+
+          echo "Verified signed tag $TAG_NAME -> $TARGET_SHA"
