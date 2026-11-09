@@ -18,7 +18,7 @@ This plan is the approved target architecture; the implementation is being deliv
 - Structural evaluation fixtures covering six scenario classes for each pilot.
 - Updated public docs and package-data inclusion.
 
-**Not yet certified:** independent agent execution, semantic/model-based Lead reasoning, automatic challenge generation, scenario-based evaluation of a connected model, third-party client end-to-end runs, secure remote hosting, full CI verification and stable release certification. The server intentionally remains local-first and does not expose unauthenticated remote HTTP.
+**Not yet certified:** independent agent execution, semantic/model-based Lead reasoning, automatic challenge generation, scenario-based evaluation of a connected model, third-party client end-to-end runs, secure remote hosting and stable release certification. CI, package build/install, real MCP STDIO smoke, security audit and MCP SDK compatibility are tracked separately through the PR's current GitHub Actions results. The server intentionally remains local-first and does not expose unauthenticated remote HTTP.
 
 The task checkboxes below are a historical implementation checklist; they are not evidence that tests ran. Mark a verification step complete only after its command or CI check has actually passed.
 
