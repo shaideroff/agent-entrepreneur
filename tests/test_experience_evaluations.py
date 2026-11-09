@@ -1,5 +1,7 @@
 """Structural evaluation gates for the initial experience-agent pilot cohort."""
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from agent_entrepreneur.agents.experience_catalogue import get_experience_agent
@@ -95,4 +97,32 @@ def test_unexecuted_model_manifest_cannot_be_mistaken_for_a_pass() -> None:
         assert record["output_artifact_ref"] is None
         assert record["trait_results"] == []
         assert record["rubric_results"] == []
+
+def test_evaluation_report_marks_empty_run_as_not_run(tmp_path: Path) -> None:
+    manifest_path = ROOT / "pilot_eval_run_manifest.template.json"
+    result = subprocess.run(
+        [sys.executable, "scripts/experience_agent_eval_report.py", str(manifest_path)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "**Overall status:** NOT RUN" in result.stdout
+    assert "| NOT_RUN | 36 |" in result.stdout
+
+
+def test_evaluation_report_rejects_pass_without_model_output_evidence(tmp_path: Path) -> None:
+    manifest = json.loads(
+        (ROOT / "pilot_eval_run_manifest.template.json").read_text(encoding="utf-8")
+    )
+    manifest["records"][0]["status"] = "REVIEWED_PASS"
+    manifest_path = tmp_path / "invalid-manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    result = subprocess.run(
+        [sys.executable, "scripts/experience_agent_eval_report.py", str(manifest_path)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+    assert "provider is required" in result.stderr
 
