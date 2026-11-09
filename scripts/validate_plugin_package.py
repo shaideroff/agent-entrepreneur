@@ -7,6 +7,7 @@ import json
 import re
 import stat
 import tempfile
+import unicodedata
 import zipfile
 from pathlib import Path
 from urllib.parse import urlparse
@@ -38,8 +39,8 @@ def validate_tree(root: Path) -> dict[str, int]:
     manifest_path = manifest_dir / "plugin.json"
     if not manifest_path.is_file():
         fail("missing .codex-plugin/plugin.json")
-    manifest_dir_files = sorted(p.name for p in manifest_dir.iterdir() if p.is_file())
-    if manifest_dir_files != ["plugin.json"]:
+    manifest_dir_entries = sorted(p.name for p in manifest_dir.iterdir())
+    if manifest_dir_entries != ["plugin.json"]:
         fail(".codex-plugin must contain plugin.json only")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     for field in ("name", "version", "description", "skills", "interface"):
@@ -50,7 +51,7 @@ def validate_tree(root: Path) -> dict[str, int]:
     if not re.fullmatch(r"\d+\.\d+\.\d+", manifest["version"]):
         fail("plugin version must be strict semver")
     interface = manifest["interface"]
-    required_fields = ("displayName", "shortDescription", "longDescription", "developerName", "category", "websiteURL", "privacyPolicyURL", "termsOfServiceURL", "composerIcon", "logo")
+    required_fields = ("displayName", "shortDescription", "longDescription", "developerName", "category", "websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL", "composerIcon", "logo")
     for field in required_fields:
         if not interface.get(field):
             fail(f"interface missing {field}")
@@ -65,24 +66,48 @@ def validate_tree(root: Path) -> dict[str, int]:
     categories = {"Productivity", "Creativity", "Developer Tools", "Business & Operations", "Data & Analytics", "Communication", "Education & Research", "Security", "Finance", "Healthcare", "Travel", "Entertainment", "Other"}
     if interface["category"] not in categories:
         fail("unsupported directory category")
-    for field in ("brandColor", "brandColorDark"):
+    def luminance(color: str) -> float:
+        channels = [int(color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+        linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    for field, background in (("brandColor", "#FFFFFF"), ("brandColorDark", "#212121")):
         color = interface.get(field)
-        if color is not None and not re.fullmatch(r"#[0-9A-Fa-f]{6}", color):
-            fail(f"{field} must be a six-digit hex color")
-    for field in ("websiteURL", "privacyPolicyURL", "termsOfServiceURL"):
-        parsed = urlparse(interface[field])
-        if parsed.scheme != "https" or not parsed.netloc:
-            fail(f"{field} must be a public HTTPS URL")
+        if color is not None:
+            if not isinstance(color, str) or not re.fullmatch(r"#[0-9A-Fa-f]{6}", color):
+                fail(f"{field} must be a six-digit hex color")
+            high, low = sorted((luminance(color), luminance(background)), reverse=True)
+            if (high + 0.05) / (low + 0.05) < 2.0:
+                fail(f"{field} must have at least 2:1 contrast against {background}")
+    for field in ("websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"):
+        value = interface[field]
+        parsed = urlparse(value)
+        if len(value) > 1024 or parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
+            fail(f"{field} must be a public HTTPS URL <=1024 characters without embedded credentials")
     for field in ("homepage", "repository"):
         parsed = urlparse(manifest.get(field, ""))
         if parsed.scheme != "https" or not parsed.netloc:
             fail(f"{field} must be a public HTTPS URL")
     if not isinstance(manifest.get("author"), dict) or not manifest["author"].get("name"):
         fail("author.name is required")
-    if not isinstance(interface.get("capabilities"), list) or not interface["capabilities"] or any(not isinstance(x, str) or not x.strip() for x in interface["capabilities"]):
-        fail("capabilities must be a non-empty list of strings")
-    if not isinstance(interface.get("defaultPrompt"), list) or not interface["defaultPrompt"] or any(not isinstance(x, str) or not x.strip() for x in interface["defaultPrompt"]):
-        fail("defaultPrompt must be a non-empty list of strings")
+    capabilities = interface.get("capabilities")
+    if not isinstance(capabilities, list) or not capabilities or len(capabilities) > 20:
+        fail("capabilities must be a non-empty list containing at most 20 entries")
+    if any(not isinstance(x, str) or not x.strip() or len(x) > 120 or "\\n" in x or "\\r" in x for x in capabilities):
+        fail("each capability must be a non-empty one-line string <=120 characters")
+    prompts = interface.get("defaultPrompt")
+    if not isinstance(prompts, list) or not prompts or len(prompts) > 3:
+        fail("defaultPrompt must contain one to three prompts")
+    normalized_prompts = set()
+    for prompt in prompts:
+        if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 128 or "\\n" in prompt or "\\r" in prompt:
+            fail("each defaultPrompt must be a non-empty one-line string <=128 characters")
+        if re.search(r"(?<![A-Za-z0-9._%+-])@[A-Za-z0-9_-]+", prompt):
+            fail("defaultPrompt must not contain app @mentions")
+        normalized = " ".join(unicodedata.normalize("NFKC", prompt).split()).casefold()
+        if normalized in normalized_prompts:
+            fail("defaultPrompt entries must be unique after Unicode and whitespace normalization")
+        normalized_prompts.add(normalized)
 
     assets = [safe_relative(root, interface["composerIcon"]), safe_relative(root, interface["logo"])]
     for variant in ("assets/logo-light.svg", "assets/logo-dark.svg"):
@@ -115,9 +140,10 @@ def validate_tree(root: Path) -> dict[str, int]:
     skills_dir = (root / skills_value.rstrip("/")).resolve()
     if root.resolve() not in skills_dir.parents or not skills_dir.is_dir():
         fail("skills path must resolve to a directory inside the package")
-    skill_dirs = sorted(p for p in skills_dir.iterdir() if p.is_dir())
-    if not skill_dirs:
-        fail("no Skill directories found")
+    skill_entries = sorted(skills_dir.iterdir())
+    if not skill_entries or any(not p.is_dir() or p.is_symlink() for p in skill_entries):
+        fail("every direct child of skills/ must be a real Skill directory")
+    skill_dirs = skill_entries
     skill_names: set[str] = set()
     for skill_dir in skill_dirs:
         skill_file = skill_dir / "SKILL.md"
@@ -138,8 +164,11 @@ def validate_tree(root: Path) -> dict[str, int]:
         if name in skill_names:
             fail(f"duplicate Skill name: {name}")
         skill_names.add(name)
-        if not desc_match.group(1).strip():
-            fail(f"empty Skill description: {skill_file}")
+        description = desc_match.group(1).strip()
+        if not description or len(description) > 1024:
+            fail(f"Skill description must be non-empty and <=1024 characters: {skill_file}")
+        if len(f"{manifest['name']}:{name}") > 64:
+            fail(f"combined plugin and Skill identity exceeds 64 characters: {name}")
 
     cases = json.loads((root / "submission" / "reviewer-cases.json").read_text(encoding="utf-8"))
     positive = cases.get("positive_cases", [])
@@ -149,6 +178,19 @@ def validate_tree(root: Path) -> dict[str, int]:
     for required in ("README.md", "INSTALL.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
         if not (root / required).is_file():
             fail(f"missing release file: {required}")
+    for item in root.rglob("*"):
+        relative = item.relative_to(root)
+        if item.is_symlink():
+            fail(f"symlinks are not allowed in the public package: {relative}")
+        if item.is_dir() and item.name in {"__pycache__", ".git"}:
+            fail(f"transient directory is not allowed in the public package: {relative}")
+        if item.is_file():
+            if item.name in {".DS_Store", "Thumbs.db"} or item.name.startswith("._"):
+                fail(f"operating-system metadata is not allowed: {relative}")
+            if item.suffix.lower() in {".pyc", ".pyo"}:
+                fail(f"Python bytecode is not allowed: {relative}")
+            if re.fullmatch(r"(?:\\.env(?:\\..*)?|auth\\.json|credentials?(?:\\..*)?|secrets?(?:\\..*)?|\\.npmrc|\\.pypirc)", item.name, re.I):
+                fail(f"secret-shaped file is not allowed: {relative}")
     return {"skills": len(skill_dirs), "positive_cases": len(positive), "negative_cases": len(negative), "assets": len(assets)}
 
 
