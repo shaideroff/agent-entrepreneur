@@ -134,7 +134,7 @@ def test_preview_agent_without_dossier_does_not_receive_fake_work_packet() -> No
     from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
 
     packet = prepare_experience_agent_work_packet(
-        "sara_blakely", "Assess a product launch."
+        "markus_villig", "Assess a hyperlocal mobility launch."
     )
     assert packet["status"] == "not_ready"
     assert "No validated dossier" in packet["reason"]
