@@ -65,7 +65,7 @@ class ExperienceDossier(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     agent_id: str = Field(min_length=1)
-    version: str = Field(pattern=r"^\\d+\\.\\d+\\.\\d+$")
+    version: str = Field(pattern=r"^\d+\.\d+\.\d+$")
     experience_thesis: str = Field(min_length=1)
     principles: list[PrincipleRecord] = Field(default_factory=list)
     decision_cases: list[DecisionCaseRecord] = Field(default_factory=list)
