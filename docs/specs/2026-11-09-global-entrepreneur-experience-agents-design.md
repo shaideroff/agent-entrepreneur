@@ -2,7 +2,7 @@
 **Status:** Approved for implementation  
 **Date:** 2026-11-09  
 **Scope:** Product experience, agent identity, knowledge architecture, orchestration and acceptance criteria  
-**Implementation status:** Additive v1.1 implementation underway. The public catalogue, first founder-contributed dossier, discovery/profile/council-routing MCP tools and structured council-synthesis contract are implemented on the current feature branch. Full dossier coverage, independent agent execution, Lead orchestration, challenge rounds, evaluation gates and public release certification remain pending.
+**Implementation status:** Additive v1.1 implementation underway. The public catalogue, six pilot dossiers, discovery/profile/work-packet MCP tools, deterministic objective/domain Lead shortlist routing and structured council synthesis with host-supplied adversarial challenge validation are implemented on the current feature branch. Independent model execution, semantic Lead reasoning, autonomous challenge generation, evaluation gates and public release certification remain pending.
 
 ## 1. Product thesis
 
