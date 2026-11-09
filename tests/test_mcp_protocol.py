@@ -44,11 +44,69 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "plan_specialist_workflow",
                 "complete_specialist_workflow",
                 "resume_specialist_workflow",
+                "discover_experience_agents",
+                "get_experience_agent_profile",
+                "recommend_experience_agent_council",
+                "synthesize_experience_agent_council",
+                "prepare_experience_agent_work_packet",
                 "search_entrepreneurs",
                 "save_memory",
                 "search_memory",
                 "delete_memory",
             }
+
+            discovered = await session.call_tool(
+                "discover_experience_agents", {"query": "Built from Zero"}
+            )
+            assert discovered.isError is False
+            directory_payload = json.loads(discovered.content[0].text)
+            assert directory_payload[0]["agent_id"] == "built_from_zero"
+
+            founder_profile = await session.call_tool(
+                "get_experience_agent_profile", {"agent_id": "built_from_zero"}
+            )
+            assert founder_profile.isError is False
+            founder_payload = json.loads(founder_profile.content[0].text)
+            assert founder_payload["dossier"]["agent_id"] == "built_from_zero"
+
+            lead_route = await session.call_tool(
+                "recommend_experience_agent_council",
+                {"objective": "Evaluate a hyperlocal mobility marketplace."},
+            )
+            assert lead_route.isError is False
+            lead_payload = json.loads(lead_route.content[0].text)
+            assert "markus_villig" in {
+                item["agent_id"] for item in lead_payload["selected_agents"]
+            }
+
+            work_packet = await session.call_tool(
+                "prepare_experience_agent_work_packet",
+                {"agent_id": "jeff_bezos", "objective": "Assess customer-led scale."},
+            )
+            assert work_packet.isError is False
+            assert json.loads(work_packet.content[0].text)["status"] == "preview_work_packet"
+
+            council = await session.call_tool(
+                "synthesize_experience_agent_council",
+                {
+                    "objective": "Should we scale now?",
+                    "contributions": [
+                        {"agent_id": "built_from_zero", "recommendations": ["Validate demand first."]},
+                        {"agent_id": "jeff_bezos", "recommendations": ["Build scalable mechanisms."]},
+                    ],
+                    "recommendation": "Run a bounded pilot with explicit scale gates.",
+                    "challenges": [{
+                        "challenger_agent_id": "built_from_zero",
+                        "target_agent_id": "jeff_bezos",
+                        "challenged_statement": "Build scalable mechanisms.",
+                        "rationale": "Repeatable demand has not yet been demonstrated.",
+                        "severity": "high",
+                    }],
+                },
+            )
+            assert council.isError is False
+            council_payload = json.loads(council.content[0].text)
+            assert council_payload["challenges"][0]["severity"] == "high"
 
             resources = await session.list_resources()
             assert {str(resource.uri) for resource in resources.resources} == {
