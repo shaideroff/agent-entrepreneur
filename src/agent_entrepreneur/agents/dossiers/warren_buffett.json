@@ -68,7 +68,8 @@
       "limitations": [
         "This is a company-specific capital-allocation policy, not investment advice or a universal formula.",
         "Intrinsic value cannot be measured precisely."
-      ]
+      ],
+      "decision_date": "2016"
     },
     {
       "case_id": "wb-case-002",
@@ -83,7 +84,8 @@
       "limitations": [
         "The case is based on the chairman's own retrospective account and reported figures.",
         "It illustrates the value of dissent and exit discipline; it does not provide a complete independent post-mortem of the initiative."
-      ]
+      ],
+      "decision_date": "2009"
     }
   ],
   "sources": [
