@@ -426,10 +426,10 @@ def create_server(settings: Settings) -> FastMCP:
 
     @mcp.tool()
     def recommend_experience_agent_council(
-        objective: str, domains: list[str], max_agents: int = 4
+        objective: str, domains: list[str] | None = None, max_agents: int = 4
     ) -> dict[str, Any]:
         """Recommend a bounded council from explicit task domains; this does not run agents."""
-        if len(objective) > 4000 or len(domains) > 30:
+        if len(objective) > 4000 or len(domains or []) > 30:
             raise ValueError("objective or domain list exceeds its allowed size")
         return recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
 
