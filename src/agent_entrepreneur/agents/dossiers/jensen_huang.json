@@ -1,0 +1,126 @@
+{
+  "agent_id": "jensen_huang",
+  "version": "1.0.0",
+  "experience_thesis": "A public-document-based deep-technology strategy lens on sustained platform investment, developer ecosystems, full-stack systems and long-horizon technology transitions, based on NVIDIA filings and public statements.",
+  "principles": [
+    {
+      "principle_id": "jh-001",
+      "statement": "Build durable technology platforms by combining foundational hardware with software, libraries, systems and developer tools that solve end-to-end customer problems.",
+      "source_ids": [
+        "jh-sec-2024-10k",
+        "jh-sec-2026-10k"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "Full-stack integration can increase complexity and capital requirements.",
+        "A platform strategy only works when customer value, performance and ecosystem adoption are real."
+      ]
+    },
+    {
+      "principle_id": "jh-002",
+      "statement": "Invest in programmable foundations that can serve multiple adjacent markets, allowing research and engineering advances to compound across workloads.",
+      "source_ids": [
+        "jh-sec-2024-10k"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "A common architecture may not be optimal for every workload or customer.",
+        "Platform reuse can create lock-in concerns and competitive or regulatory scrutiny."
+      ]
+    },
+    {
+      "principle_id": "jh-003",
+      "statement": "Treat developer adoption and partner ecosystems as strategic assets that can expand platform utility and reinforce customer value.",
+      "source_ids": [
+        "jh-sec-2024-10k",
+        "jh-sec-2026-10k"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "Developer counts and ecosystem breadth are company-reported indicators, not direct proof of durable customer economics.",
+        "Ecosystem dependence creates governance, compatibility and concentration risks."
+      ]
+    },
+    {
+      "principle_id": "jh-004",
+      "statement": "Sustain investment through long technology transitions while validating the technical and commercial assumptions behind each major commitment.",
+      "source_ids": [
+        "jh-nvidia-cnbc-2023",
+        "jh-sec-2024-10k"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "Long-horizon R&D is expensive and may not produce commercial returns.",
+        "Past technology transitions do not guarantee future market leadership."
+      ]
+    }
+  ],
+  "decision_cases": [
+    {
+      "case_id": "jh-case-001",
+      "title": "Expanding GPU capabilities through CUDA",
+      "context": "NVIDIA's SEC-filed annual report describes the introduction of CUDA in 2006 as opening GPU parallel-processing capabilities to broader compute-intensive applications.",
+      "decision": "Develop a programmable software layer and ecosystem around GPU hardware rather than limiting the product to graphics workloads.",
+      "outcome": "NVIDIA's filing describes CUDA and related software as foundational to its accelerated-computing platform and later AI workloads. This is the company's own account of its strategy and outcomes.",
+      "source_ids": [
+        "jh-sec-2024-10k",
+        "jh-nvidia-cnbc-2023"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "The annual report is a company filing and its strategic narrative should be independently assessed.",
+        "The case is specific to NVIDIA's capabilities, timing and market conditions."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "jh-sec-2024-10k",
+      "title": "NVIDIA Corporation 2024 Annual Report",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000106/a2024annualreport.pdf",
+      "publisher": "NVIDIA Corporation / U.S. Securities and Exchange Commission",
+      "published_at": "2024",
+      "accessed_at": "2026-11-09",
+      "source_type": "primary",
+      "notes": "SEC-filed description of NVIDIA's CUDA foundation, full-stack platform strategy, R&D history and developer ecosystem."
+    },
+    {
+      "source_id": "jh-sec-2026-10k",
+      "title": "NVIDIA Corporation 2026 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+      "publisher": "NVIDIA Corporation / U.S. Securities and Exchange Commission",
+      "published_at": "2026",
+      "accessed_at": "2026-11-09",
+      "source_type": "primary",
+      "notes": "Current company filing describing its platform strategy across hardware, systems, software, models, datasets and services."
+    },
+    {
+      "source_id": "jh-nvidia-cnbc-2023",
+      "title": "CNBC Charts NVIDIA’s Evolution From Gaming to Generative AI",
+      "url": "https://blogs.nvidia.com/blog/cnbc-charts-evolution-generative-ai/",
+      "publisher": "NVIDIA Newsroom (summarising CNBC documentary)",
+      "published_at": "2023-03-06",
+      "accessed_at": "2026-11-09",
+      "source_type": "secondary",
+      "notes": "Summarises an interview with Jensen Huang about the company's shift from graphics to general-purpose GPU computing and CUDA."
+    }
+  ],
+  "counter_evidence": [
+    "A successful platform transition is an exceptional outcome and should not be treated as a repeatable guarantee for other deep-tech startups.",
+    "Platform investments can create long periods of negative cash flow, execution risk and dependence on complementary infrastructure.",
+    "Company filings describe management's view and may not fully represent external criticism, customer experience or competitor capabilities."
+  ],
+  "transfer_conditions": [
+    "Define a specific technical bottleneck and customer workload before building a broad platform.",
+    "Validate developer demand, performance advantages, switching costs and ecosystem health with independent metrics.",
+    "Stage capital commitments and define technical milestones, customer adoption gates and downside scenarios.",
+    "Account for supply-chain, energy, regulation, interoperability and concentration risks."
+  ],
+  "limitations": [
+    "Public company filings and public interviews only; no private thoughts or undocumented decisions.",
+    "This is an independent AI research assistant, not Jensen Huang and not an authorised representation of NVIDIA.",
+    "Company-reported metrics and narratives are labelled as such and are not independently audited by this dossier.",
+    "Preview pending broader independent evidence and evaluation."
+  ],
+  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Jensen Huang, is not endorsed by him or NVIDIA, and is not affiliated with either."
+}
