@@ -204,13 +204,25 @@ def synthesize_experience_council(
     unknown = sorted(set(ids) - known_ids)
     if unknown:
         raise ValueError(f"unknown experience agent IDs: {unknown}")
+    if len(challenges or []) > 20:
+        raise ValueError("council may contain no more than 20 challenges")
     parsed_challenges = [CouncilChallenge.model_validate(item) for item in (challenges or [])]
     council_ids = set(ids)
+    response_by_id = {item.agent_id: item for item in parsed}
     for challenge in parsed_challenges:
         if challenge.challenger_agent_id not in council_ids or challenge.target_agent_id not in council_ids:
             raise ValueError("challenge participants must belong to the selected council")
         if challenge.challenger_agent_id == challenge.target_agent_id:
             raise ValueError("an agent cannot challenge its own contribution")
+        target = response_by_id[challenge.target_agent_id]
+        target_statements = {
+            *target.documented_facts,
+            *target.interpretations,
+            *target.analogies,
+            *target.recommendations,
+        }
+        if challenge.challenged_statement not in target_statements:
+            raise ValueError("challenged_statement must match a statement in the target contribution")
     result = CouncilSynthesis(
         objective=objective,
         contributions=parsed,
