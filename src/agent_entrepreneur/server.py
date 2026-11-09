@@ -11,6 +11,7 @@ from agent_entrepreneur.agents.experience_catalogue import (
     get_experience_agent,
     list_experience_agents,
     recommend_experience_agents,
+    synthesize_experience_council,
 )
 from agent_entrepreneur.agents.models import (
     SpecialistFinding,
@@ -430,6 +431,29 @@ def create_server(settings: Settings) -> FastMCP:
         if len(objective) > 4000 or len(domains) > 30:
             raise ValueError("objective or domain list exceeds its allowed size")
         return recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
+
+    @mcp.tool()
+    def synthesize_experience_agent_council(
+        objective: str,
+        contributions: list[dict[str, Any]],
+        recommendation: str,
+        agreements: list[str] | None = None,
+        disagreements: list[str] | None = None,
+        unresolved_questions: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Validate host-produced agent contributions and preserve disagreement in synthesis."""
+        if len(objective) > 4000 or len(recommendation) > 8000:
+            raise ValueError("objective or recommendation exceeds its allowed length")
+        if len(contributions) > 5:
+            raise ValueError("council must contain no more than five contributions")
+        return synthesize_experience_council(
+            objective,
+            contributions,
+            recommendation=recommendation,
+            agreements=agreements,
+            disagreements=disagreements,
+            unresolved_questions=unresolved_questions,
+        )
 
     @mcp.tool()
     def search_entrepreneurs(
