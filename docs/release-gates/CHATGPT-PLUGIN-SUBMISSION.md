@@ -8,8 +8,8 @@
 ## Exact validated package
 
 - File: agent-entrepreneur-1.0.0.zip
-- Size: 19,771 bytes
-- SHA-256: 336b230abba330a73df6a973232e77078ddeaea95b8d76c700b1811482de30b4
+- Size: 20,004 bytes
+- SHA-256: 873c4b178acb22f180d2736cd8e620700dc2c9bc51fc538e09bdb9ab6272ed01
 - Entries: 16
 - Skills: 4
 - Positive test cases: 5
@@ -17,7 +17,7 @@
 - SVG assets: 3
 - Python 3.11 and 3.12 CI artifacts contain byte-identical inner Plugin ZIPs.
 
-The repository's custom validator passed on Python 3.11 and 3.12. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, reviewer case completeness, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from the CI artifact and independently inspected; its internal manifest and case counts match the values above.
+The repository's custom validator passed on Python 3.11 and 3.12 in workflow 42717590585. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, complete positive/negative reviewer case fields, release notes, availability state, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from both CI artifacts and independently inspected; the two inner ZIPs are byte-identical and their manifest, listing pack and case counts match the values above.
 
 ## Product boundary
 
