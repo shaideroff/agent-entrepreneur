@@ -199,3 +199,25 @@ def test_catalogue_fails_closed_for_missing_configured_dossier(monkeypatch) -> N
     with pytest.raises(FileNotFoundError, match="Configured experience dossier is missing"):
         get_experience_agent("built_from_zero")
 
+
+
+def test_council_challenge_must_reference_a_target_contribution_statement() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    with pytest.raises(ValueError, match="must match a statement"):
+        synthesize_experience_council(
+            "Objective",
+            [
+                {"agent_id": "built_from_zero", "recommendations": ["Run a pilot."]},
+                {"agent_id": "jeff_bezos", "recommendations": ["Invest in infrastructure."]},
+            ],
+            recommendation="Run a pilot.",
+            challenges=[{
+                "challenger_agent_id": "built_from_zero",
+                "target_agent_id": "jeff_bezos",
+                "challenged_statement": "A fabricated statement.",
+                "rationale": "Test challenge integrity.",
+            }],
+        )
+
