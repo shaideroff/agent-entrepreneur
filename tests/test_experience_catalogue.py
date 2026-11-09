@@ -60,7 +60,7 @@ def test_council_synthesis_preserves_disagreement() -> None:
     result = synthesize_experience_council(
         "Should we expand now?",
         [
-            {"agent_id": "built_from_zero", "documented_facts": ["Founder-led validation is a relevant lens."], "recommendations": ["Run a small test."]},
+            {"agent_id": "built_from_zero", "documented_facts": ["Founder-led validation is a relevant lens."], "fact_evidence": [{"statement": "Founder-led validation is a relevant lens.", "source_ids": ["sh-founder-experience-001"], "evidence_status": "partially_supported"}], "recommendations": ["Run a small test."]},
             {"agent_id": "jeff_bezos", "interpretations": ["Scale mechanisms matter after repeatability."]},
         ],
         recommendation="Validate one market before expanding.",
@@ -222,6 +222,22 @@ def test_council_challenge_must_reference_a_target_contribution_statement() -> N
             }],
         )
 
+
+
+
+def test_council_requires_claim_level_evidence_for_documented_facts() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    with pytest.raises(ValueError, match="require claim-level fact_evidence"):
+        synthesize_experience_council(
+            "Objective",
+            [{
+                "agent_id": "built_from_zero",
+                "documented_facts": ["The founder reported an early sales experiment."],
+            }],
+            recommendation="Treat as a first-party account.",
+        )
 
 
 def test_council_rejects_unknown_contribution_source_references() -> None:
