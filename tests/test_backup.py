@@ -139,3 +139,36 @@ def test_backup_is_not_published_until_snapshot_is_complete(
     backup_database(source, destination)
 
     assert destination.is_file()
+
+def test_backup_restores_after_source_database_is_lost(tmp_path: Path):
+    import shutil
+
+    source = tmp_path / "production.sqlite3"
+    backup = tmp_path / "backups" / "recovery.sqlite3"
+    with connect(source) as db:
+        db.execute(
+            "INSERT INTO memory(id, scope, content) VALUES (?, ?, ?)",
+            ("recover-memory", "user", "recoverable approved data"),
+        )
+        db.execute(
+            "INSERT INTO workflow_runs(id, status, state_json) VALUES (?, ?, ?)",
+            ("recover-workflow", "partial", '{"checkpoint": 3}'),
+        )
+
+    backup_database(source, backup)
+    source.unlink()
+    shutil.copy2(backup, source)
+
+    with connect(source) as recovered:
+        memory = recovered.execute(
+            "SELECT scope, content FROM memory WHERE id = ?",
+            ("recover-memory",),
+        ).fetchone()
+        workflow = recovered.execute(
+            "SELECT status, state_json FROM workflow_runs WHERE id = ?",
+            ("recover-workflow",),
+        ).fetchone()
+
+    assert tuple(memory) == ("user", "recoverable approved data")
+    assert tuple(workflow) == ("partial", '{"checkpoint": 3}')
+
