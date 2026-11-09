@@ -1,8 +1,11 @@
-from scripts.run_local_model_evaluation import (
-    digest_for_model,
-    strip_thinking,
-    validate_judgment,
-)
+import runpy
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+RUNNER = runpy.run_path(str(ROOT / "scripts" / "run_local_model_evaluation.py"))
+digest_for_model = RUNNER["digest_for_model"]
+strip_thinking = RUNNER["strip_thinking"]
+validate_judgment = RUNNER["validate_judgment"]
 
 
 def test_local_model_runner_strips_thinking_blocks() -> None:
