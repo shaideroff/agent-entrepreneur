@@ -54,6 +54,7 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "discover_experience_agents",
                 "get_experience_agent_profile",
                 "recommend_experience_agent_council",
+                "prepare_experience_agent_council_work",
                 "synthesize_experience_agent_council",
                 "prepare_experience_agent_work_packet",
                 "search_entrepreneurs",
@@ -85,6 +86,15 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             assert "markus_villig" in {
                 item["agent_id"] for item in lead_payload["selected_agents"]
             }
+
+            lead_council = await session.call_tool(
+                "prepare_experience_agent_council_work",
+                {"objective": "Evaluate a hyperlocal mobility marketplace."},
+            )
+            assert lead_council.isError is False
+            lead_council_payload = _decode_tool_payload(lead_council)
+            assert "markus_villig" in lead_council_payload["ready_agent_ids"]
+            assert lead_council_payload["council_protocol"]
 
             work_packet = await session.call_tool(
                 "prepare_experience_agent_work_packet",
