@@ -82,6 +82,8 @@ def get_experience_agent(agent_id: str) -> dict[str, Any]:
                 dossier = ExperienceDossier.model_validate_json(dossier_path.read_text(encoding="utf-8"))
                 if dossier.agent_id != agent_id:
                     raise ValueError("dossier agent_id does not match its catalogue entry")
+                if dossier.version != record.get("dossier_version"):
+                    raise ValueError("dossier version does not match its catalogue entry")
                 record["dossier"] = dossier.validate_source_references().model_dump(mode="json")
             return record
     raise ValueError(f"unknown experience agent: {agent_id}")
