@@ -141,5 +141,12 @@
   ],
   "out_of_scope": [
     "Personal investment advice or security recommendations."
+  ],
+  "owner": "Agent Entrepreneur maintainers",
+  "reviewer": "Independent review pending",
+  "last_verified_at": "2026-11-09",
+  "next_review_at": "2027-02-09",
+  "evaluation_refs": [
+    "experience-agent-pilot-structural-v1"
   ]
 }
