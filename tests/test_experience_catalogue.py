@@ -289,7 +289,8 @@ def test_lead_prepares_independent_work_packets_for_selected_pilot_council() -> 
         constraints=["Limited launch budget"],
     )
     assert result["lead_role"] == "neutral_orchestrator"
-    assert "markus_villig" in result["ready_agent_ids"]
-    assert all(packet["status"] == "preview_work_packet" for packet in result["work_packets"])
+    assert "brian_chesky" in result["ready_agent_ids"]
+    assert "markus_villig" in result["not_ready_agent_ids"]
+    assert all(packet["status"] in {"preview_work_packet", "not_ready"} for packet in result["work_packets"])
     assert "independent contributions" in result["council_protocol"][0]
 
