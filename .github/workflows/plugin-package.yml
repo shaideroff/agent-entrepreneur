@@ -1,0 +1,30 @@
+name: Plugin package validation
+
+on:
+  push:
+    branches: [feat/global-chatgpt-codex-plugin-v1]
+  pull_request:
+    branches: [main]
+    paths:
+      - "plugins/agent-entrepreneur/**"
+      - "scripts/validate_plugin_package.py"
+      - ".github/workflows/plugin-package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Python ${{ matrix.python-version }} package validation
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate Skills-only Plugin and deterministic package
+        run: python scripts/validate_plugin_package.py
