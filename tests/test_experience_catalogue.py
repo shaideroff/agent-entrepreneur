@@ -256,3 +256,25 @@ def test_council_rejects_unknown_challenge_evidence_references() -> None:
             }],
         )
 
+
+
+def test_council_fact_evidence_maps_each_fact_to_a_dossier_source() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    result = synthesize_experience_council(
+        "Assess founder validation.",
+        [{
+            "agent_id": "built_from_zero",
+            "documented_facts": ["The founder reported a 2017 campus sales experiment."],
+            "fact_evidence": [{
+                "statement": "The founder reported a 2017 campus sales experiment.",
+                "source_ids": ["sh-founder-experience-001"],
+                "evidence_status": "partially_supported",
+            }],
+        }],
+        recommendation="Treat the case as a founder-reported example, not audited proof.",
+    )
+    assert result["contributions"][0]["fact_evidence"][0]["source_ids"] == [
+        "sh-founder-experience-001"
+    ]
+
