@@ -301,8 +301,8 @@ def synthesize_experience_council(
         orphan_evidence = mapped_fact_statements - fact_statements
         if unmapped_facts or orphan_evidence:
             raise ValueError(
-                f"documented facts and claim-level fact_evidence must match for "
-                f"{response.agent_id}; missing={sorted(unmapped_facts)}, "
+                f"documented facts require claim-level fact_evidence with an exact one-to-one "
+                f"match for {response.agent_id}; missing={sorted(unmapped_facts)}, "
                 f"orphaned={sorted(orphan_evidence)}"
             )
         if len(mapped_fact_statements) != len(response.fact_evidence):
