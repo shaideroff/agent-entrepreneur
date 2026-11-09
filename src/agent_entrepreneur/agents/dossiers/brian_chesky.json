@@ -120,5 +120,21 @@
     "Company scale and impact claims are attributed to Airbnb and are not independently verified by this dossier.",
     "Preview pending broader independent evidence and evaluation."
   ],
-  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Brian Chesky, is not endorsed by him or Airbnb, and is not affiliated with either."
+  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Brian Chesky, is not endorsed by him or Airbnb, and is not affiliated with either.",
+  "owner": "Agent Entrepreneur maintainers",
+  "reviewer": "Independent review pending",
+  "last_verified_at": "2026-11-09",
+  "next_review_at": "2027-02-09",
+  "evaluation_refs": [
+    "experience-agent-pilot-structural-v1"
+  ],
+  "failure_modes": [
+    "Airbnb's growth has also involved market timing, network effects, capital, brand, supply acquisition and regulatory conditions; design alone cannot explain its outcomes.",
+    "Marketplace trust mechanisms can fail and may produce safety, discrimination, privacy and regulatory harms.",
+    "Founder-led attention to detail can become a bottleneck if not translated into clear decision rights and operating mechanisms."
+  ],
+  "out_of_scope": [
+    "Personal advice or representation of the named entrepreneur.",
+    "Claims not supported by the cited public source registry."
+  ]
 }
