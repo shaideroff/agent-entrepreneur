@@ -291,11 +291,15 @@ def synthesize_experience_council(
         fact_statements = set(response.documented_facts)
         mapped_fact_statements = {fact.statement for fact in response.fact_evidence}
         unmapped_facts = fact_statements - mapped_fact_statements
-        if unmapped_facts:
+        orphan_evidence = mapped_fact_statements - fact_statements
+        if unmapped_facts or orphan_evidence:
             raise ValueError(
-                f"documented facts require claim-level fact_evidence for {response.agent_id}: "
-                f"{sorted(unmapped_facts)}"
+                f"documented facts and claim-level fact_evidence must match for "
+                f"{response.agent_id}; missing={sorted(unmapped_facts)}, "
+                f"orphaned={sorted(orphan_evidence)}"
             )
+        if len(mapped_fact_statements) != len(response.fact_evidence):
+            raise ValueError(f"duplicate fact_evidence statements for {response.agent_id}")
         referenced_ids = set(response.source_ids)
         for fact in response.fact_evidence:
             referenced_ids.update(fact.source_ids)
