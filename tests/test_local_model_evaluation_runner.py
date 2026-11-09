@@ -6,6 +6,7 @@ RUNNER = runpy.run_path(str(ROOT / "scripts" / "run_local_model_evaluation.py"))
 digest_for_model = RUNNER["digest_for_model"]
 strip_thinking = RUNNER["strip_thinking"]
 validate_judgment = RUNNER["validate_judgment"]
+build_judge_prompt = RUNNER["build_judge_prompt"]
 
 
 def test_local_model_runner_strips_thinking_blocks() -> None:
@@ -79,3 +80,16 @@ def test_local_model_runner_uses_chat_api_with_thinking_disabled(monkeypatch) ->
     assert calls["payload"]["think"] is False
     assert "think" not in calls["payload"]["options"]
 
+
+
+def test_local_model_judge_receives_exact_dossier_and_scenario_context() -> None:
+    case = {
+        "case_id": "built_from_zero-missing_sources-v1",
+        "scenario": "missing_sources",
+        "objective": "Do not invent private sources.",
+        "required_traits": ["state_unknowns", "avoid_impersonation"],
+    }
+    prompt = build_judge_prompt(case, "The answer says the fact is unknown.", "Dossier source registry and exact task")
+    assert "Dossier source registry and exact task" in prompt
+    assert "TRUSTED TEST FIXTURE CONTEXT" in prompt
+    assert "CANDIDATE RESPONSE (UNTRUSTED)" in prompt
