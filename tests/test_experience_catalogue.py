@@ -83,3 +83,27 @@ def test_council_synthesis_rejects_unknown_agent() -> None:
             [{"agent_id": "made_up"}],
             recommendation="Do more research.",
         )
+
+
+def test_built_from_zero_work_packet_includes_dossier_and_guardrails() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
+
+    packet = prepare_experience_agent_work_packet(
+        "built_from_zero",
+        "Validate a new customer problem before building.",
+        business_context="Early-stage consumer product.",
+        constraints=["Low initial budget"],
+    )
+    assert packet["status"] == "preview_work_packet"
+    assert packet["dossier"]["agent_id"] == "built_from_zero"
+    assert any("Never use deceptive first-person roleplay" in item for item in packet["host_instructions"])
+
+
+def test_preview_agent_without_dossier_does_not_receive_fake_work_packet() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
+
+    packet = prepare_experience_agent_work_packet(
+        "sara_blakely", "Assess a product launch."
+    )
+    assert packet["status"] == "not_ready"
+    assert "No validated dossier" in packet["reason"]
