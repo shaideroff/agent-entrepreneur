@@ -204,6 +204,21 @@ def synthesize_experience_council(
     unknown = sorted(set(ids) - known_ids)
     if unknown:
         raise ValueError(f"unknown experience agent IDs: {unknown}")
+    allowed_refs_by_agent: dict[str, set[str]] = {}
+    for response in parsed:
+        profile = get_experience_agent(response.agent_id)
+        dossier = profile.get("dossier")
+        allowed_refs: set[str] = set()
+        if isinstance(dossier, dict):
+            allowed_refs.update(source["source_id"] for source in dossier["sources"])
+            allowed_refs.update(item["principle_id"] for item in dossier["principles"])
+            allowed_refs.update(item["case_id"] for item in dossier["decision_cases"])
+        allowed_refs_by_agent[response.agent_id] = allowed_refs
+        unknown_refs = set(response.source_ids) - allowed_refs
+        if unknown_refs:
+            raise ValueError(
+                f"unknown evidence references for {response.agent_id}: {sorted(unknown_refs)}"
+            )
     if len(challenges or []) > 20:
         raise ValueError("council may contain no more than 20 challenges")
     parsed_challenges = [CouncilChallenge.model_validate(item) for item in (challenges or [])]
@@ -223,6 +238,14 @@ def synthesize_experience_council(
         }
         if challenge.challenged_statement not in target_statements:
             raise ValueError("challenged_statement must match a statement in the target contribution")
+        allowed_challenge_refs = set().union(
+            *(allowed_refs_by_agent[agent_id] for agent_id in council_ids)
+        )
+        unknown_challenge_refs = set(challenge.evidence_refs) - allowed_challenge_refs
+        if unknown_challenge_refs:
+            raise ValueError(
+                f"unknown challenge evidence references: {sorted(unknown_challenge_refs)}"
+            )
     result = CouncilSynthesis(
         objective=objective,
         contributions=parsed,
