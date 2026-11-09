@@ -29,7 +29,7 @@ Returns one catalogue entry. Unknown IDs produce a validation error.
 
 ### `synthesize_experience_agent_council`
 
-Inputs include the objective, one to five host-produced agent contributions, a recommendation, agreements, disagreements and unresolved questions. The server validates the contribution structure and known agent IDs, then returns one synthesis object that preserves disagreement. It does not generate or independently verify the contributions.
+Inputs include the objective, one to five host-produced agent contributions, a recommendation, agreements, disagreements, unresolved questions and optional adversarial challenges. Each challenge identifies a challenger, target, challenged statement, rationale, evidence references and severity. The server validates council membership and structure, then returns one synthesis object that preserves disagreement. Challenge generation and reasoning remain the connected host's responsibility; the server does not independently generate or verify contributions or challenges.
 
 ### `recommend_experience_agent_council`
 
@@ -38,7 +38,7 @@ Inputs:
 - `domains`: user/client-supplied capability domains.
 - `max_agents`: integer from 1 to 5 (default 4).
 
-Returns a deterministic domain match, the selected entries, rationale, unmatched domains and an explicit execution boundary. This is routing support only. It does not invoke the named people, generate their opinions or execute agent reasoning.
+Returns a bounded shortlist using explicit domain matches and transparent objective-keyword hints, including inferred domains, rationale, unmatched domains and an execution boundary. This is a deterministic heuristic, not semantic model reasoning. It does not invoke the named people, generate their opinions or execute agent reasoning. Supply explicit domains for higher precision.
 
 ## Founding directory
 
@@ -86,4 +86,4 @@ A catalogue entry may move from Preview to Active only after:
 
 ## Current release boundary
 
-This PR is an implementation foundation. It is not a complete global public launch. Individual dossier-grounded reasoning, multi-agent independent execution, challenge rounds, Lead synthesis, public-host deployment, authentication, third-party client end-to-end verification, legal review and release certification remain separate gates.
+This PR is an implementation foundation. It is not a complete global public launch. Dossier-grounded work packets and structural challenge validation are available, but independent model execution, autonomous challenge generation, semantic Lead reasoning, evaluation suites, public-host deployment, authentication, third-party client end-to-end verification, legal review and release certification remain separate gates.
