@@ -166,3 +166,56 @@ def synthesize_experience_council(
             "The server does not independently generate, verify or endorse agent reasoning."
         ),
     }
+
+
+def prepare_experience_agent_work_packet(
+    agent_id: str, objective: str, *, business_context: str = "", constraints: list[str] | None = None
+) -> dict[str, Any]:
+    """Prepare a dossier-grounded, host-executable work packet for a Preview agent."""
+    if not objective.strip() or len(objective) > 4000:
+        raise ValueError("objective must contain 1 to 4000 characters")
+    if len(business_context) > 8000:
+        raise ValueError("business_context must not exceed 8000 characters")
+    if len(constraints or []) > 30:
+        raise ValueError("constraints must contain no more than 30 items")
+    profile = get_experience_agent(agent_id)
+    dossier = profile.get("dossier")
+    if not isinstance(dossier, dict):
+        return {
+            "agent": profile,
+            "status": "not_ready",
+            "objective": objective,
+            "reason": "No validated dossier is available for this catalogue entry.",
+        }
+    return {
+        "agent": profile,
+        "status": "preview_work_packet",
+        "objective": objective,
+        "business_context": business_context,
+        "constraints": constraints or [],
+        "dossier": dossier,
+        "host_instructions": [
+            "You are an AI research assistant applying this dossier, not the named person.",
+            "Never use deceptive first-person roleplay or imply endorsement or private access.",
+            "Separate documented facts, interpretation, analogy and recommendations.",
+            "Cite only source IDs present in the dossier; do not invent sources or quotations.",
+            "Test transferability against the supplied business context and constraints.",
+            "State counter-evidence, limitations, unknowns, risks and a measurable decision gate.",
+            "If the dossier does not support an answer, say so and request research rather than guessing.",
+        ],
+        "required_output": {
+            "objective_understood": "string",
+            "documented_facts": "array of strings with source IDs",
+            "principles_applied": "array of principle IDs with transfer rationale",
+            "interpretations": "array of strings",
+            "recommendations": "array of strings",
+            "alternatives": "array of strings",
+            "risks_and_unknowns": "array of strings",
+            "decision_gate": "string",
+            "limitations": "array of strings",
+        },
+        "execution_boundary": (
+            "This packet is passed to the connected MCP host for reasoning. The server does not "
+            "run a language model or claim the named person is speaking."
+        ),
+    }
