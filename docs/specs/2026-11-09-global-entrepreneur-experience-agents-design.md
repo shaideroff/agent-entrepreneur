@@ -1,5 +1,5 @@
 # Agent Entrepreneur v1.1 — Global Entrepreneur Experience Agents
-**Status:** Design proposal — awaiting product-owner approval  
+**Status:** Approved for implementation  
 **Date:** 2026-11-09  
 **Scope:** Product experience, agent identity, knowledge architecture, orchestration and acceptance criteria  
 **Implementation status:** Documentation only. No v1.0 runtime behaviour or APIs are changed by this proposal.
@@ -251,7 +251,7 @@ Approve product model, founding cohort, naming, dossier schema, evidence policy,
 
 ### Phase 1 — Knowledge foundation
 Create complete dossiers for a small pilot cohort before implementing all named agents. Suggested pilot:
-- S Haider — Built from Zero (founder-contributed material, explicitly marked as such).
+- S Haider — Built from Zero (first-party founder experience, with provenance recorded at the individual claim level).
 - Sara Blakely — Bootstrapped Consumer Brand.
 - Jeff Bezos — Customer Obsession & Scale.
 - Warren Buffett — Capital Allocation.
