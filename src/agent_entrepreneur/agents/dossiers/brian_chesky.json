@@ -69,7 +69,8 @@
       "limitations": [
         "The public sources describe Airbnb's own philosophy and should not be treated as independent proof of causal impact.",
         "Trust systems may create new costs, exclusion risks and regulatory obligations."
-      ]
+      ],
+      "decision_date": "2020"
     }
   ],
   "sources": [
