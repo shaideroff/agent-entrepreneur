@@ -284,6 +284,14 @@ def synthesize_experience_council(
             allowed_refs.update(item["principle_id"] for item in dossier["principles"])
             allowed_refs.update(item["case_id"] for item in dossier["decision_cases"])
         allowed_refs_by_agent[response.agent_id] = allowed_refs
+        fact_statements = set(response.documented_facts)
+        mapped_fact_statements = {fact.statement for fact in response.fact_evidence}
+        unmapped_facts = fact_statements - mapped_fact_statements
+        if unmapped_facts:
+            raise ValueError(
+                f"documented facts require claim-level fact_evidence for {response.agent_id}: "
+                f"{sorted(unmapped_facts)}"
+            )
         referenced_ids = set(response.source_ids)
         for fact in response.fact_evidence:
             referenced_ids.update(fact.source_ids)
