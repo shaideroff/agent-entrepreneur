@@ -52,3 +52,34 @@ def test_council_routing_rejects_more_than_five_agents() -> None:
 
     with pytest.raises(ValueError, match="between 1 and 5"):
         recommend_experience_agents("Test", max_agents=6)
+
+
+def test_council_synthesis_preserves_disagreement() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    result = synthesize_experience_council(
+        "Should we expand now?",
+        [
+            {"agent_id": "built_from_zero", "documented_facts": ["Founder-led validation is a relevant lens."], "recommendations": ["Run a small test."]},
+            {"agent_id": "jeff_bezos", "interpretations": ["Scale mechanisms matter after repeatability."]},
+        ],
+        recommendation="Validate one market before expanding.",
+        agreements=["Demand evidence is needed."],
+        disagreements=["Timing of system investment differs."],
+        unresolved_questions=["What is the repeatable acquisition cost?"],
+    )
+    assert len(result["contributions"]) == 2
+    assert result["disagreements"] == ["Timing of system investment differs."]
+    assert result["unresolved_questions"] == ["What is the repeatable acquisition cost?"]
+
+
+def test_council_synthesis_rejects_unknown_agent() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    with pytest.raises(ValueError, match="unknown experience agent IDs"):
+        synthesize_experience_council(
+            "Objective",
+            [{"agent_id": "made_up"}],
+            recommendation="Do more research.",
+        )
