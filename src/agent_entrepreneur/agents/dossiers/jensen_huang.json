@@ -72,24 +72,6 @@
         "The case is specific to NVIDIA's capabilities, timing and market conditions."
       ],
       "decision_date": "2006"
-    },
-    {
-      "case_id": "jh-case-002",
-      "decision_date": "2006",
-      "title": "Opening GPU parallel computing through CUDA",
-      "context": "NVIDIA's public corporate history describes the company moving beyond graphics into general-purpose GPU computing. A 2023 NVIDIA summary of a CNBC documentary notes that the company had faced a near-brush with bankruptcy during its earlier history before its later platform transition.",
-      "decision": "Invest in a programmable software platform that exposed GPU parallel-processing capability to a broader set of compute-intensive applications.",
-      "outcome": "NVIDIA's SEC-filed 2024 annual report identifies CUDA's 2006 introduction as a foundational step in its accelerated-computing platform and later AI workloads.",
-      "source_ids": [
-        "jh-sec-2024-10k",
-        "jh-nvidia-cnbc-2023"
-      ],
-      "evidence_status": "partially_supported",
-      "limitations": [
-        "The near-bankruptcy detail is a company-published summary of a CNBC documentary and does not identify the precise causes or quantify the company's financial condition.",
-        "The SEC filing is NVIDIA's own description of the strategic outcome; it does not prove that CUDA alone caused subsequent growth.",
-        "This case should not be generalised without assessing a venture's technical differentiation, capital runway and ecosystem potential."
-      ]
     }
   ],
   "sources": [
