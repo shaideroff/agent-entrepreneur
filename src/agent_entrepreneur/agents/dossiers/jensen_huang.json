@@ -122,5 +122,21 @@
     "Company-reported metrics and narratives are labelled as such and are not independently audited by this dossier.",
     "Preview pending broader independent evidence and evaluation."
   ],
-  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Jensen Huang, is not endorsed by him or NVIDIA, and is not affiliated with either."
+  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Jensen Huang, is not endorsed by him or NVIDIA, and is not affiliated with either.",
+  "owner": "Agent Entrepreneur maintainers",
+  "reviewer": "Independent review pending",
+  "last_verified_at": "2026-11-09",
+  "next_review_at": "2027-02-09",
+  "evaluation_refs": [
+    "experience-agent-pilot-structural-v1"
+  ],
+  "failure_modes": [
+    "A successful platform transition is an exceptional outcome and should not be treated as a repeatable guarantee for other deep-tech startups.",
+    "Platform investments can create long periods of negative cash flow, execution risk and dependence on complementary infrastructure.",
+    "Company filings describe management's view and may not fully represent external criticism, customer experience or competitor capabilities."
+  ],
+  "out_of_scope": [
+    "Personal advice or representation of the named entrepreneur.",
+    "Claims not supported by the cited public source registry."
+  ]
 }
