@@ -36,6 +36,7 @@ jobs:
         env:
           SOURCE_DATE_EPOCH: "1767225600"
         run: |
+          rm -rf build src/agent_entrepreneur.egg-info
           python -m build --outdir /tmp/rebuilt-dist
           python - <<'PY'
           import hashlib
