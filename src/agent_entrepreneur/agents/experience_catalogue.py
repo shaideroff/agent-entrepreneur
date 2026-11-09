@@ -275,15 +275,19 @@ def synthesize_experience_council(
     if unknown:
         raise ValueError(f"unknown experience agent IDs: {unknown}")
     allowed_refs_by_agent: dict[str, set[str]] = {}
+    allowed_source_ids_by_agent: dict[str, set[str]] = {}
     for response in parsed:
         profile = get_experience_agent(response.agent_id)
         dossier = profile.get("dossier")
         allowed_refs: set[str] = set()
+        allowed_source_ids: set[str] = set()
         if isinstance(dossier, dict):
-            allowed_refs.update(source["source_id"] for source in dossier["sources"])
+            allowed_source_ids.update(source["source_id"] for source in dossier["sources"])
+            allowed_refs.update(allowed_source_ids)
             allowed_refs.update(item["principle_id"] for item in dossier["principles"])
             allowed_refs.update(item["case_id"] for item in dossier["decision_cases"])
         allowed_refs_by_agent[response.agent_id] = allowed_refs
+        allowed_source_ids_by_agent[response.agent_id] = allowed_source_ids
         fact_statements = set(response.documented_facts)
         mapped_fact_statements = {fact.statement for fact in response.fact_evidence}
         unmapped_facts = fact_statements - mapped_fact_statements
@@ -295,7 +299,7 @@ def synthesize_experience_council(
         referenced_ids = set(response.source_ids)
         for fact in response.fact_evidence:
             referenced_ids.update(fact.source_ids)
-        unknown_refs = referenced_ids - allowed_refs
+        unknown_refs = referenced_ids - allowed_source_ids_by_agent[response.agent_id]
         if unknown_refs:
             raise ValueError(
                 f"unknown evidence references for {response.agent_id}: {sorted(unknown_refs)}"
