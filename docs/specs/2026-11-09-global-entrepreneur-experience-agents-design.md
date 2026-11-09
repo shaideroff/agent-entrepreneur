@@ -2,7 +2,7 @@
 **Status:** Approved for implementation  
 **Date:** 2026-11-09  
 **Scope:** Product experience, agent identity, knowledge architecture, orchestration and acceptance criteria  
-**Implementation status:** Documentation only. No v1.0 runtime behaviour or APIs are changed by this proposal.
+**Implementation status:** Additive v1.1 implementation underway. The public catalogue, first founder-contributed dossier, discovery/profile/council-routing MCP tools and structured council-synthesis contract are implemented on the current feature branch. Full dossier coverage, independent agent execution, Lead orchestration, challenge rounds, evaluation gates and public release certification remain pending.
 
 ## 1. Product thesis
 
