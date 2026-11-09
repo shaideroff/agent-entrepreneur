@@ -1,8 +1,8 @@
 # Agent Entrepreneur v1.1 — Global Entrepreneur Experience Agents
-**Status:** Design proposal — awaiting product-owner approval  
+**Status:** Approved for implementation  
 **Date:** 2026-11-09  
 **Scope:** Product experience, agent identity, knowledge architecture, orchestration and acceptance criteria  
-**Implementation status:** Documentation only. No v1.0 runtime behaviour or APIs are changed by this proposal.
+**Implementation status:** Additive v1.1 implementation underway. The public catalogue, six pilot dossiers, discovery/profile/work-packet MCP tools, deterministic objective/domain Lead routing, Lead-selected council work-packet preparation, claim-level contribution evidence mapping and structured council synthesis with host-supplied adversarial challenge validation are implemented on the current feature branch. Structural evaluation fixtures cover six scenario classes per pilot. Independent model execution, semantic Lead reasoning, autonomous challenge generation, connected-model quality evaluation, client runtime verification and public release certification remain pending.
 
 ## 1. Product thesis
 
@@ -251,7 +251,7 @@ Approve product model, founding cohort, naming, dossier schema, evidence policy,
 
 ### Phase 1 — Knowledge foundation
 Create complete dossiers for a small pilot cohort before implementing all named agents. Suggested pilot:
-- S Haider — Built from Zero (founder-contributed material, explicitly marked as such).
+- S Haider — Built from Zero (first-party founder experience, with provenance recorded at the individual claim level).
 - Sara Blakely — Bootstrapped Consumer Brand.
 - Jeff Bezos — Customer Obsession & Scale.
 - Warren Buffett — Capital Allocation.
@@ -296,8 +296,8 @@ The v1.1 design is ready for implementation only when all of the following are a
 2. Should the Lead Entrepreneur be a neutral orchestration identity or have a distinct founder/operator philosophy of its own? Recommendation: neutral orchestration identity.
 3. Should users be able to create private custom experience agents from their own documents? Recommendation: later phase, opt-in and clearly separated from public named agents.
 4. Should the directory display public evidence coverage and last-verified date? Recommendation: yes.
-5. Should S Haider's Built from Zero agent be included in the public founding cohort? Recommendation: yes, but explicitly label it founder-contributed and unverified until independently corroborated.
+5. S Haider's Built from Zero agent is included in the public founding cohort as first-party founder experience. Preserve provenance and evidence status at the individual claim level; do not assign a profile-level verification label or require independent corroboration for profile recognition.
 
 ---
 
-**Review status:** This document is a product and architecture proposal only. No code, runtime prompts, database schema, public agent claims or API changes are authorised by this document until the product owner approves the design.
+**Review status:** Product owner approved. Implementation proceeds additively; runtime and release claims remain gated by tests and verification.

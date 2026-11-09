@@ -10,6 +10,43 @@ from mcp.client.session import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 
+def _decode_tool_payload(result):
+    blocks = [block for block in result.content if hasattr(block, "text")]
+    decoded = [json.loads(block.text) for block in blocks]
+    if len(decoded) > 1:
+        return decoded
+    payload = decoded[0]
+    if isinstance(payload, dict) and "result" in payload:
+        return payload["result"]
+    return payload
+
+
+def _find_value(payload, key):
+    if isinstance(payload, dict):
+        if key in payload:
+            return payload[key]
+        for value in payload.values():
+            found = _find_value(value, key)
+            if found is not None:
+                return found
+    elif isinstance(payload, list):
+        for value in payload:
+            found = _find_value(value, key)
+            if found is not None:
+                return found
+    return None
+
+
+def _contains_agent(payload, agent_id):
+    if isinstance(payload, dict):
+        if payload.get("agent_id") == agent_id:
+            return True
+        return any(_contains_agent(value, agent_id) for value in payload.values())
+    if isinstance(payload, list):
+        return any(_contains_agent(value, agent_id) for value in payload)
+    return False
+
+
 @pytest.fixture
 def anyio_backend() -> str:
     return "asyncio"
@@ -44,11 +81,94 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "plan_specialist_workflow",
                 "complete_specialist_workflow",
                 "resume_specialist_workflow",
+                "discover_experience_agents",
+                "get_experience_agent_profile",
+                "recommend_experience_agent_council",
+                "prepare_experience_agent_council_work",
+                "synthesize_experience_agent_council",
+                "prepare_experience_agent_work_packet",
                 "search_entrepreneurs",
                 "save_memory",
                 "search_memory",
                 "delete_memory",
             }
+
+            discovered = await session.call_tool(
+                "discover_experience_agents", {"query": "Built from Zero"}
+            )
+            assert discovered.isError is False
+            directory_payload = _decode_tool_payload(discovered)
+            assert _contains_agent(directory_payload, "built_from_zero")
+
+            founder_profile = await session.call_tool(
+                "get_experience_agent_profile", {"agent_id": "built_from_zero"}
+            )
+            assert founder_profile.isError is False
+            founder_payload = _decode_tool_payload(founder_profile)
+            assert _contains_agent(founder_payload, "built_from_zero")
+
+            lead_route = await session.call_tool(
+                "recommend_experience_agent_council",
+                {"objective": "Evaluate a hyperlocal mobility marketplace."},
+            )
+            assert lead_route.isError is False
+            lead_payload = _decode_tool_payload(lead_route)
+            assert "markus_villig" in {
+                item["agent_id"] for item in _find_value(lead_payload, "selected_agents")
+            }
+
+            lead_council = await session.call_tool(
+                "prepare_experience_agent_council_work",
+                {"objective": "Evaluate a hyperlocal mobility marketplace."},
+            )
+            assert lead_council.isError is False
+            lead_council_payload = _decode_tool_payload(lead_council)
+            assert "brian_chesky" in _find_value(lead_council_payload, "ready_agent_ids")
+            assert "markus_villig" in _find_value(lead_council_payload, "not_ready_agent_ids")
+            assert _find_value(lead_council_payload, "council_protocol")
+
+            user_council = await session.call_tool(
+                "prepare_experience_agent_council_work",
+                {
+                    "objective": "Compare founder-led validation with capital allocation.",
+                    "selected_agent_ids": ["built_from_zero", "warren_buffett"],
+                },
+            )
+            assert user_council.isError is False
+            user_council_payload = _decode_tool_payload(user_council)
+            assert _find_value(user_council_payload, "selection_mode") == "user_selected"
+            assert _find_value(user_council_payload, "ready_agent_ids") == [
+                "built_from_zero", "warren_buffett"
+            ]
+
+            work_packet = await session.call_tool(
+                "prepare_experience_agent_work_packet",
+                {"agent_id": "jeff_bezos", "objective": "Assess customer-led scale."},
+            )
+            assert work_packet.isError is False
+            assert _decode_tool_payload(work_packet)["status"] == "preview_work_packet"
+
+            council = await session.call_tool(
+                "synthesize_experience_agent_council",
+                {
+                    "objective": "Should we scale now?",
+                    "contributions": [
+                        {"agent_id": "built_from_zero", "recommendations": ["Validate demand first."]},
+                        {"agent_id": "jeff_bezos", "recommendations": ["Build scalable mechanisms."]},
+                    ],
+                    "recommendation": "Run a bounded pilot with explicit scale gates.",
+                    "challenges": [{
+                        "challenger_agent_id": "built_from_zero",
+                        "target_agent_id": "jeff_bezos",
+                        "challenged_statement": "Build scalable mechanisms.",
+                        "rationale": "Repeatable demand has not yet been demonstrated.",
+                        "severity": "high",
+                    }],
+                },
+            )
+            assert council.isError is False
+            council_payload = _decode_tool_payload(council)
+            assert _find_value(council_payload, "challenges")[0]["severity"] == "high"
 
             resources = await session.list_resources()
             assert {str(resource.uri) for resource in resources.resources} == {

@@ -6,7 +6,7 @@ These are analytical roles, not simulated people or claims of endorsement.
 SPECIALISTS = {
     "built_from_zero": {
         "title": "Founder & Bootstrapping Specialist",
-        "methodology": "S Haider — Built from Zero; founder-contributed and unverified",
+        "methodology": "S Haider — Built from Zero; first-party founder experience",
         "domains": ["bootstrapping", "venture building", "early-stage execution"],
     },
     "technology_ai": {

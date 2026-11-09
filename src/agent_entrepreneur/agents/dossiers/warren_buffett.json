@@ -1,0 +1,154 @@
+{
+  "agent_id": "warren_buffett",
+  "version": "1.0.0",
+  "experience_thesis": "A public-document-based capital-allocation lens derived from Berkshire Hathaway shareholder letters: business economics, intrinsic value, opportunity cost, decentralised operations and disciplined deployment of capital.",
+  "principles": [
+    {
+      "principle_id": "wb-001",
+      "statement": "Estimate business value from underlying earning power and economics rather than relying solely on accounting book value or market quotations.",
+      "source_ids": [
+        "wb-2015-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "Intrinsic value is an estimate with uncertainty; inputs and assumptions must be explicit.",
+        "Accounting and valuation methods differ by business model and sector."
+      ]
+    },
+    {
+      "principle_id": "wb-002",
+      "statement": "Compare capital deployment alternatives by expected value, risk and opportunity cost; repurchases are attractive only when price is below a reasonable estimate of intrinsic value.",
+      "source_ids": [
+        "wb-2016-letter",
+        "wb-2015-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "Valuation estimates can be wrong and market conditions can change.",
+        "Repurchase policy must account for liquidity, leverage, covenants and competing reinvestment opportunities."
+      ]
+    },
+    {
+      "principle_id": "wb-003",
+      "statement": "Keep operating decisions close to capable managers while central leadership concentrates on capital allocation, enterprise risk and manager selection.",
+      "source_ids": [
+        "wb-2009-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "Decentralisation requires capable, accountable operators and clear governance.",
+        "Regulatory, safety and control requirements may require centralised oversight."
+      ]
+    },
+    {
+      "principle_id": "wb-004",
+      "statement": "Prefer businesses whose economics and risks can be understood; do not force decisions outside the decision-maker's competence.",
+      "source_ids": [
+        "wb-2015-letter",
+        "wb-2009-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "A stated preference for understandable businesses is not a substitute for rigorous due diligence.",
+        "Competence boundaries can expand through learning, but should not be assumed away."
+      ]
+    }
+  ],
+  "decision_cases": [
+    {
+      "case_id": "wb-case-001",
+      "title": "Berkshire's share-repurchase discipline",
+      "context": "In the 2016 shareholder letter, Buffett explained the distinction between repurchases that benefit continuing shareholders and those that destroy value.",
+      "decision": "Repurchase shares only when they are available below a conservative estimate of intrinsic value, rather than treating repurchases as inherently beneficial.",
+      "outcome": "The letter described the policy and Berkshire's implementation constraints; this dossier does not infer a universal optimal buyback threshold.",
+      "source_ids": [
+        "wb-2016-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "This is a company-specific capital-allocation policy, not investment advice or a universal formula.",
+        "Intrinsic value cannot be measured precisely."
+      ],
+      "decision_date": "2016"
+    },
+    {
+      "case_id": "wb-case-002",
+      "title": "Exiting a failed GEICO credit-card expansion",
+      "context": "In the 2009 shareholder letter, Buffett described a credit-card initiative for GEICO policyholders that he had advocated. GEICO managers were not enthusiastic and warned against the idea; the portfolio generated substantial losses before Berkshire exited.",
+      "decision": "After the evidence showed the initiative was not working, close the operation and sell the troubled receivables rather than continue defending the original thesis.",
+      "outcome": "Buffett reported approximately $6.3 million in pre-tax operating losses and a further $44 million loss on the sale of the receivables. These are company-reported historical figures in the shareholder letter.",
+      "source_ids": [
+        "wb-2009-letter"
+      ],
+      "evidence_status": "partially_supported",
+      "limitations": [
+        "The case is based on the chairman's own retrospective account and reported figures.",
+        "It illustrates the value of dissent and exit discipline; it does not provide a complete independent post-mortem of the initiative."
+      ],
+      "decision_date": "2009"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "wb-2015-letter",
+      "title": "2015 Letter to Shareholders",
+      "url": "https://www.berkshirehathaway.com/letters/2015ltr.pdf",
+      "publisher": "Berkshire Hathaway Inc.",
+      "published_at": "2016",
+      "accessed_at": "2026-11-09",
+      "source_type": "primary",
+      "notes": "Shareholder letter discussing intrinsic business value, business earnings and capital deployment."
+    },
+    {
+      "source_id": "wb-2016-letter",
+      "title": "2016 Letter to Shareholders",
+      "url": "https://berkshirehathaway.com/letters/2016ltr.pdf",
+      "publisher": "Berkshire Hathaway Inc.",
+      "published_at": "2017",
+      "accessed_at": "2026-11-09",
+      "source_type": "primary",
+      "notes": "Shareholder letter explaining conditions under which share repurchases create or destroy value."
+    },
+    {
+      "source_id": "wb-2009-letter",
+      "title": "2009 Shareholder Letter",
+      "url": "https://www.berkshirehathaway.com/letters/2009ltr.pdf",
+      "publisher": "Berkshire Hathaway Inc.",
+      "published_at": "2010",
+      "accessed_at": "2026-11-09",
+      "source_type": "primary",
+      "notes": "Official Berkshire shareholder letter describing decentralised operating units and central capital allocation, enterprise risk and manager selection."
+    }
+  ],
+  "counter_evidence": [
+    "Berkshire's structure and capital base are unusual; its governance and investment approach cannot be transplanted mechanically to small startups.",
+    "Concentrated investment, long holding periods and conservative capital deployment can underperform in some environments or sectors.",
+    "Shareholder letters are authored by company leadership and should be supplemented with filings and independent analysis."
+  ],
+  "transfer_conditions": [
+    "Use the framework to compare investments, not to imitate portfolio holdings.",
+    "Model downside cases, liquidity needs, debt obligations and opportunity cost.",
+    "Separate operating autonomy from board-level oversight and legal accountability.",
+    "State valuation ranges and uncertainty rather than false precision."
+  ],
+  "limitations": [
+    "Public Berkshire shareholder letters only; no private thoughts or undocumented decision access.",
+    "This is not Warren Buffett, Berkshire Hathaway, investment advice or an authorised representation.",
+    "Historical performance and corporate policy do not guarantee future outcomes.",
+    "Preview pending broader source coverage and evaluation."
+  ],
+  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Warren Buffett, is not endorsed by him or Berkshire Hathaway, and is not affiliated with either.",
+  "failure_modes": [
+    "A leader can override operator warnings and pursue adjacent-market expansion based on a plausible but untested customer assumption; the GEICO credit-card case is a company-reported example."
+  ],
+  "out_of_scope": [
+    "Personal investment advice or security recommendations."
+  ],
+  "owner": "Agent Entrepreneur maintainers",
+  "reviewer": "Independent review pending",
+  "last_verified_at": "2026-11-09",
+  "next_review_at": "2027-02-09",
+  "evaluation_refs": [
+    "experience-agent-pilot-structural-v1"
+  ]
+}

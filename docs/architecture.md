@@ -47,3 +47,11 @@ Local memory writes require explicit consent. Memory and workflow checkpoints sh
 STDIO is the supported default. Streamable HTTP is restricted to loopback. Non-loopback binding is disabled until an authenticated remote deployment with TLS, rate limiting and audit controls is implemented and tested.
 
 The core server does not browse the live web, execute arbitrary code, contact customers, publish content, spend money or make binding business decisions. Market research sources must be supplied by the connected client or a separately configured research integration.
+
+## Entrepreneur experience agents (v1.1 development)
+
+The additive `agents.experience_catalogue` layer exposes a twelve-entry public directory and loads versioned JSON dossiers from package data. Six pilot dossiers currently exist: Built from Zero (first-party founder-contributed material), Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky. All entries remain Preview pending evaluation and release gates.
+
+MCP tools expose discovery, profile retrieval, dossier-grounded individual work packets, bounded Lead shortlist routing, Lead-selected council work packets and council synthesis. Lead routing is currently a deterministic keyword/domain heuristic and returns its inferred domains and limitations. Council preparation produces independent assignments and a host-executable challenge protocol without claiming the server runs agent models. It is not semantic LLM reasoning. The connected host performs independent agent analysis and generates any adversarial challenges. The server validates claim-level fact-to-source mappings, challenge participants and evidence references, and binds each challenged statement to a statement in the target contribution before preserving it in synthesis.
+
+Dossiers validate source references and unique source, principle and decision-case identifiers. Configured dossier files fail closed when missing or malformed. The server does not assert that a source semantically proves a claim; it preserves provenance so the connected host and human reviewer can assess relevance.

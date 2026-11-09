@@ -7,6 +7,14 @@ from typing import Any, Literal, cast
 
 from mcp.server.fastmcp import FastMCP
 
+from agent_entrepreneur.agents.experience_catalogue import (
+    get_experience_agent,
+    list_experience_agents,
+    recommend_experience_agents,
+    prepare_experience_council_work,
+    synthesize_experience_council,
+    prepare_experience_agent_work_packet as build_experience_agent_work_packet,
+)
 from agent_entrepreneur.agents.models import (
     SpecialistFinding,
     SpecialistResponse,
@@ -398,6 +406,93 @@ def create_server(settings: Settings) -> FastMCP:
             evidence_claims=claims,
         )
         return _workflow_result_payload(result)
+
+    @mcp.tool()
+    def discover_experience_agents(
+        query: str = "", domain: str = "", status: str = ""
+    ) -> list[dict[str, Any]]:
+        """Browse the public named experience-agent directory and filter by capability."""
+        if len(query) > 300 or len(domain) > 100:
+            raise ValueError("query or domain exceeds its allowed length")
+        if status and status not in {"active", "preview", "retired"}:
+            raise ValueError("status must be active, preview or retired")
+        return list_experience_agents(query=query, domain=domain, status=status)
+
+    @mcp.tool()
+    def get_experience_agent_profile(agent_id: str) -> dict[str, Any]:
+        """Read one experience-agent profile, lifecycle status and non-affiliation notice."""
+        if not agent_id.strip() or len(agent_id) > 100:
+            raise ValueError("agent_id must contain 1 to 100 characters")
+        return get_experience_agent(agent_id)
+
+    @mcp.tool()
+    def recommend_experience_agent_council(
+        objective: str, domains: list[str] | None = None, max_agents: int = 4
+    ) -> dict[str, Any]:
+        """Recommend a bounded council from explicit task domains; this does not run agents."""
+        if len(objective) > 4000 or len(domains or []) > 30:
+            raise ValueError("objective or domain list exceeds its allowed size")
+        return recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
+
+    @mcp.tool()
+    def prepare_experience_agent_council_work(
+        objective: str,
+        domains: list[str] | None = None,
+        max_agents: int = 4,
+        business_context: str = "",
+        constraints: list[str] | None = None,
+        selected_agent_ids: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Prepare independent work packets for a Lead- or user-selected experience-agent council."""
+        if len(objective) > 4000 or len(domains or []) > 30:
+            raise ValueError("objective or domain list exceeds its allowed size")
+        return prepare_experience_council_work(
+            objective,
+            domains=domains,
+            max_agents=max_agents,
+            business_context=business_context,
+            constraints=constraints,
+            selected_agent_ids=selected_agent_ids,
+        )
+
+    @mcp.tool()
+    def synthesize_experience_agent_council(
+        objective: str,
+        contributions: list[dict[str, Any]],
+        recommendation: str,
+        agreements: list[str] | None = None,
+        disagreements: list[str] | None = None,
+        unresolved_questions: list[str] | None = None,
+        challenges: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        """Validate host-produced contributions and adversarial challenges; preserve disagreement."""
+        if len(objective) > 4000 or len(recommendation) > 8000:
+            raise ValueError("objective or recommendation exceeds its allowed length")
+        if len(contributions) > 5:
+            raise ValueError("council must contain no more than five contributions")
+        return synthesize_experience_council(
+            objective,
+            contributions,
+            recommendation=recommendation,
+            agreements=agreements,
+            disagreements=disagreements,
+            unresolved_questions=unresolved_questions,
+            challenges=challenges,
+        )
+
+    @mcp.tool()
+    def prepare_experience_agent_work_packet(
+        agent_id: str,
+        objective: str,
+        business_context: str = "",
+        constraints: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Prepare a dossier-grounded direct-agent task for the connected MCP host."""
+        if not agent_id.strip() or len(agent_id) > 100:
+            raise ValueError("agent_id must contain 1 to 100 characters")
+        return build_experience_agent_work_packet(
+            agent_id, objective, business_context=business_context, constraints=constraints
+        )
 
     @mcp.tool()
     def search_entrepreneurs(

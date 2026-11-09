@@ -8,6 +8,20 @@
 
 **Tech Stack:** Python 3.11+, Pydantic v2, MCP SDK 1.x, SQLite/current storage abstractions, JSON package data, pytest, Ruff and mypy.
 
+## Implementation status (2026-11-09)
+
+This plan is the approved target architecture; the implementation is being delivered incrementally on PR #14. The current branch contains:
+- Typed Pydantic experience-agent, dossier, challenge and council contracts.
+- Twelve-entry public catalogue; six versioned Preview dossiers (Built from Zero, Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky).
+- Claim/source linkage, unique identifier validation and fail-closed handling for missing configured dossiers.
+- MCP discovery, profile, individual work-packet, deterministic Lead shortlist, Lead-selected council work-packet and host-supplied council challenge/synthesis tools; claim-level fact-to-source mapping in council contributions.
+- Structural evaluation fixtures covering six scenario classes for each pilot.
+- Updated public docs and package-data inclusion.
+
+**Not yet certified:** independent agent execution, semantic/model-based Lead reasoning, automatic challenge generation, scenario-based evaluation of a connected model, third-party client end-to-end runs, secure remote hosting and stable release certification. CI, package build/install, real MCP STDIO smoke, security audit and MCP SDK compatibility are tracked separately through the PR's current GitHub Actions results. The server intentionally remains local-first and does not expose unauthenticated remote HTTP.
+
+The task checkboxes below are a historical implementation checklist; they are not evidence that tests ran. Mark a verification step complete only after its command or CI check has actually passed.
+
 ## Global Constraints
 
 - Preserve the v1.0 MCP foundation and all existing tool names, input/output contracts and behaviour.
@@ -17,7 +31,7 @@
 - Every material claim about an entrepreneur's methods, decisions or outcomes must have claim-level source provenance. Preserve evidence labels: verified, corroborated, partially supported, unverified and disputed.
 - Dossiers must include counter-evidence, failures/setbacks, transfer conditions, limitations, source registry, evaluation set and version metadata. Success-only biographies are insufficient.
 - The proposed founding roster has twelve entries; the six pilot entries are S Haider, Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky. A catalogue entry is not active merely because it exists.
-- S Haider's founder-contributed material remains explicitly unverified until independently corroborated.
+- S Haider is the named founder and public-facing entrepreneur behind Built from Zero. Attribute material from S Haider's own journey as first-party founder experience; apply provenance and evidence status at the individual claim level. Do not assign a profile-level verification status or require independent corroboration for profile recognition.
 - The Lead selects the smallest useful council, explains agent selection, obtains independent analysis before challenge, preserves disagreement and produces one synthesis.
 - Cross-agent memory sharing is opt-in, task-scoped and provenance-preserving. Sensitive personal data and secrets must not be stored.
 - No external consequential action may be taken without user approval. No autonomous spending, publishing, customer contact or binding decision-making.
@@ -95,7 +109,7 @@ git commit -m "feat: define entrepreneur experience agent contracts"
 
 - [ ] **Step 1: Add the focused failing tests**
 
-Assert that the twelve proposed roster entries have stable IDs and catalogue metadata; only evidence-gated pilot dossiers are active; preview agents cannot be selected for production work; dossier versions resolve deterministically; missing or malformed dossier files fail closed; every material principle/case has source references; and unverified founder-contributed claims remain labelled unverified.
+Assert that the twelve proposed roster entries have stable IDs and catalogue metadata; only evidence-gated pilot dossiers are active; preview agents cannot be selected for production work; dossier versions resolve deterministically; missing or malformed dossier files fail closed; every material principle/case has source references; and claim-level evidence statuses are preserved without assigning a profile-level verification status to S Haider.
 
 - [ ] **Step 2: Verify the relevant failure**
 

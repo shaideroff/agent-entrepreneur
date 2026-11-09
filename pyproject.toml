@@ -40,4 +40,4 @@ strict = true
 mypy_path = "src"
 
 [tool.setuptools.package-data]
-agent_entrepreneur = ["knowledge/seed_data/*.json"]
+agent_entrepreneur = ["knowledge/seed_data/*.json", "agents/dossiers/*.json"]

@@ -1,6 +1,10 @@
 {
   "edges": [
     {
+      "source": "agent_entrepreneur.agents.experience_catalogue",
+      "target": "agent_entrepreneur.agents.experience_models"
+    },
+    {
       "source": "agent_entrepreneur.agents.orchestrator",
       "target": "agent_entrepreneur.agents.models"
     },
@@ -19,6 +23,10 @@
     {
       "source": "agent_entrepreneur.memory.service",
       "target": "agent_entrepreneur.storage.database"
+    },
+    {
+      "source": "agent_entrepreneur.server",
+      "target": "agent_entrepreneur.agents.experience_catalogue"
     },
     {
       "source": "agent_entrepreneur.server",
@@ -81,6 +89,14 @@
     {
       "id": "agent_entrepreneur.agents",
       "path": "src/agent_entrepreneur/agents/__init__.py"
+    },
+    {
+      "id": "agent_entrepreneur.agents.experience_catalogue",
+      "path": "src/agent_entrepreneur/agents/experience_catalogue.py"
+    },
+    {
+      "id": "agent_entrepreneur.agents.experience_models",
+      "path": "src/agent_entrepreneur/agents/experience_models.py"
     },
     {
       "id": "agent_entrepreneur.agents.models",
