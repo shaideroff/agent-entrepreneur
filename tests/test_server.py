@@ -21,6 +21,6 @@ def test_server_registers_tools_resources_and_prompts(monkeypatch):
     from pathlib import Path
     from agent_entrepreneur.config import Settings
     module.create_server(Settings(database_path=Path("/tmp/agent-entrepreneur-test.db")))
-    assert registered["tools"] == ["understand_business", "research_market", "analyse_business", "evaluate_decision", "create_execution_plan", "review_outcomes", "plan_specialist_workflow", "complete_specialist_workflow", "resume_specialist_workflow", "search_entrepreneurs", "save_memory", "search_memory", "delete_memory"]
+    assert registered["tools"] == ["understand_business", "research_market", "analyse_business", "evaluate_decision", "create_execution_plan", "review_outcomes", "plan_specialist_workflow", "complete_specialist_workflow", "resume_specialist_workflow", "discover_experience_agents", "get_experience_agent_profile", "recommend_experience_agent_council", "search_entrepreneurs", "save_memory", "search_memory", "delete_memory"]
     assert len(registered["resources"]) == 2
     assert len(registered["prompts"]) == 3
