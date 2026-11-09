@@ -60,8 +60,9 @@ def list_experience_agents(
             continue
         record["non_affiliation_notice"] = NON_AFFILIATION
         record["availability_note"] = (
-            "Preview: the directory entry is visible, but dossier-grounded agent execution "
-            "is not enabled until source and evaluation gates pass."
+            "Preview: a dossier-grounded work packet is available for controlled evaluation only. "
+            "This is not an Active or production-validated agent; do not present its output as validated behavior "
+            "or as the named person's own views."
             if agent.status is ExperienceAgentStatus.PREVIEW
             else "Available."
         )
