@@ -96,17 +96,52 @@ def recommend_experience_agents(
         raise ValueError("objective must not be empty")
     if not 1 <= max_agents <= 5:
         raise ValueError("max_agents must be between 1 and 5")
+    # Deterministic Lead routing: explicit domains take priority; objective terms
+    # provide transparent keyword hints when a caller has not supplied domains.
+    objective_terms = {
+        token.strip(".,:;!?()[]{}").casefold()
+        for token in objective.split()
+        if len(token.strip(".,:;!?()[]{}")) >= 4
+    }
+    aliases = {
+        "mobility": {"mobility", "transport", "ride", "rides", "fleet", "dispatch"},
+        "hyperlocal": {"hyperlocal", "local", "nearby", "lastmile", "last-mile"},
+        "bootstrapping": {"bootstrap", "bootstrapping", "cashflow", "cash-flow", "lean"},
+        "consumer brands": {"consumer", "brand", "brands", "retail", "d2c"},
+        "capital allocation": {"capital", "allocation", "investment", "investing", "valuation"},
+        "customer experience": {"customer", "customers", "experience", "retention"},
+        "scale": {"scale", "scaling", "growth", "expansion"},
+        "deep technology": {"technology", "technical", "engineering", "semiconductor", "chips"},
+        "AI strategy": {"ai", "artificial", "intelligence", "model", "models"},
+        "marketplace": {"marketplace", "marketplaces", "platform", "platforms", "two-sided"},
+        "trust": {"trust", "safety", "fraud", "identity"},
+        "leadership": {"leadership", "organisation", "organization", "management", "team"},
+        "real estate": {"property", "real", "estate", "development"},
+        "operations": {"operations", "operating", "supply", "logistics"},
+        "finance": {"finance", "financial", "profit", "margin", "cash"},
+        "product launch": {"launch", "prototype", "product", "validation"},
+    }
     terms = {term.strip().casefold() for term in (domains or []) if term.strip()}
+    inferred = {
+        domain for domain, words in aliases.items()
+        if objective_terms.intersection(words)
+    }
+    if not terms:
+        terms = inferred
     scored: list[tuple[int, ExperienceAgentRecord, list[str]]] = []
     for agent in CATALOGUE:
-        matched = [domain for domain in agent.domains if domain.casefold() in terms]
+        matched = [
+            domain for domain in agent.domains
+            if domain.casefold() in terms
+            or any(alias.casefold() in terms for alias in aliases.get(domain, set()))
+        ]
         if matched:
             scored.append((len(matched), agent, matched))
     scored.sort(key=lambda item: (-item[0], item[1].agent_id))
     selected = scored[:max_agents]
     return {
         "objective": objective,
-        "selection_mode": "deterministic_domain_match",
+        "selection_mode": "lead_keyword_and_domain_match",
         "selected_agents": [
             {
                 **agent.model_dump(mode="json"),
@@ -126,6 +161,8 @@ def recommend_experience_agents(
             "reasoning; no named person is simulated and no agent execution is claimed."
         ),
         "council_limit": max_agents,
+        "inferred_domains": sorted(inferred),
+        "lead_routing_note": "Deterministic keyword routing is a transparent shortlist heuristic, not semantic model reasoning. Supply explicit domains for higher precision.",
     }
 
 
