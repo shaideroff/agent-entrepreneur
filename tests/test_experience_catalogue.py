@@ -26,6 +26,9 @@ def test_built_from_zero_is_first_party_founder_experience() -> None:
     profile = get_experience_agent("built_from_zero")
     assert profile["display_name"].startswith("S Haider")
     assert "not affiliated" in profile["non_affiliation_notice"]
+    assert profile["dossier"]["agent_id"] == "built_from_zero"
+    assert profile["dossier"]["principles"]
+    assert profile["dossier"]["sources"][0]["source_type"] == "primary"
 
 
 def test_discovery_filters_by_domain_and_query() -> None:
