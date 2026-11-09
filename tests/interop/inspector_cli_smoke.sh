@@ -2,7 +2,7 @@
 set -euo pipefail
 
 INSPECTOR="./node_modules/.bin/mcp-inspector"
-SERVER_CMD=(python -m agent_entrepreneur.server)
+SERVER_CMD=(bash tests/interop/start_server.sh)
 OUTPUT_DIR="${RUNNER_TEMP:-/tmp}/agent-entrepreneur-inspector"
 mkdir -p "$OUTPUT_DIR"
 
