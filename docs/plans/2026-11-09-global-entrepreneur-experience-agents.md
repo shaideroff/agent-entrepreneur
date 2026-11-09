@@ -14,7 +14,7 @@ This plan is the approved target architecture; the implementation is being deliv
 - Typed Pydantic experience-agent, dossier, challenge and council contracts.
 - Twelve-entry public catalogue; six versioned Preview dossiers (Built from Zero, Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky).
 - Claim/source linkage, unique identifier validation and fail-closed handling for missing configured dossiers.
-- MCP discovery, profile, work-packet, deterministic Lead shortlist and host-supplied council challenge/synthesis tools.
+- MCP discovery, profile, individual work-packet, deterministic Lead shortlist, Lead-selected council work-packet and host-supplied council challenge/synthesis tools; claim-level fact-to-source mapping in council contributions.
 - Structural evaluation fixtures covering six scenario classes for each pilot.
 - Updated public docs and package-data inclusion.
 
