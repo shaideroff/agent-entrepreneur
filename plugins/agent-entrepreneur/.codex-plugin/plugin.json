@@ -13,7 +13,8 @@
     "shortDescription": "Founder decision toolkit",
     "longDescription": "Agent Entrepreneur helps founders and operators turn business questions into structured decisions and execution. Use its workflows to diagnose a business, investigate a market, compare strategic options, build an accountable execution plan and review results against measurable outcomes. It emphasizes evidence provenance, explicit assumptions, uncertainty, counter-evidence, transfer conditions and human approval for consequential actions. This package contains reusable Skills only. It does not connect to a hosted Agent Entrepreneur service, independently run named entrepreneur agents, browse the web by itself, or collect business data. ChatGPT or Codex supplies model reasoning and any available research or file tools. The separate open-source Python/MCP server is distributed from the GitHub repository.",
     "developerName": "S Haider",
-    "category": "Productivity",
+    "category": "Business & Operations",
+    "brandColorDark": "#E5B65F",
     "capabilities": [
       "Diagnose business models, constraints and evidence gaps",
       "Research markets and compare competitors using available sources",
