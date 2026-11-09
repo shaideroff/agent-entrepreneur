@@ -174,7 +174,7 @@ def recommend_experience_agents(
             }
         ),
         "execution_boundary": (
-            "The server recommends catalogue entries only. The connected MCP host supplies "
+            "The server does not execute agent reasoning; it recommends catalogue entries only. The connected MCP host supplies "
             "reasoning; no named person is simulated and no agent execution is claimed."
         ),
         "council_limit": max_agents,
