@@ -27,6 +27,10 @@ Input: `agent_id`.
 
 Returns one catalogue entry. Unknown IDs produce a validation error.
 
+### `prepare_experience_agent_council_work`
+
+Inputs: objective, optional capability domains, council limit, business context and constraints. Returns the Lead routing result, one independent dossier-grounded work packet per selected agent, ready/not-ready IDs and an explicit council protocol. The protocol requires independent contributions before cross-challenge, claim-level source mapping, preservation of disagreement and a reversible decision gate. The connected host performs all reasoning and challenge generation.
+
 ### `synthesize_experience_agent_council`
 
 Inputs include the objective, one to five host-produced agent contributions, a recommendation, agreements, disagreements, unresolved questions and optional adversarial challenges. Contributions may include claim-level `fact_evidence` records mapping each documented fact to dossier source IDs and an explicit evidence status. Each challenge identifies a challenger, target, challenged statement, rationale, evidence references and severity. Evidence references must resolve to a source, principle or decision-case ID in a dossier represented in the council; the challenged statement must match text in the target contribution. The server validates council membership and structure, then returns one synthesis object that preserves disagreement. Challenge generation and reasoning remain the connected host's responsibility; the server does not independently generate or verify contributions or challenges.
