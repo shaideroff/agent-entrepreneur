@@ -77,3 +77,35 @@ def test_invalid_evidence_status_is_rejected() -> None:
             source_ids=["s1"],
             evidence_status="guess",
         )
+
+
+def test_dossier_rejects_duplicate_source_ids() -> None:
+    dossier = ExperienceDossier(
+        agent_id="example",
+        version="1.0.0",
+        experience_thesis="A sourced example dossier.",
+        sources=[
+            SourceRecord(source_id="s1", title="Source one"),
+            SourceRecord(source_id="s1", title="Duplicate source"),
+        ],
+        non_affiliation_notice="This AI agent is not affiliated with or endorsed by the person.",
+    )
+    with pytest.raises(ValueError, match="Source identifiers must be unique"):
+        dossier.validate_source_references()
+
+
+def test_dossier_supports_governance_and_evaluation_metadata() -> None:
+    dossier = ExperienceDossier(
+        agent_id="example",
+        version="1.0.0",
+        experience_thesis="A sourced example dossier.",
+        failure_modes=["Overgeneralising from one case."],
+        out_of_scope=["Legal advice."],
+        evaluation_refs=["eval-001"],
+        owner="Project maintainer",
+        last_verified_at="2026-11-09",
+        next_review_at="2027-02-09",
+        non_affiliation_notice="This AI agent is not affiliated with or endorsed by the person.",
+    )
+    assert dossier.evaluation_refs == ["eval-001"]
+    assert dossier.failure_modes
