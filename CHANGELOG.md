@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — v1.1 development
+
+- Add a 12-entry global entrepreneur experience-agent directory with explicit Preview lifecycle.
+- Add six source-linked pilot dossiers, including the first-party S Haider — Built from Zero dossier.
+- Add dossier-grounded work packets, deterministic Lead shortlist routing and structured council synthesis with host-supplied adversarial challenge validation.
+- Add dossier governance metadata, fail-closed loading and structural evaluation fixtures for six scenario classes per pilot.
+- Preserve model-independent operation, local-first transport and non-impersonation safeguards.
+- Release remains uncertified pending CI, package, security, MCP compatibility and client runtime verification.
+
 ## 1.0.0 — 2026-11-09
 
 - Publish the model-independent Agent Entrepreneur MCP server.
