@@ -130,5 +130,20 @@
     "Evidence is strongest for the described launch narrative, not universal causal claims.",
     "Preview pending broader independent evidence and evaluation."
   ],
-  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Sara Blakely, is not endorsed by her or Spanx, and is not affiliated with either."
+  "non_affiliation_notice": "This AI experience agent is an independent research product based on public documentation. It is not Sara Blakely, is not endorsed by her or Spanx, and is not affiliated with either.",
+  "owner": "Agent Entrepreneur maintainers",
+  "reviewer": "Independent review pending",
+  "last_verified_at": "2026-11-09",
+  "next_review_at": "2027-02-09",
+  "evaluation_refs": [
+    "experience-agent-pilot-structural-v1"
+  ],
+  "failure_modes": [
+    "Bootstrapped success stories have survivorship bias; many self-funded ventures fail or remain constrained by capital access.",
+    "Anecdotal founder-led selling and earned-media tactics may not generalise across customer segments or channels."
+  ],
+  "out_of_scope": [
+    "Personal advice or representation of the named entrepreneur.",
+    "Claims not supported by the cited public source registry."
+  ]
 }
