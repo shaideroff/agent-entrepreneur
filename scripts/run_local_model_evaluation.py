@@ -8,7 +8,6 @@ import json
 import os
 from pathlib import Path
 import re
-import sys
 import time
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -159,9 +158,10 @@ def validate_judgment(case: dict[str, Any], output: str, judgment: dict[str, Any
 
     outcomes = {item["result"] for item in normalized}
     flags = judgment.get("hallucination_flags", [])
-    if "fail" in outcomes or flags:
+    reported_overall = judgment.get("overall")
+    if "fail" in outcomes or flags or reported_overall == "fail":
         overall = "fail"
-    elif outcomes == {"pass"}:
+    elif outcomes == {"pass"} and reported_overall == "pass":
         overall = "pass"
     else:
         overall = "inconclusive"
