@@ -17,7 +17,7 @@
 - Every material claim about an entrepreneur's methods, decisions or outcomes must have claim-level source provenance. Preserve evidence labels: verified, corroborated, partially supported, unverified and disputed.
 - Dossiers must include counter-evidence, failures/setbacks, transfer conditions, limitations, source registry, evaluation set and version metadata. Success-only biographies are insufficient.
 - The proposed founding roster has twelve entries; the six pilot entries are S Haider, Sara Blakely, Jeff Bezos, Warren Buffett, Jensen Huang and Brian Chesky. A catalogue entry is not active merely because it exists.
-- S Haider's founder-contributed material remains explicitly unverified until independently corroborated.
+- S Haider is the named founder and public-facing entrepreneur behind Built from Zero. Attribute material from S Haider's own journey as first-party founder experience; apply provenance and evidence status at the individual claim level. Do not assign a profile-level verification status or require independent corroboration for profile recognition.
 - The Lead selects the smallest useful council, explains agent selection, obtains independent analysis before challenge, preserves disagreement and produces one synthesis.
 - Cross-agent memory sharing is opt-in, task-scoped and provenance-preserving. Sensitive personal data and secrets must not be stored.
 - No external consequential action may be taken without user approval. No autonomous spending, publishing, customer contact or binding decision-making.
@@ -95,7 +95,7 @@ git commit -m "feat: define entrepreneur experience agent contracts"
 
 - [ ] **Step 1: Add the focused failing tests**
 
-Assert that the twelve proposed roster entries have stable IDs and catalogue metadata; only evidence-gated pilot dossiers are active; preview agents cannot be selected for production work; dossier versions resolve deterministically; missing or malformed dossier files fail closed; every material principle/case has source references; and unverified founder-contributed claims remain labelled unverified.
+Assert that the twelve proposed roster entries have stable IDs and catalogue metadata; only evidence-gated pilot dossiers are active; preview agents cannot be selected for production work; dossier versions resolve deterministically; missing or malformed dossier files fail closed; every material principle/case has source references; and claim-level evidence statuses are preserved without assigning a profile-level verification status to S Haider.
 
 - [ ] **Step 2: Verify the relevant failure**
 
