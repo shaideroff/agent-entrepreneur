@@ -67,7 +67,7 @@ try {
     requiredToolsDiscovered: requiredTools.length,
     validToolCalls: calls.length,
     invalidInputRejected: true,
-    cleanShutdown: "pending",
+    closeCalled: true,
   }));
 } finally {
   await client.close();
