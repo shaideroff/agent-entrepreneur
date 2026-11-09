@@ -12,7 +12,7 @@ from agent_entrepreneur.agents.experience_catalogue import (
     list_experience_agents,
     recommend_experience_agents,
     synthesize_experience_council,
-    prepare_experience_agent_work_packet,
+    prepare_experience_agent_work_packet as build_experience_agent_work_packet,
 )
 from agent_entrepreneur.agents.models import (
     SpecialistFinding,
@@ -466,7 +466,7 @@ def create_server(settings: Settings) -> FastMCP:
         """Prepare a dossier-grounded direct-agent task for the connected MCP host."""
         if not agent_id.strip() or len(agent_id) > 100:
             raise ValueError("agent_id must contain 1 to 100 characters")
-        return prepare_experience_agent_work_packet(
+        return build_experience_agent_work_packet(
             agent_id, objective, business_context=business_context, constraints=constraints
         )
 
