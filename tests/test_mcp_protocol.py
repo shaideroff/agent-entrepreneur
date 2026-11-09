@@ -97,6 +97,20 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
             assert "markus_villig" in lead_council_payload["not_ready_agent_ids"]
             assert lead_council_payload["council_protocol"]
 
+            user_council = await session.call_tool(
+                "prepare_experience_agent_council_work",
+                {
+                    "objective": "Compare founder-led validation with capital allocation.",
+                    "selected_agent_ids": ["built_from_zero", "warren_buffett"],
+                },
+            )
+            assert user_council.isError is False
+            user_council_payload = _decode_tool_payload(user_council)
+            assert user_council_payload["routing"]["selection_mode"] == "user_selected"
+            assert user_council_payload["ready_agent_ids"] == [
+                "built_from_zero", "warren_buffett"
+            ]
+
             work_packet = await session.call_tool(
                 "prepare_experience_agent_work_packet",
                 {"agent_id": "jeff_bezos", "objective": "Assess customer-led scale."},
