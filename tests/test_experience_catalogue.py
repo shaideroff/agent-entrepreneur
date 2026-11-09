@@ -189,3 +189,13 @@ def test_council_challenge_rejects_non_council_participant() -> None:
             }],
         )
 
+
+
+def test_catalogue_fails_closed_for_missing_configured_dossier(monkeypatch) -> None:
+    import pytest
+    from pathlib import Path
+
+    monkeypatch.setattr(Path, "is_file", lambda self: False)
+    with pytest.raises(FileNotFoundError, match="Configured experience dossier is missing"):
+        get_experience_agent("built_from_zero")
+
