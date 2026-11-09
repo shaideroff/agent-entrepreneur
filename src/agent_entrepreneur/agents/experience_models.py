@@ -124,11 +124,20 @@ class ExperienceAgentSelection(BaseModel):
     selection_mode: Literal["lead", "user_selected"] = "lead"
 
 
+class FactEvidenceRecord(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    statement: str = Field(min_length=1)
+    source_ids: list[str] = Field(min_length=1)
+    evidence_status: EvidenceStatus
+
+
 class ExperienceAgentResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     agent_id: str = Field(min_length=1)
     documented_facts: list[str] = Field(default_factory=list)
+    fact_evidence: list[FactEvidenceRecord] = Field(default_factory=list)
     interpretations: list[str] = Field(default_factory=list)
     analogies: list[str] = Field(default_factory=list)
     recommendations: list[str] = Field(default_factory=list)
