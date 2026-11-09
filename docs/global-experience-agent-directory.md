@@ -86,4 +86,4 @@ A catalogue entry may move from Preview to Active only after:
 
 ## Current release boundary
 
-This PR is an implementation foundation. It is not a complete global public launch. Dossier-grounded work packets and structural challenge validation are available, but independent model execution, autonomous challenge generation, semantic Lead reasoning, evaluation suites, public-host deployment, authentication, third-party client end-to-end verification, legal review and release certification remain separate gates.
+This PR is an implementation foundation. It is not a complete global public launch. Dossier-grounded work packets and structural challenge validation are available, but independent model execution, autonomous challenge generation, semantic Lead reasoning, connected-model quality evaluation, public-host deployment, authentication, third-party client end-to-end verification, legal review and release certification remain separate gates. A deterministic structural evaluation suite exists for six scenario classes per pilot; it does not certify generated response quality.
