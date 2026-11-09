@@ -295,3 +295,29 @@ def test_lead_prepares_independent_work_packets_for_selected_pilot_council() -> 
     assert all(packet["status"] in {"preview_work_packet", "not_ready"} for packet in result["work_packets"])
     assert "independent contributions" in result["council_protocol"][0]
 
+
+
+def test_user_can_select_a_bounded_experience_agent_council() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import prepare_experience_council_work
+
+    result = prepare_experience_council_work(
+        "Compare bootstrapping and capital allocation approaches.",
+        selected_agent_ids=["built_from_zero", "warren_buffett"],
+    )
+    assert result["routing"]["selection_mode"] == "user_selected"
+    assert result["ready_agent_ids"] == ["built_from_zero", "warren_buffett"]
+    assert all(packet["status"] == "preview_work_packet" for packet in result["work_packets"])
+
+
+def test_user_selected_council_rejects_unknown_or_oversized_selection() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import prepare_experience_council_work
+
+    with pytest.raises(ValueError, match="unknown experience agent IDs"):
+        prepare_experience_council_work("Objective", selected_agent_ids=["unknown"])
+    with pytest.raises(ValueError, match="between 1 and 5"):
+        prepare_experience_council_work(
+            "Objective",
+            selected_agent_ids=["built_from_zero", "sara_blakely", "jeff_bezos", "warren_buffett", "jensen_huang", "brian_chesky"],
+        )
+
