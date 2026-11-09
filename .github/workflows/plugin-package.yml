@@ -29,7 +29,7 @@ jobs:
       - name: Validate Skills-only Plugin and deterministic package
         run: python scripts/validate_plugin_package.py
       - name: Upload validated Plugin package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: agent-entrepreneur-plugin-1.0.0-py${{ matrix.python-version }}
           path: |

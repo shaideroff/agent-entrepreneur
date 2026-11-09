@@ -33,7 +33,7 @@ jobs:
       - name: Generate dependency licence inventory
         run: pip-licenses --format=json --with-urls --with-license-file --output-file=dependency-licenses.json
       - name: Upload licence inventory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-licence-inventory
           path: dependency-licenses.json
