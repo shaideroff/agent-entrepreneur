@@ -51,3 +51,24 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  bandit-sast:
+    name: Python static security analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Bandit
+        run: python -m pip install --upgrade pip bandit
+      - name: Scan application source for high-confidence security findings
+        run: bandit -r src/agent_entrepreneur -ll -ii -f json -o bandit-report.json
+      - name: Upload Bandit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+          if-no-files-found: warn
+          retention-days: 30
