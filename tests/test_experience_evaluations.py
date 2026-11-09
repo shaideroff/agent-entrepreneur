@@ -73,3 +73,26 @@ def test_dossier_specific_prompt_suite_covers_all_structural_cases() -> None:
         assert "source IDs" in case["prompt"]
         assert "Do not impersonate" in case["prompt"] or "not the named person" in case["prompt"]
 
+def test_unexecuted_model_manifest_cannot_be_mistaken_for_a_pass() -> None:
+    manifest = json.loads(
+        (ROOT / "pilot_eval_run_manifest.template.json").read_text(encoding="utf-8")
+    )
+    prompts = json.loads((ROOT / "pilot_eval_prompts.json").read_text(encoding="utf-8"))
+
+    assert manifest["execution_status"] == "NOT_RUN"
+    assert manifest["execution_policy"]["paid_apis_allowed"] is False
+    assert manifest["execution_policy"]["missing_output_status"] == "NOT_RUN"
+    assert len(manifest["records"]) == len(prompts["cases"]) == 36
+    assert {record["case_id"] for record in manifest["records"]} == {
+        case["case_id"] for case in prompts["cases"]
+    }
+
+    for record in manifest["records"]:
+        assert record["status"] == "NOT_RUN"
+        assert record["provider"] is None
+        assert record["model"] is None
+        assert record["executed_at_utc"] is None
+        assert record["output_artifact_ref"] is None
+        assert record["trait_results"] == []
+        assert record["rubric_results"] == []
+
