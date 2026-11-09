@@ -398,3 +398,79 @@ async def test_stdio_transport_exposes_protocol_and_serves_tool_calls(
                 "delete_memory", {"record_id": memory["record_id"]}
             )
             assert deleted_memory.isError is False
+
+@pytest.mark.anyio
+async def test_experience_agent_tools_enforce_boundaries_over_stdio(tmp_path: Path) -> None:
+    server_parameters = StdioServerParameters(
+        command=sys.executable,
+        args=["-m", "agent_entrepreneur.server"],
+        env={
+            **os.environ,
+            "AGENT_ENTREPRENEUR_TRANSPORT": "stdio",
+            "AGENT_ENTREPRENEUR_DB": str(tmp_path / "experience-boundaries.sqlite3"),
+        },
+    )
+    async with stdio_client(server_parameters) as (read_stream, write_stream):
+        async with ClientSession(read_stream, write_stream) as session:
+            await session.initialize()
+
+            invalid_discovery = await session.call_tool(
+                "discover_experience_agents", {"status": "unreviewed"}
+            )
+            assert invalid_discovery.isError is True
+
+            empty_profile = await session.call_tool(
+                "get_experience_agent_profile", {"agent_id": ""}
+            )
+            assert empty_profile.isError is True
+
+            oversized_recommendation = await session.call_tool(
+                "recommend_experience_agent_council", {"objective": "x" * 4001}
+            )
+            assert oversized_recommendation.isError is True
+
+            oversized_council = await session.call_tool(
+                "prepare_experience_agent_council_work", {"objective": "x" * 4001}
+            )
+            assert oversized_council.isError is True
+
+            oversized_contributions = await session.call_tool(
+                "synthesize_experience_agent_council",
+                {
+                    "objective": "Boundary test",
+                    "recommendation": "Do not execute.",
+                    "contributions": [{"agent_id": f"agent-{index}"} for index in range(6)],
+                },
+            )
+            assert oversized_contributions.isError is True
+
+            empty_work_packet = await session.call_tool(
+                "prepare_experience_agent_work_packet",
+                {"agent_id": "", "objective": "Boundary test"},
+            )
+            assert empty_work_packet.isError is True
+
+            first_discovery = await session.call_tool(
+                "discover_experience_agents", {"query": "Built from Zero"}
+            )
+            second_discovery = await session.call_tool(
+                "discover_experience_agents", {"query": "Built from Zero"}
+            )
+            assert first_discovery.isError is False
+            assert second_discovery.isError is False
+            assert _decode_tool_payload(first_discovery) == _decode_tool_payload(second_discovery)
+
+            first_recommendation = await session.call_tool(
+                "recommend_experience_agent_council",
+                {"objective": "Evaluate a hyperlocal mobility marketplace."},
+            )
+            second_recommendation = await session.call_tool(
+                "recommend_experience_agent_council",
+                {"objective": "Evaluate a hyperlocal mobility marketplace."},
+            )
+            assert first_recommendation.isError is False
+            assert second_recommendation.isError is False
+            assert _decode_tool_payload(first_recommendation) == _decode_tool_payload(
+                second_recommendation
+            )
+
