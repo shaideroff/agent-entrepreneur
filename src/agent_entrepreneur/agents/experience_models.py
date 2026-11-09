@@ -73,10 +73,25 @@ class ExperienceDossier(BaseModel):
     counter_evidence: list[str] = Field(default_factory=list)
     transfer_conditions: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
+    failure_modes: list[str] = Field(default_factory=list)
+    out_of_scope: list[str] = Field(default_factory=list)
+    evaluation_refs: list[str] = Field(default_factory=list)
+    owner: str | None = None
+    reviewer: str | None = None
+    last_verified_at: str | None = None
+    next_review_at: str | None = None
     non_affiliation_notice: str = Field(min_length=1)
 
     def validate_source_references(self) -> "ExperienceDossier":
         source_ids = {source.source_id for source in self.sources}
+        if len(source_ids) != len(self.sources):
+            raise ValueError("Source identifiers must be unique within a dossier")
+        principle_ids = [item.principle_id for item in self.principles]
+        case_ids = [item.case_id for item in self.decision_cases]
+        if len(set(principle_ids)) != len(principle_ids):
+            raise ValueError("Principle identifiers must be unique within a dossier")
+        if len(set(case_ids)) != len(case_ids):
+            raise ValueError("Decision case identifiers must be unique within a dossier")
         referenced = {
             source_id
             for item in [*self.principles, *self.decision_cases]
