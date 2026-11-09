@@ -99,6 +99,21 @@ def test_built_from_zero_work_packet_includes_dossier_and_guardrails() -> None:
     assert any("Never use deceptive first-person roleplay" in item for item in packet["host_instructions"])
 
 
+def test_jeff_bezos_dossier_has_traceable_sources_and_work_packet() -> None:
+    from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
+
+    profile = get_experience_agent("jeff_bezos")
+    dossier = profile["dossier"]
+    source_ids = {source["source_id"] for source in dossier["sources"]}
+    assert len(source_ids) >= 2
+    assert all(principle["source_ids"] for principle in dossier["principles"])
+    assert all(set(principle["source_ids"]) <= source_ids for principle in dossier["principles"])
+    assert dossier["decision_cases"]
+    packet = prepare_experience_agent_work_packet("jeff_bezos", "Evaluate a customer-led growth investment.")
+    assert packet["status"] == "preview_work_packet"
+    assert packet["dossier"]["agent_id"] == "jeff_bezos"
+
+
 def test_preview_agent_without_dossier_does_not_receive_fake_work_packet() -> None:
     from agent_entrepreneur.agents.experience_catalogue import prepare_experience_agent_work_packet
 
