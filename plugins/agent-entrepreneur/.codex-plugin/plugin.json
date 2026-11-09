@@ -23,13 +23,13 @@
       "Review outcomes and recommend evidence-based adjustments"
     ],
     "websiteURL": "https://github.com/shaideroff/agent-entrepreneur",
+    "supportURL": "https://github.com/shaideroff/agent-entrepreneur/issues",
     "privacyPolicyURL": "https://github.com/shaideroff/agent-entrepreneur/blob/main/plugins/agent-entrepreneur/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/shaideroff/agent-entrepreneur/blob/main/plugins/agent-entrepreneur/TERMS.md",
     "defaultPrompt": [
-      "Use Agent Entrepreneur to diagnose my business model and identify the three highest-priority constraints.",
-      "Research this market, compare the strongest alternatives and cite current sources.",
-      "Evaluate these strategic options with assumptions, downside scenarios and a recommendation.",
-      "Turn this goal into a 90-day execution plan with milestones, owners and KPIs."
+      "Diagnose my business model and identify the three highest-priority constraints.",
+      "Research this market, compare relevant alternatives and cite current sources.",
+      "Evaluate my options and turn the decision into a measurable execution plan."
     ],
     "brandColor": "#123B35",
     "composerIcon": "./assets/icon.svg",
