@@ -173,6 +173,19 @@ def validate_judgment(case: dict[str, Any], output: str, judgment: dict[str, Any
     }
 
 
+def atomic_write(path: Path, content: str) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(content, encoding="utf-8")
+    temporary.replace(path)
+
+
+def append_jsonl(path: Path, record: dict[str, Any]) -> None:
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(record, ensure_ascii=False) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -189,11 +202,69 @@ def main() -> None:
     tags = request_json("/api/tags")
     generator_digest = digest_for_model(tags, GENERATOR_MODEL)
     judge_digest = digest_for_model(tags, JUDGE_MODEL)
-    executed_at = datetime.now(timezone.utc).isoformat()
     run_id = os.environ.get("GITHUB_RUN_ID", f"local-{int(time.time())}")
 
+    output_path = args.output_dir / "generation-results.jsonl"
+    judged_path = args.output_dir / "evaluation-results.jsonl"
+    manifest_path = args.output_dir / "evaluation-run-manifest.json"
+    output_path.write_text("", encoding="utf-8")
+    judged_path.write_text("", encoding="utf-8")
+
+    records: list[dict[str, Any]] = []
+    for case in cases:
+        records.append({
+            "case_id": case["case_id"],
+            "agent_id": case["agent_id"],
+            "dossier_version": case["dossier_version"],
+            "scenario": case["scenario"],
+            "status": "NOT_RUN",
+            "provider": None,
+            "model": None,
+            "model_version": None,
+            "executed_at_utc": None,
+            "prompt_sha256": None,
+            "dossier_sha256": None,
+            "output_artifact_ref": None,
+            "evaluator_method": None,
+            "evaluator_identity": None,
+            "trait_results": [],
+            "rubric_results": [],
+            "limitations": [],
+        })
+
+    manifest: dict[str, Any] = {
+        "schema_version": "1.0.0",
+        "suite_id": prompt_suite["suite_id"],
+        "suite_version": prompt_suite["suite_version"],
+        "run_id": run_id,
+        "execution_status": "IN_PROGRESS",
+        "generator": {"provider": "Ollama local", "model": GENERATOR_MODEL, "digest": generator_digest},
+        "auto_judge": {"provider": "Ollama local", "model": JUDGE_MODEL, "digest": judge_digest},
+        "execution_policy": {
+            "paid_apis_allowed": False,
+            "model_output_required": True,
+            "independent_human_review_required": True,
+            "missing_output_status": "NOT_RUN",
+            "raw_outputs_committed_to_repository": False,
+        },
+        "records": records,
+    }
+    def persist_manifest() -> None:
+        atomic_write(manifest_path, json.dumps(manifest, indent=2) + "\n")
+
+    persist_manifest()
+    atomic_write(
+        args.output_dir / "model-digests.json",
+        json.dumps({
+            "generator": GENERATOR_MODEL,
+            "generator_digest": generator_digest,
+            "judge": JUDGE_MODEL,
+            "judge_digest": judge_digest,
+        }, indent=2) + "\n",
+    )
+
     generated: list[dict[str, Any]] = []
-    for index, case in enumerate(cases, start=1):
+    for index, case in enumerate(cases):
         prompt = case["prompt"] + (
             "\n\nProduce only the final answer. Do not reveal hidden reasoning or private chain-of-thought. "
             "Clearly separate sourced facts, interpretation, assumptions, limitations, and recommendations."
@@ -201,7 +272,10 @@ def main() -> None:
         output, metrics = generate(GENERATOR_MODEL, prompt)
         dossier_path = DOSSIER_DIR / f'{case["agent_id"]}.json'
         dossier_bytes = dossier_path.read_bytes()
-        generated.append({
+        prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+        dossier_hash = hashlib.sha256(dossier_bytes).hexdigest()
+        executed_at = datetime.now(timezone.utc).isoformat()
+        generated_item = {
             "case": case,
             "output": output,
             "generation_metrics": {
@@ -210,16 +284,50 @@ def main() -> None:
                 "eval_count": metrics.get("eval_count"),
                 "eval_duration_ns": metrics.get("eval_duration"),
             },
-            "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
-            "dossier_sha256": hashlib.sha256(dossier_bytes).hexdigest(),
+            "prompt_sha256": prompt_hash,
+            "dossier_sha256": dossier_hash,
+            "executed_at_utc": executed_at,
+        }
+        generated.append(generated_item)
+        append_jsonl(output_path, {
+            "case_id": case["case_id"],
+            "agent_id": case["agent_id"],
+            "scenario": case["scenario"],
+            "generator_model": GENERATOR_MODEL,
+            "generator_digest": generator_digest,
+            "generator_output": output,
+            "generation_metrics": generated_item["generation_metrics"],
+            "prompt_sha256": prompt_hash,
+            "dossier_sha256": dossier_hash,
         })
-        print(f"generated {index}/{len(cases)}: {case['case_id']}", flush=True)
+        manifest["records"][index] = {
+            "case_id": case["case_id"],
+            "agent_id": case["agent_id"],
+            "dossier_version": case["dossier_version"],
+            "scenario": case["scenario"],
+            "status": "GENERATED",
+            "provider": "Ollama local inference on GitHub-hosted CPU runner",
+            "model": GENERATOR_MODEL,
+            "model_version": generator_digest,
+            "executed_at_utc": executed_at,
+            "prompt_sha256": prompt_hash,
+            "dossier_sha256": dossier_hash,
+            "output_artifact_ref": f"generation-results.jsonl#{case['case_id']}",
+            "evaluator_method": None,
+            "evaluator_identity": None,
+            "trait_results": [],
+            "rubric_results": [],
+            "limitations": [
+                f"Cross-model automated triage uses {JUDGE_MODEL} ({judge_digest}).",
+                "No human review or release approval is implied.",
+            ],
+        }
+        persist_manifest()
+        print(f"generated {index + 1}/{len(cases)}: {case['case_id']}", flush=True)
 
     unload(GENERATOR_MODEL)
 
-    records: list[dict[str, Any]] = []
-    output_lines: list[str] = []
-    for index, item in enumerate(generated, start=1):
+    for index, item in enumerate(generated):
         case = item["case"]
         judge_prompt = build_judge_prompt(structural_by_id[case["case_id"]], item["output"])
         raw_judgment, judge_metrics = generate(JUDGE_MODEL, judge_prompt, schema=JUDGE_FORMAT)
@@ -235,7 +343,7 @@ def main() -> None:
         judgment = validate_judgment(
             structural_by_id[case["case_id"]], item["output"], judgment_data
         )
-        output_lines.append(json.dumps({
+        append_jsonl(judged_path, {
             "case_id": case["case_id"],
             "agent_id": case["agent_id"],
             "scenario": case["scenario"],
@@ -251,62 +359,19 @@ def main() -> None:
                 "prompt_eval_count": judge_metrics.get("prompt_eval_count"),
                 "eval_count": judge_metrics.get("eval_count"),
             },
-        }, ensure_ascii=False))
-
-        records.append({
-            "case_id": case["case_id"],
-            "agent_id": case["agent_id"],
-            "dossier_version": case["dossier_version"],
-            "scenario": case["scenario"],
-            "status": "GENERATED",
-            "provider": "Ollama local inference on GitHub-hosted CPU runner",
-            "model": GENERATOR_MODEL,
-            "model_version": generator_digest,
-            "executed_at_utc": executed_at,
-            "prompt_sha256": item["prompt_sha256"],
-            "dossier_sha256": item["dossier_sha256"],
-            "output_artifact_ref": f"evaluation-results.jsonl#{case['case_id']}",
-            "evaluator_method": None,
-            "evaluator_identity": None,
-            "trait_results": [],
-            "rubric_results": [],
-            "limitations": [
-                f"Preliminary cross-model auto-judge: {JUDGE_MODEL} ({judge_digest}).",
-                "Auto-judge results are stored in evaluation-results.jsonl and are not human review or release approval.",
-            ],
         })
-        print(f"judged {index}/{len(generated)}: {case['case_id']} -> {judgment['overall']}", flush=True)
+        manifest["records"][index]["auto_judge_artifact_ref"] = (
+            f"evaluation-results.jsonl#{case['case_id']}"
+        )
+        persist_manifest()
+        print(
+            f"judged {index + 1}/{len(generated)}: {case['case_id']} -> {judgment['overall']}",
+            flush=True,
+        )
 
-    unload(JUDGE_MODEL)
-
-    output_path = args.output_dir / "evaluation-results.jsonl"
-    output_path.write_text("\n".join(output_lines) + "\n", encoding="utf-8")
-    manifest = {
-        "schema_version": "1.0.0",
-        "suite_id": prompt_suite["suite_id"],
-        "suite_version": prompt_suite["suite_version"],
-        "run_id": run_id,
-        "execution_status": "GENERATED_NOT_HUMAN_REVIEWED",
-        "generator": {"provider": "Ollama local", "model": GENERATOR_MODEL, "digest": generator_digest},
-        "auto_judge": {"provider": "Ollama local", "model": JUDGE_MODEL, "digest": judge_digest},
-        "execution_policy": {
-            "paid_apis_allowed": False,
-            "model_output_required": True,
-            "independent_human_review_required": True,
-            "missing_output_status": "NOT_RUN",
-            "raw_outputs_committed_to_repository": False,
-        },
-        "records": records,
-    }
-    manifest_path = args.output_dir / "evaluation-run-manifest.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    (args.output_dir / "model-digests.json").write_text(
-        json.dumps({"generator": GENERATOR_MODEL, "generator_digest": generator_digest,
-                    "judge": JUDGE_MODEL, "judge_digest": judge_digest}, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    print(f"wrote {len(records)} generated records to {output_path}", flush=True)
-
+    manifest["execution_status"] = "GENERATED_NOT_HUMAN_REVIEWED"
+    persist_manifest()
+    print(f"completed {len(generated)} generated records", flush=True)
 
 if __name__ == "__main__":
     main()
