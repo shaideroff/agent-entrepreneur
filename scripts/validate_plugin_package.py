@@ -159,9 +159,16 @@ def main() -> None:
         extracted_stats = validate_tree(extracted)
         if extracted_stats != stats:
             fail("clean extraction validation differs from source validation")
+        dist_dir = PLUGIN_ROOT.parents[1] / "dist"
+        dist_dir.mkdir(parents=True, exist_ok=True)
+        artifact = dist_dir / "agent-entrepreneur-1.0.0.zip"
+        artifact.write_bytes(first.read_bytes())
+        checksum = artifact.with_suffix(".zip.sha256")
+        checksum.write_text(f"{hash_one}  {artifact.name}\\n", encoding="utf-8")
         print(f"PASS: {stats['skills']} Skills; {stats['positive_cases']} positive and {stats['negative_cases']} negative reviewer cases; {stats['assets']} SVG asset checks")
         print(f"PASS: deterministic ZIP SHA256 {hash_one}")
         print("PASS: fresh extraction revalidated")
+        print(f"ARTIFACT: {artifact}")
 
 
 if __name__ == "__main__":
