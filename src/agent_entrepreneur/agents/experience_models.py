@@ -121,11 +121,23 @@ class ExperienceAgentResponse(BaseModel):
     limitations: list[str] = Field(default_factory=list)
 
 
+class CouncilChallenge(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    challenger_agent_id: str = Field(min_length=1)
+    target_agent_id: str = Field(min_length=1)
+    challenged_statement: str = Field(min_length=1)
+    rationale: str = Field(min_length=1)
+    evidence_refs: list[str] = Field(default_factory=list)
+    severity: Literal["low", "medium", "high"] = "medium"
+
+
 class CouncilSynthesis(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     objective: str = Field(min_length=1)
     contributions: list[ExperienceAgentResponse] = Field(min_length=1)
+    challenges: list[CouncilChallenge] = Field(default_factory=list)
     agreements: list[str] = Field(default_factory=list)
     disagreements: list[str] = Field(default_factory=list)
     unresolved_questions: list[str] = Field(default_factory=list)
