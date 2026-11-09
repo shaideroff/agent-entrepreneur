@@ -235,6 +235,12 @@ def prepare_experience_council_work(
         "objective": objective,
         "lead_role": "neutral_orchestrator",
         "routing": routing,
+        "lead_review_prompt": (
+            "Before requesting contributions, assess whether this is the smallest useful council "
+            "for the objective and supplied context. Explain why each selected dossier fits, identify "
+            "relevant exclusions and gaps, and do not silently add agents. Preserve an explicit "
+            "user-selected council unless the user authorises a change."
+        ),
         "work_packets": packets,
         "ready_agent_ids": [item["agent"]["agent_id"] for item in ready],
         "not_ready_agent_ids": [item["agent"]["agent_id"] for item in not_ready],
