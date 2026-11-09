@@ -63,3 +63,19 @@ def test_local_model_runner_resolves_model_digest_exactly() -> None:
         ]
     }
     assert digest_for_model(tags, "qwen3.5:4b") == "sha256:model-digest"
+
+def test_local_model_runner_uses_chat_api_with_thinking_disabled(monkeypatch) -> None:
+    calls = {}
+
+    def fake_request(path, payload, timeout=1800):
+        calls["path"] = path
+        calls["payload"] = payload
+        return {"message": {"content": "final answer"}, "eval_count": 3}
+
+    monkeypatch.setitem(RUNNER["generate"].__globals__, "request_json", fake_request)
+    response, _ = RUNNER["generate"]("qwen3.5:4b", "say hello")
+    assert response == "final answer"
+    assert calls["path"] == "/api/chat"
+    assert calls["payload"]["think"] is False
+    assert "think" not in calls["payload"]["options"]
+
