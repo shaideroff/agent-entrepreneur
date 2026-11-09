@@ -11,6 +11,7 @@ from agent_entrepreneur.agents.experience_catalogue import (
     get_experience_agent,
     list_experience_agents,
     recommend_experience_agents,
+    prepare_experience_council_work,
     synthesize_experience_council,
     prepare_experience_agent_work_packet as build_experience_agent_work_packet,
 )
@@ -432,6 +433,25 @@ def create_server(settings: Settings) -> FastMCP:
         if len(objective) > 4000 or len(domains or []) > 30:
             raise ValueError("objective or domain list exceeds its allowed size")
         return recommend_experience_agents(objective, domains=domains, max_agents=max_agents)
+
+    @mcp.tool()
+    def prepare_experience_agent_council_work(
+        objective: str,
+        domains: list[str] | None = None,
+        max_agents: int = 4,
+        business_context: str = "",
+        constraints: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Prepare independent work packets for a bounded Lead-selected experience-agent council."""
+        if len(objective) > 4000 or len(domains or []) > 30:
+            raise ValueError("objective or domain list exceeds its allowed size")
+        return prepare_experience_council_work(
+            objective,
+            domains=domains,
+            max_agents=max_agents,
+            business_context=business_context,
+            constraints=constraints,
+        )
 
     @mcp.tool()
     def synthesize_experience_agent_council(
