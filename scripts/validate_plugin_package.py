@@ -175,6 +175,14 @@ def validate_tree(root: Path) -> dict[str, int]:
     negative = cases.get("negative_cases", [])
     if len(positive) < 5 or len(negative) < 3:
         fail("reviewer case pack needs at least five positive and three negative cases")
+    for case in positive:
+        for field in ("id", "prompt", "expected", "expected_result_shape", "fixture"):
+            if not isinstance(case.get(field), str) or not case[field].strip():
+                fail(f"positive reviewer case requires non-empty {field}")
+    for case in negative:
+        for field in ("id", "prompt", "expected", "expected_safe_fallback", "reason"):
+            if not isinstance(case.get(field), str) or not case[field].strip():
+                fail(f"negative reviewer case requires non-empty {field}")
     for required in ("README.md", "INSTALL.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
         if not (root / required).is_file():
             fail(f"missing release file: {required}")
