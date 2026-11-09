@@ -12,7 +12,7 @@ Local marketplace availability depends on the host surface and account/workspace
 
 ## Public Plugin Directory
 
-For public distribution, prepare the exact package and submit it through the OpenAI Platform Plugin submission portal. A public listing requires a verified individual or business developer identity, the required organization submission permission, accurate listing metadata, successful package and Skill checks, required policy attestations, and OpenAI review. The five-positive/three-negative case pack in this repository is retained as an internal QA suite; current OpenAI guidance reserves MCP reviewer cases and a demo recording for plugins with MCP connections. Approval and a separate publish action are required before public availability.
+For public distribution, prepare the exact package and submit it through the OpenAI Platform Plugin submission portal. A public listing requires a verified individual or business developer identity, the required organization submission permission, accurate listing metadata, successful package and Skill checks, required policy attestations, and OpenAI review. The five-positive/three-negative case pack in this repository is required submission material. Execute each case against the exact final Skill bundle and record the observed result before submitting. This Skills-only package does not require an MCP server endpoint. Approval and a separate publish action are required before public availability.
 
 ## Separate Python/MCP distribution
 
