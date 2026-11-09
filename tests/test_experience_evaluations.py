@@ -26,7 +26,7 @@ def test_pilot_evaluation_suite_covers_required_scenarios_for_each_agent() -> No
 
 
 def test_each_pilot_dossier_meets_minimum_structural_release_gates() -> None:
-    suite = json.loads((ROOT / "evaluations" / "experience_agents" / "pilot_eval_cases.json").read_text(encoding="utf-8"))
+    suite = json.loads((ROOT / "pilot_eval_cases.json").read_text(encoding="utf-8"))
     for agent_id in suite["agents"]:
         dossier = get_experience_agent(agent_id)["dossier"]
         assert dossier["principles"]
