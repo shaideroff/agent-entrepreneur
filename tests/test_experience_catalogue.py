@@ -221,3 +221,38 @@ def test_council_challenge_must_reference_a_target_contribution_statement() -> N
             }],
         )
 
+
+
+def test_council_rejects_unknown_contribution_source_references() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    with pytest.raises(ValueError, match="unknown evidence references"):
+        synthesize_experience_council(
+            "Objective",
+            [{"agent_id": "built_from_zero", "source_ids": ["invented-source"]}],
+            recommendation="Do more research.",
+        )
+
+
+def test_council_rejects_unknown_challenge_evidence_references() -> None:
+    import pytest
+    from agent_entrepreneur.agents.experience_catalogue import synthesize_experience_council
+
+    with pytest.raises(ValueError, match="unknown challenge evidence references"):
+        synthesize_experience_council(
+            "Objective",
+            [
+                {"agent_id": "built_from_zero", "recommendations": ["Run a pilot."]},
+                {"agent_id": "jeff_bezos", "recommendations": ["Build mechanisms."]},
+            ],
+            recommendation="Run a pilot.",
+            challenges=[{
+                "challenger_agent_id": "built_from_zero",
+                "target_agent_id": "jeff_bezos",
+                "challenged_statement": "Build mechanisms.",
+                "rationale": "Evidence gap.",
+                "evidence_refs": ["invented-ref"],
+            }],
+        )
+
