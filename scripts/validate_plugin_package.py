@@ -170,6 +170,19 @@ def validate_tree(root: Path) -> dict[str, int]:
         if len(f"{manifest['name']}:{name}") > 64:
             fail(f"combined plugin and Skill identity exceeds 64 characters: {name}")
 
+    listing = json.loads((root / "submission" / "listing-pack.json").read_text(encoding="utf-8"))
+    if listing.get("submissionType") != "skills_only":
+        fail("listing pack must identify the Skills-only submission type")
+    release_notes = listing.get("releaseNotes")
+    if not isinstance(release_notes, str) or not release_notes.strip() or len(release_notes) > 2000:
+        fail("listing pack requires release notes of 1-2000 characters")
+    availability = listing.get("availabilitySelection")
+    if not isinstance(availability, dict) or availability.get("status") not in {
+        "pending_owner_selection",
+        "selected",
+    }:
+        fail("listing pack must explicitly track country availability selection")
+
     cases = json.loads((root / "submission" / "reviewer-cases.json").read_text(encoding="utf-8"))
     positive = cases.get("positive_cases", [])
     negative = cases.get("negative_cases", [])
