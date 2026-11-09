@@ -55,5 +55,12 @@
     "Run Plugin Autopilot package validation, deterministic packaging and clean-extraction validation.",
     "Smoke-install and test in the supported ChatGPT and Codex surfaces available to the publisher.",
     "Submit through the official Plugin submission portal and wait for approval before publication."
-  ]
+  ],
+  "submissionType": "skills_only",
+  "releaseNotes": "Initial public submission of Agent Entrepreneur 1.0.0, a Skills-only founder decision toolkit with workflows for business diagnosis, market research, decision evaluation, and execution planning/outcome review. The package does not expose an MCP server or execute external actions.",
+  "availabilitySelection": {
+    "status": "pending_owner_selection",
+    "guidance": "Select only countries or regions where the verified publisher, product support process, and legal terms are ready. Do not infer worldwide availability."
+  },
+  "submissionStatus": "not_submitted"
 }
