@@ -35,7 +35,7 @@ Inputs include the objective, one to five host-produced agent contributions, a r
 
 Inputs:
 - `objective`: non-empty task objective.
-- `domains`: user/client-supplied capability domains.
+- `domains` (optional): user/client-supplied capability domains; if omitted, deterministic keyword hints are inferred from the objective.
 - `max_agents`: integer from 1 to 5 (default 4).
 
 Returns a bounded shortlist using explicit domain matches and transparent objective-keyword hints, including inferred domains, rationale, unmatched domains and an execution boundary. This is a deterministic heuristic, not semantic model reasoning. It does not invoke the named people, generate their opinions or execute agent reasoning. Supply explicit domains for higher precision.
