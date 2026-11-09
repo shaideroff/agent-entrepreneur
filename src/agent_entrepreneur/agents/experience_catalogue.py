@@ -5,11 +5,13 @@ Dossiers remain Preview until source coverage and evaluations meet release gates
 """
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from agent_entrepreneur.agents.experience_models import (
     ExperienceAgentRecord,
     ExperienceAgentStatus,
+    ExperienceDossier,
 )
 
 CATALOGUE: tuple[ExperienceAgentRecord, ...] = (
@@ -68,7 +70,16 @@ def get_experience_agent(agent_id: str) -> dict[str, Any]:
     """Resolve one catalogue entry or raise a clear validation error."""
     for item in list_experience_agents():
         if item["agent_id"] == agent_id:
-            return item
+            record = dict(item)
+            dossier_ref = record.get("dossier_ref")
+            if dossier_ref:
+                dossier_path = Path(__file__).parent / dossier_ref
+                if dossier_path.is_file():
+                    dossier = ExperienceDossier.model_validate_json(dossier_path.read_text(encoding="utf-8"))
+                    if dossier.agent_id != agent_id:
+                        raise ValueError("dossier agent_id does not match its catalogue entry")
+                    record["dossier"] = dossier.validate_source_references().model_dump(mode="json")
+            return record
     raise ValueError(f"unknown experience agent: {agent_id}")
 
 
