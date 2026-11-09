@@ -48,3 +48,28 @@ def test_each_pilot_dossier_meets_minimum_structural_release_gates() -> None:
         assert dossier["last_verified_at"] == "2026-11-09"
         assert dossier["next_review_at"]
         assert dossier["evaluation_refs"] == ["experience-agent-pilot-structural-v1"]
+
+def test_dossier_specific_prompt_suite_covers_all_structural_cases() -> None:
+    structural = json.loads((ROOT / "pilot_eval_cases.json").read_text(encoding="utf-8"))
+    prompts = json.loads((ROOT / "pilot_eval_prompts.json").read_text(encoding="utf-8"))
+
+    assert prompts["suite_version"] == "1.0.0"
+    assert prompts["source_suite"] == structural["suite_id"]
+    assert len(prompts["cases"]) == len(structural["cases"]) == 36
+    assert "No model run has been performed" in prompts["execution_boundary"]
+
+    structural_ids = {case["case_id"] for case in structural["cases"]}
+    prompt_ids = {case["case_id"] for case in prompts["cases"]}
+    assert prompt_ids == structural_ids
+    assert len(prompt_ids) == len(prompts["cases"])
+
+    for case in prompts["cases"]:
+        assert case["prompt_version"] == "1.0.0"
+        assert case["dossier_version"] == "1.0.0"
+        assert case["agent_id"] in structural["agents"]
+        assert case["scenario"] in structural["scenarios"]
+        assert len(case["prompt"]) > 500
+        assert "EVALUATION TASK" in case["prompt"]
+        assert "source IDs" in case["prompt"]
+        assert "Do not impersonate" in case["prompt"] or "not the named person" in case["prompt"]
+
