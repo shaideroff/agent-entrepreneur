@@ -18,7 +18,7 @@
 - Reviewer execution template: eight cases, all explicitly NOT_RUN
 - Python 3.11 and 3.12 CI artifacts contain byte-identical inner Plugin ZIPs.
 
-The repository's custom validator passed on Python 3.11 and 3.12 in workflow 42718085157. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, complete positive/negative reviewer case fields, release notes, availability state, fail-closed NOT_RUN reviewer-results template, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from both CI artifacts and independently inspected; the two inner ZIPs are byte-identical and their manifest, listing pack and case counts match the values above.
+The repository's custom validator passed on Python 3.11 and 3.12 in workflow 42718657968. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, complete positive/negative reviewer case fields, release notes, availability state, fail-closed NOT_RUN reviewer-results template, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from both CI artifacts and independently inspected; the two inner ZIPs are byte-identical and their manifest, listing pack and case counts match the values above.
 
 ## Product boundary
 
