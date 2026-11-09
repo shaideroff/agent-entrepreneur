@@ -23,7 +23,7 @@ jobs:
         mcp-version: ["1.9.0", "latest"]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install project with selected MCP SDK version
