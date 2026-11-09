@@ -196,6 +196,20 @@ def validate_tree(root: Path) -> dict[str, int]:
         for field in ("id", "prompt", "expected", "expected_safe_fallback", "reason"):
             if not isinstance(case.get(field), str) or not case[field].strip():
                 fail(f"negative reviewer case requires non-empty {field}")
+    results_path = safe_relative(root, listing.get("reviewerResultsTemplatePath", ""))
+    results_template = json.loads(results_path.read_text(encoding="utf-8"))
+    expected_case_ids = {case["id"] for case in positive + negative}
+    result_records = results_template.get("records", [])
+    if results_template.get("overall_status") != "NOT_RUN":
+        fail("reviewer results template must remain NOT_RUN until host tests execute")
+    if {record.get("case_id") for record in result_records} != expected_case_ids:
+        fail("reviewer results template must cover every positive and negative case")
+    for record in result_records:
+        if record.get("status") != "NOT_RUN":
+            fail("reviewer results template must not claim unverified test outcomes")
+        for field in ("test_surface", "host_version", "model", "model_version", "executed_at_utc", "actual_behavior", "output_artifact_ref", "reviewer"):
+            if record.get(field) is not None:
+                fail(f"NOT_RUN reviewer record must not contain {field}")
     for required in ("README.md", "INSTALL.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
         if not (root / required).is_file():
             fail(f"missing release file: {required}")
