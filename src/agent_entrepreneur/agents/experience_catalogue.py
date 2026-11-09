@@ -216,7 +216,10 @@ def synthesize_experience_council(
             allowed_refs.update(item["principle_id"] for item in dossier["principles"])
             allowed_refs.update(item["case_id"] for item in dossier["decision_cases"])
         allowed_refs_by_agent[response.agent_id] = allowed_refs
-        unknown_refs = set(response.source_ids) - allowed_refs
+        referenced_ids = set(response.source_ids)
+        for fact in response.fact_evidence:
+            referenced_ids.update(fact.source_ids)
+        unknown_refs = referenced_ids - allowed_refs
         if unknown_refs:
             raise ValueError(
                 f"unknown evidence references for {response.agent_id}: {sorted(unknown_refs)}"
@@ -237,6 +240,7 @@ def synthesize_experience_council(
             *target.interpretations,
             *target.analogies,
             *target.recommendations,
+            *(fact.statement for fact in target.fact_evidence),
         }
         if challenge.challenged_statement not in target_statements:
             raise ValueError("challenged_statement must match a statement in the target contribution")
@@ -308,7 +312,7 @@ def prepare_experience_agent_work_packet(
         ],
         "required_output": {
             "objective_understood": "string",
-            "documented_facts": "array of strings with source IDs",
+            "documented_facts": "array of {statement, source_ids, evidence_status} records; each source ID must resolve in this dossier",
             "principles_applied": "array of principle IDs with transfer rationale",
             "interpretations": "array of strings",
             "recommendations": "array of strings",
