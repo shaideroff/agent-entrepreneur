@@ -7,11 +7,11 @@
 - Add dossier-grounded individual and Lead-selected council work packets, deterministic Lead shortlist routing, claim-level contribution evidence mapping and structured council synthesis with host-supplied adversarial challenge validation.
 - Add dossier governance metadata, fail-closed loading and structural evaluation fixtures for six scenario classes per pilot.
 - Preserve model-independent operation, local-first transport and non-impersonation safeguards.
-- Verify the six experience-agent tools over real MCP STDIO clients, including MCP SDK 1.9.0/latest, TypeScript MCP client 2.4.0 and MCP Inspector CLI 2.14.0; Python 3.11/3.12 CI passes.
-- Add 36 dossier-specific model-evaluation prompts, a 36-case NOT_RUN manifest and fail-closed evaluation reporting; no real-model outputs or independent dossier judgments have been recorded.
-- Add reproducible wheel/sdist builds, installed-wheel tests for all six experience-agent tools, Bandit static analysis, dependency/licence inventory, secret-history scanning, memory scope-isolation tests and backup recovery after source loss.
+- Verify the six experience-agent tools over real MCP STDIO clients, including MCP SDK 1.9.0/latest, TypeScript MCP client 2.4.0 and MCP Inspector CLI 2.14.0; branch-head CI run 42720225116, protocol run 42720225085 and independent-client run 42720225528 pass.
+- Add 36 dossier-specific model-evaluation prompts, a checkpointed local Ollama runner and fail-closed evaluation reporting. Latest run 42720225031 remains queued with no job or artifact; no real-model outputs or independent dossier judgments have been recorded.
+- Add reproducible wheel/sdist builds (run 42720225110), installed-wheel tests for all six experience-agent tools, Bandit static analysis and security checks (run 42720225108), dependency/licence inventory, secret-history scanning, memory scope-isolation tests and backup recovery after source loss.
 - Add bounded local STDIO performance evidence (120 calls, zero errors); this is not a production concurrency, network or model-inference benchmark.
-- Add a separately validated Skills-only ChatGPT Plugin 1.0.0 package with four Skills, five positive and three negative submission test cases, and a NOT_RUN reviewer-result template. The package is not uploaded or submitted.
+- Add a separately validated Skills-only ChatGPT Plugin 1.0.0 package (run 42720225184) with four Skills, five positive and three negative submission test cases, and a NOT_RUN reviewer-result template. The package is not uploaded or submitted.
 - Keep all six experience-agent dossiers in Preview and keep the current 1.0.0 development release unchanged. Real-model evaluation, branded desktop-host compatibility, full adversarial security/privacy review, operational disaster-recovery and production performance testing, publisher verification, Plugin case execution/submission, version bump, signed stable tag and GitHub Release remain pending.
 
 ## 1.0.0 — 2026-11-09
