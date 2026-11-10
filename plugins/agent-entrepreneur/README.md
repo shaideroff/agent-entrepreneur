@@ -25,7 +25,7 @@ Use the ChatGPT/Codex Plugin installation flow or add this folder to a local plu
 
 ## Release status
 
-This is a release candidate under validation. It is not yet submitted to, approved by, or published in the OpenAI public Plugin Directory. Public submission requires a verified individual or business publisher identity, the required organization submission permission, accurate listing metadata, successful package and Skill checks, required policy attestations, and OpenAI review. Under current OpenAI guidance, MCP reviewer cases and a demo recording apply to plugins with MCP connections; this Skills-only package keeps its five-positive/three-negative case set as an additional internal QA suite.
+This is a release candidate under validation. It is not yet submitted to, approved by, or published in the OpenAI public Plugin Directory. Public submission requires a verified individual or business publisher identity, the required organization submission permission, accurate listing metadata, successful package and Skill checks, required policy attestations, and OpenAI review. OpenAI requires at least five positive and three negative test cases for plugin submissions. This package includes that required 5/3 case set. Because this is Skills-only, it does not include an MCP server endpoint or MCP demo credentials.
 
 ## License
 

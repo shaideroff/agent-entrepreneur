@@ -1,0 +1,84 @@
+name: Third-party MCP client interoperability
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typescript-client:
+    name: Official TypeScript MCP client v2.4.0 over STDIO
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Agent Entrepreneur
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+      - name: Install pinned independent MCP client
+        run: npm install --no-save @modelcontextprotocol/client@2.4.0
+      - name: Exercise all six tools using the TypeScript SDK client
+        env:
+          AGENT_ENTREPRENEUR_DB: ${{ runner.temp }}/agent-entrepreneur-interop.sqlite3
+        run: node tests/interop/typescript_stdio_client.mjs
+
+  performance-smoke:
+    name: Bounded experience-agent STDIO performance smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Agent Entrepreneur
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+      - name: Measure bounded per-tool latency
+        run: python tests/performance/experience_agent_stdio_benchmark.py --iterations 20 --output ${{ runner.temp }}/experience-agent-performance.json
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: experience-agent-stdio-performance
+          path: ${{ runner.temp }}/experience-agent-performance.json
+          if-no-files-found: error
+          retention-days: 14
+
+  mcp-inspector-client:
+    name: MCP Inspector CLI v2.14.0
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.23.4"
+      - name: Install Agent Entrepreneur
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+      - name: Install pinned MCP Inspector CLI
+        run: npm install --no-save @modelcontextprotocol/inspector@2.14.0
+      - name: Exercise all six tools through independent Inspector CLI
+        env:
+          AGENT_ENTREPRENEUR_TRANSPORT: stdio
+          AGENT_ENTREPRENEUR_DB: ${{ runner.temp }}/agent-entrepreneur-inspector.sqlite3
+        run: bash tests/interop/inspector_cli_smoke.sh

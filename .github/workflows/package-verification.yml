@@ -29,7 +29,47 @@ jobs:
       - name: Install build tooling
         run: python -m pip install --upgrade pip build twine
       - name: Build wheel and source distribution
+        env:
+          SOURCE_DATE_EPOCH: "1767225600"
         run: python -m build
+      - name: Rebuild distributions and compare SHA-256 checksums
+        env:
+          SOURCE_DATE_EPOCH: "1767225600"
+        run: |
+          rm -rf build src/agent_entrepreneur.egg-info
+          python -m build --outdir /tmp/rebuilt-dist
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          def hashes(directory: Path) -> dict[str, str]:
+              return {
+                  path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                  for path in sorted(directory.iterdir())
+                  if path.is_file()
+              }
+
+          first = hashes(Path("dist"))
+          second = hashes(Path("/tmp/rebuilt-dist"))
+          if first != second:
+              import gzip
+              import io
+              import tarfile
+
+              first_sdist = next(Path("dist").glob("*.tar.gz"))
+              second_sdist = next(Path("/tmp/rebuilt-dist").glob("*.tar.gz"))
+              first_payload = gzip.decompress(first_sdist.read_bytes())
+              second_payload = gzip.decompress(second_sdist.read_bytes())
+              print(f"sdist uncompressed payload identical: {first_payload == second_payload}")
+              print(f"gzip headers: {first_sdist.read_bytes()[:10]!r} / {second_sdist.read_bytes()[:10]!r}")
+              with tarfile.open(fileobj=io.BytesIO(first_payload), mode="r:") as first_tar:
+                  first_members = [(m.name, m.size, m.mtime) for m in first_tar.getmembers()]
+              with tarfile.open(fileobj=io.BytesIO(second_payload), mode="r:") as second_tar:
+                  second_members = [(m.name, m.size, m.mtime) for m in second_tar.getmembers()]
+              print(f"tar member metadata identical: {first_members == second_members}")
+              raise SystemExit(f"non-reproducible distributions: first={first}, second={second}")
+          print(f"Reproducible distributions verified: {sorted(first)}")
+          PY
       - name: Validate distribution metadata
         run: python -m twine check --strict dist/*
       - name: Install wheel in a clean virtual environment
@@ -77,6 +117,12 @@ jobs:
                               "plan_specialist_workflow",
                               "complete_specialist_workflow",
                               "resume_specialist_workflow",
+                              "discover_experience_agents",
+                              "get_experience_agent_profile",
+                              "recommend_experience_agent_council",
+                              "prepare_experience_agent_council_work",
+                              "prepare_experience_agent_work_packet",
+                              "synthesize_experience_agent_council",
                               "search_entrepreneurs",
                               "save_memory",
                               "search_memory",
@@ -90,6 +136,29 @@ jobs:
                           assert result.isError is False
                           payload = json.loads(result.content[0].text)
                           assert payload["business"]["name"] == "Installed Wheel Smoke Test"
+
+                          experience_calls = [
+                              ("discover_experience_agents", {"query": "Built from Zero"}),
+                              ("get_experience_agent_profile", {"agent_id": "built_from_zero"}),
+                              ("recommend_experience_agent_council", {"objective": "Evaluate a constrained founder launch."}),
+                              ("prepare_experience_agent_council_work", {"objective": "Evaluate a constrained founder launch."}),
+                              ("prepare_experience_agent_work_packet", {"agent_id": "built_from_zero", "objective": "Evaluate a constrained founder launch."}),
+                              (
+                                  "synthesize_experience_agent_council",
+                                  {
+                                      "objective": "Evaluate a constrained founder launch.",
+                                      "contributions": [
+                                          {"agent_id": "built_from_zero", "recommendations": ["Test demand first."]},
+                                          {"agent_id": "jeff_bezos", "recommendations": ["Build repeatable mechanisms."]},
+                                      ],
+                                      "recommendation": "Run a bounded pilot with explicit decision gates.",
+                                  },
+                              ),
+                          ]
+                          for tool_name, arguments in experience_calls:
+                              experience_result = await session.call_tool(tool_name, arguments)
+                              assert experience_result.isError is False, tool_name
+                              assert experience_result.content, tool_name
 
           asyncio.run(main())
           PY

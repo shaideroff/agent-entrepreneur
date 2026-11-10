@@ -12,12 +12,12 @@
 
 ## Mandatory remaining gates
 
-1. Run the Plugin Autopilot analyzer, validator, directory pack builder and deterministic ZIP build twice.
+1. Re-run the repository's custom package validator and deterministic ZIP build after any package-content change; upload the exact ZIP and resolve the OpenAI portal's own scan findings.
 2. Extract a clean package and rerun validation.
 3. Smoke-install and test the exact package in supported ChatGPT and Codex surfaces where access is available.
 4. Review all Skill content for policy, attribution, privacy and security.
-5. Execute the repository's five-positive/three-negative golden-case suite as an internal product-quality gate; these are not MCP reviewer requirements for this Skills-only package under the current OpenAI submission guidance.
-6. Confirm the website, support, privacy and terms links resolve from the default branch and accurately identify the publisher. These URLs are included as good public practice; current guidance makes the four URLs mandatory for MCP review, not Skills-only submission.
+5. Execute and document all five positive and three negative test cases against the exact packaged Skills. OpenAI requires these cases for plugin submissions, including Skills-only submissions; each positive case needs a prompt, expected behavior, expected result shape and reproducible fixture, and each negative case needs a safe expected response and rationale.
+6. Confirm the website, support, privacy and terms URLs resolve publicly from the default branch and match the selected verified publisher identity.
 7. Verify the individual or business developer identity in OpenAI Platform and confirm the selected organization has submission access (organization owners can submit; other members need Apps Management Write).
 8. Upload the exact validated ZIP, review automated metadata and Skill findings, complete required policy attestations, submit for review, and resolve any findings.
 9. Publish only after OpenAI approval and an explicit publish action in the portal.
@@ -26,7 +26,7 @@
 
 - GitHub Actions generated a Plugin ZIP and the repository's custom package validator passed on Python 3.11 and 3.12. The archive was built twice per runtime, compared byte-for-byte, extracted to a clean directory and revalidated. The Python 3.11 and 3.12 inner Plugin ZIPs were byte-identical. The current archive SHA256 is recorded in the PR description and release checksum sidecar; rebuild after any package-content change.
 - No ChatGPT/Codex app install smoke test has been run. CI clean-extraction validation passed.
-- The internal golden-case QA suite has not been executed; it is retained as additional quality evidence, not a mandatory MCP review pack for this Skills-only package.
+- The required five-positive/three-negative case set is prepared but has not been executed against the final packaged Skills. Submission remains blocked until execution evidence and expected result records are complete.
 - The user confirmed on 2026-11-10 that OpenAI Platform developer identity verification has not yet been completed.
 - No submission, approval or public Plugin Directory publication has occurred.
 - The existing Python/MCP server remains a separate product distribution and is not bundled in this Skills-only Plugin.

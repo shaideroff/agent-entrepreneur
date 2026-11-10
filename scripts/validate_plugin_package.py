@@ -170,11 +170,46 @@ def validate_tree(root: Path) -> dict[str, int]:
         if len(f"{manifest['name']}:{name}") > 64:
             fail(f"combined plugin and Skill identity exceeds 64 characters: {name}")
 
+    listing = json.loads((root / "submission" / "listing-pack.json").read_text(encoding="utf-8"))
+    if listing.get("submissionType") != "skills_only":
+        fail("listing pack must identify the Skills-only submission type")
+    release_notes = listing.get("releaseNotes")
+    if not isinstance(release_notes, str) or not release_notes.strip() or len(release_notes) > 2000:
+        fail("listing pack requires release notes of 1-2000 characters")
+    availability = listing.get("availabilitySelection")
+    if not isinstance(availability, dict) or availability.get("status") not in {
+        "pending_owner_selection",
+        "selected",
+    }:
+        fail("listing pack must explicitly track country availability selection")
+
     cases = json.loads((root / "submission" / "reviewer-cases.json").read_text(encoding="utf-8"))
     positive = cases.get("positive_cases", [])
     negative = cases.get("negative_cases", [])
     if len(positive) < 5 or len(negative) < 3:
         fail("reviewer case pack needs at least five positive and three negative cases")
+    for case in positive:
+        for field in ("id", "prompt", "expected", "expected_result_shape", "fixture"):
+            if not isinstance(case.get(field), str) or not case[field].strip():
+                fail(f"positive reviewer case requires non-empty {field}")
+    for case in negative:
+        for field in ("id", "prompt", "expected", "expected_safe_fallback", "reason"):
+            if not isinstance(case.get(field), str) or not case[field].strip():
+                fail(f"negative reviewer case requires non-empty {field}")
+    results_path = safe_relative(root, listing.get("reviewerResultsTemplatePath", ""))
+    results_template = json.loads(results_path.read_text(encoding="utf-8"))
+    expected_case_ids = {case["id"] for case in positive + negative}
+    result_records = results_template.get("records", [])
+    if results_template.get("overall_status") != "NOT_RUN":
+        fail("reviewer results template must remain NOT_RUN until host tests execute")
+    if {record.get("case_id") for record in result_records} != expected_case_ids:
+        fail("reviewer results template must cover every positive and negative case")
+    for record in result_records:
+        if record.get("status") != "NOT_RUN":
+            fail("reviewer results template must not claim unverified test outcomes")
+        for field in ("test_surface", "host_version", "model", "model_version", "executed_at_utc", "actual_behavior", "output_artifact_ref", "reviewer"):
+            if record.get(field) is not None:
+                fail(f"NOT_RUN reviewer record must not contain {field}")
     for required in ("README.md", "INSTALL.md", "PRIVACY.md", "TERMS.md", "RELEASE-STATUS.md", "BRAND.md"):
         if not (root / required).is_file():
             fail(f"missing release file: {required}")

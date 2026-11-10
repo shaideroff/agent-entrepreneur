@@ -1,0 +1,60 @@
+# ChatGPT Plugin submission dossier — Agent Entrepreneur 1.0.0
+
+**Submission type:** Skills only  
+**Submission state:** Package validated on current candidate; not uploaded, submitted, approved or published  
+**Package source commit:** ade9ec4788ef443dfa3e4fbe224d3f9ff34296a4  
+**Latest validation workflow:** https://github.com/shaideroff/agent-entrepreneur/actions/runs/42920928054
+
+## Exact validated package
+
+- File: agent-entrepreneur-1.0.0.zip
+- Size: 20,648 bytes
+- SHA-256: 2258d94b2987ab213aad5d0d81751f9116131e6e6d446ff98ef339b279452b97
+- Entries: 17
+- Skills: 4
+- Positive test cases: 5
+- Negative test cases: 3
+- SVG assets: 3
+- Reviewer execution template: eight cases, all explicitly NOT_RUN
+- Python 3.11 and 3.12 CI artifacts contain byte-identical inner Plugin ZIPs.
+
+The latest candidate validation passed on Python 3.11 and 3.12 in workflow 42920928054. I downloaded both current workflow artifacts and independently inspected their contents: each outer artifact contains the same 20,648-byte inner ZIP with SHA-256 `2258d94b2987ab213aad5d0d81751f9116131e6e6d446ff98ef339b279452b97`; the outer artifact ZIPs were also byte-identical (SHA-256 `b4baff50f29a5af709eb548bdcc724371370eb695e47a86beb4b9864f6578f1a`). Both inner ZIPs contain the expected 17 entries. The repository's custom validator passed on Python 3.11 and 3.12 in workflow 42718657968. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, complete positive/negative reviewer case fields, release notes, availability state, fail-closed NOT_RUN reviewer-results template, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from both CI artifacts and independently inspected; the two inner ZIPs are byte-identical and their manifest, listing pack and case counts match the values above.
+
+## Product boundary
+
+This is a Skills-only package. It contains four reusable founder workflows: business diagnosis, market research, decision evaluation, and execution planning/outcome review. It does not contain an MCP endpoint, a hosted service, autonomous named-person agents, or external action execution. ChatGPT supplies model reasoning and any available research tools.
+
+The Python/MCP server is a separate distribution and is not part of this Plugin ZIP.
+
+## Submission blockers
+
+1. **Publisher identity:** Complete individual or business identity verification in the OpenAI Platform and select the verified identity in the submission form.
+2. **Submission permission:** Confirm the submitting account is an organization owner or has Apps Management Write permission.
+3. **Execute required test cases:** Run all five positive and three negative cases against the exact final Skill bundle. Record actual outcomes, expected-result comparison, and any fixes. The case definitions are present, but execution evidence is not yet recorded.
+4. **Host smoke test:** Install the exact package in a supported ChatGPT and/or Codex surface available to the publisher and verify Skill triggering and behavior. CI validates the package structure; it does not simulate the actual host UI/runtime.
+5. **Portal review:** Upload the exact ZIP, complete listing fields and availability, inspect OpenAI's automated Skill scan, resolve findings, and complete policy attestations.
+6. **Approval and publication:** Submit for review. Publishing is a separate action available only after approval.
+
+## Listing and policy material
+
+- Listing manifest: plugins/agent-entrepreneur/.codex-plugin/plugin.json
+- Listing pack: plugins/agent-entrepreneur/submission/listing-pack.json
+- Required test cases: plugins/agent-entrepreneur/submission/reviewer-cases.json
+- Privacy notice: plugins/agent-entrepreneur/PRIVACY.md
+- Terms: plugins/agent-entrepreneur/TERMS.md
+- Support: https://github.com/shaideroff/agent-entrepreneur/issues
+- Website/repository: https://github.com/shaideroff/agent-entrepreneur
+
+Privacy and terms files are present on the public default branch. Recheck all public URLs and publisher identity immediately before submission.
+
+## Official requirements reference
+
+OpenAI's current submission guide: https://developers.openai.com/plugins/deploy/submission
+
+The guide permits Skills-only submissions and requires a verified developer/business identity, Apps Management submission access, listing materials, starter prompts, at least five positive and three negative test cases, availability selection, release notes and policy attestations. An MCP endpoint, domain verification and MCP tool metadata are not applicable to this Skills-only architecture.
+
+## Release controls
+
+- Do not claim submitted, approved or published until the portal confirms each state.
+- Do not replace the validated ZIP after submission without rebuilding, revalidating and updating the checksum.
+- Keep the Plugin version (1.0.0) independent from the Python/MCP server's v1.1 certification work.
