@@ -155,7 +155,7 @@ def validate_judgment(case: dict[str, Any], output: str, judgment: dict[str, Any
             continue
         result = item.get("result")
         quote = item.get("evidence_quote", "")
-        if result == "pass" and (not quote or " ".join(quote.split()) not in " ".join(output.split()):
+        if result == "pass" and (not quote or " ".join(quote.split()) not in " ".join(output.split())):
             item = {
                 **item,
                 "result": "uncertain",
