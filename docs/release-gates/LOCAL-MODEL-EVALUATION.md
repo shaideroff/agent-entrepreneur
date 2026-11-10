@@ -35,10 +35,13 @@
 - The runner checkpoints each generated case and each cross-model judgment so partial work survives a timeout or failure.
 - The first test run also exposed a test-import issue (scripts is not a Python package); the test was corrected to load the script with runpy. Latest full CI run 42728723667 passes on Python 3.11 and 3.12.
 
-## Current run
+## Corrective reruns and current run
 
-- Completed preliminary run: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42719845451 (36/36 outputs generated, quality gate failed due truncation and judge limitations).
-- A corrected run with increased output budgets is required. Its result must be inspected before this gate can move beyond PENDING.
+- Preliminary run 42719845451 generated 36/36 outputs, but every generation response hit the 512-token cap and the automated judge results were unreliable/incomplete (3 pass, 11 fail, 22 inconclusive; 11 invalid-JSON judge responses). This is a failed quality gate, not a pass.
+- Corrective run 42920487609 installed Ollama and downloaded both models, then stopped before generation because the exact-quote validator had a Python syntax error. No evaluation artifact was produced by that run.
+- The syntax error was fixed in commit `561876b0f4f9a2a740d371b8f57e98f3e2f21e0a`. Current run 42920927913 is executing the full 36-case suite on that commit. At the latest inspection, runtime installation, loopback service startup and both model downloads had passed; the generation/judging step was still in progress.
+- The corrected runner uses a 1,400-token generation budget and a 768-token structured-judge budget. Inspect the new artifact for `eval_count`, completion reasons, valid judge JSON, exact quote validation and all 36 case IDs. A workflow-level success is not sufficient.
+- Keep all cases GENERATED/NOT REVIEWED until an independent human reviewer has assessed the actual outputs. Do not promote any dossier based on model triage alone.
 
 ## Model and runtime references
 
