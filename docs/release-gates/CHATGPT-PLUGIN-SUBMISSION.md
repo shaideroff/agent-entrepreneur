@@ -1,9 +1,9 @@
 # ChatGPT Plugin submission dossier — Agent Entrepreneur 1.0.0
 
 **Submission type:** Skills only  
-**Submission state:** Package validated; not uploaded, submitted, approved or published  
+**Submission state:** Package validated on current candidate; not uploaded, submitted, approved or published  
 **Package source commit:** ade9ec4788ef443dfa3e4fbe224d3f9ff34296a4  
-**Validation workflow:** https://github.com/shaideroff/agent-entrepreneur/actions/runs/42717356538
+**Latest validation workflow:** https://github.com/shaideroff/agent-entrepreneur/actions/runs/42920928054
 
 ## Exact validated package
 
@@ -18,7 +18,7 @@
 - Reviewer execution template: eight cases, all explicitly NOT_RUN
 - Python 3.11 and 3.12 CI artifacts contain byte-identical inner Plugin ZIPs.
 
-The repository's custom validator passed on Python 3.11 and 3.12 in workflow 42718657968. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, complete positive/negative reviewer case fields, release notes, availability state, fail-closed NOT_RUN reviewer-results template, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from both CI artifacts and independently inspected; the two inner ZIPs are byte-identical and their manifest, listing pack and case counts match the values above.
+The latest candidate validation passed on Python 3.11 and 3.12 in workflow 42920928054. I downloaded both current workflow artifacts and independently inspected their contents: each outer artifact contains the same 20,648-byte inner ZIP with SHA-256 `2258d94b2987ab213aad5d0d81751f9116131e6e6d446ff98ef339b279452b97`; the outer artifact ZIPs were also byte-identical (SHA-256 `b4baff50f29a5af709eb548bdcc724371370eb695e47a86beb4b9864f6578f1a`). Both inner ZIPs contain the expected 17 entries. The repository's custom validator passed on Python 3.11 and 3.12 in workflow 42718657968. It checks manifest metadata, safe paths, required release documents, SVG safety, Skill frontmatter, complete positive/negative reviewer case fields, release notes, availability state, fail-closed NOT_RUN reviewer-results template, excluded files, deterministic ZIP bytes and fresh-extraction validation. The exact ZIP was downloaded from both CI artifacts and independently inspected; the two inner ZIPs are byte-identical and their manifest, listing pack and case counts match the values above.
 
 ## Product boundary
 
