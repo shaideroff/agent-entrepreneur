@@ -24,13 +24,13 @@
 - Initial run 42719241551 installed Ollama, verified its binary checksum, downloaded both models, then failed on the first Qwen3.5 response because /api/generate returned no visible final answer while the model used its thinking budget.
 - Corrected the runner to use /api/chat with the documented top-level think=false setting. Automated tests verify this request shape and require exact evidence quotes from the candidate output.
 - The runner checkpoints each generated case and each cross-model judgment so partial work survives a timeout or failure.
-- The first test run also exposed a test-import issue (scripts is not a Python package); the test was corrected to load the script with runpy. Latest full CI run 42720225116 passes on Python 3.11 and 3.12.
+- The first test run also exposed a test-import issue (scripts is not a Python package); the test was corrected to load the script with runpy. Latest full CI run 42728723667 passes on Python 3.11 and 3.12.
 
 ## Current run
 
-- Latest workflow: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42720225031
+- Latest workflow: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42728723682
 - State at last inspection: queued/pending; GitHub has not created a job yet and no evaluation artifact exists.
-- Previous corrected attempt 42719785320 was cancelled before job allocation; it produced no results.
+- Previous corrected attempts 42719785320 and 42720225031 were cancelled or remained queued without job allocation; neither produced results. The latest queued attempt is 42728723682.
 - Do not treat this gate as passed until the latest workflow completes, the manifest contains all 36 records, model digests and outputs are verified, and a human reviewer has examined the cases.
 - All dossier statuses remain Preview.
 
