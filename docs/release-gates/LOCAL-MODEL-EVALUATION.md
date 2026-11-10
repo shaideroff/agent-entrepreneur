@@ -15,9 +15,18 @@
 
 - Generator output is real local model output, not a simulated response.
 - Granite triage is a separate model family, but it is automated evaluation—not independent human review.
-- The run manifest marks every executed case GENERATED, never REVIEWED_PASS.
+- The run manifest marks every executed case GENERATED, never REVIEWED_PASS. Workflow success is not evaluation success; truncated output or judge failures block the gate.
 - Human review of source fidelity, evidence citations, scope boundaries, transfer assumptions, and hallucination flags remains mandatory before any dossier promotion.
 - If the runner fails or a case has no output, the case remains NOT_RUN.
+
+## First completed model run — output generated, quality gate failed
+
+- Run 42719845451 completed successfully at the workflow level and produced an artifact containing all 36 generation records and all 36 cross-model triage records. Artifact SHA-256: 4b8dea866cf2f8dd28789f2c3dc6624c7e7d868751bcbb32a349a8e8151af477.
+- Generator digest: d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04. Judge digest: 07bd1f170855240f9e162bf54ea494a8bc1c73d8cbd1365d7fccbeb7d2504947.
+- All 36 generation responses reached the 512-token cap. Candidate responses are therefore incomplete/truncated.
+- Automated judge outcomes: 3 pass, 11 fail, 22 inconclusive. Eleven judge responses hit the 384-token output cap and returned invalid JSON; other uncertainty included non-exact evidence quotations. One case was flagged for transfer-condition and missing-evidence concerns.
+- Therefore workflow execution succeeded, but the model-quality gate failed. These are preliminary automated signals, not human review.
+- Corrective change: increase generator output budget to 1,400 tokens and structured-judge budget to 768 tokens; tighten exact-quote instructions and permit whitespace-normalized exact matching only. Re-run all 36 cases before drawing quality conclusions.
 
 ## Runtime issue and correction
 
@@ -28,11 +37,8 @@
 
 ## Current run
 
-- Latest workflow: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42728723682
-- State at last inspection: queued/pending; GitHub has not created a job yet and no evaluation artifact exists.
-- Previous corrected attempts 42719785320 and 42720225031 were cancelled or remained queued without job allocation; neither produced results. The latest queued attempt is 42728723682.
-- Do not treat this gate as passed until the latest workflow completes, the manifest contains all 36 records, model digests and outputs are verified, and a human reviewer has examined the cases.
-- All dossier statuses remain Preview.
+- Completed preliminary run: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42719845451 (36/36 outputs generated, quality gate failed due truncation and judge limitations).
+- A corrected run with increased output budgets is required. Its result must be inspected before this gate can move beyond PENDING.
 
 ## Model and runtime references
 
