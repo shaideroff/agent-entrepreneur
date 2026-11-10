@@ -21,20 +21,23 @@
 
 ## Runtime issue and correction
 
-- Initial run 42719241551 downloaded both models but failed on the first Qwen3.5 response: the Ollama `/api/generate` endpoint spent the output budget in thinking mode and returned an empty visible response.
-- Corrected the runner to use `/api/chat` with the documented top-level `think: false` setting. The runner now checkpoints each generated case and each cross-model judgment so partial work survives a timeout or failure.
-- Automated tests assert that thinking is disabled at the API top level and that judge evidence quotes must exactly occur in the candidate output.
+- Initial run 42719241551 installed Ollama, verified its binary checksum, downloaded both models, then failed on the first Qwen3.5 response because /api/generate returned no visible final answer while the model used its thinking budget.
+- Corrected the runner to use /api/chat with the documented top-level think=false setting. Automated tests verify this request shape and require exact evidence quotes from the candidate output.
+- The runner checkpoints each generated case and each cross-model judgment so partial work survives a timeout or failure.
+- The first test run also exposed a test-import issue (scripts is not a Python package); the test was corrected to load the script with runpy. Latest full CI run 42720225116 passes on Python 3.11 and 3.12.
 
 ## Current run
 
-- Workflow: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42719785320
-- State: queued after runner correction; no model outputs have yet been accepted.
-- Compare the final manifest, model digests and output artifact before treating any case as GENERATED. Human review remains mandatory.
+- Latest workflow: https://github.com/shaideroff/agent-entrepreneur/actions/runs/42720225031
+- State at last inspection: queued/pending; GitHub has not created a job yet and no evaluation artifact exists.
+- Previous corrected attempt 42719785320 was cancelled before job allocation; it produced no results.
+- Do not treat this gate as passed until the latest workflow completes, the manifest contains all 36 records, model digests and outputs are verified, and a human reviewer has examined the cases.
+- All dossier statuses remain Preview.
 
 ## Model and runtime references
 
 - Ollama Linux installation and version pinning: https://github.com/ollama/ollama/blob/main/docs/linux.mdx
-- Ollama v0.40.14 release and binary checksum: https://github.com/ollama/ollama/releases/expanded_assets/v0.40.14 (Linux amd64 tarball SHA-256: `993e83d08c3d13d17c55009a3e2664c8a25445e644aec3a68bef5abb6abce67d`)
-- Ollama thinking controls and top-level `think` API parameter: https://github.com/ollama/ollama/blob/main/docs/capabilities/thinking.mdx
+- Ollama v0.40.14 release and binary checksum: https://github.com/ollama/ollama/releases/expanded_assets/v0.40.14 (Linux amd64 tarball SHA-256: 993e83d08c3d13d17c55009a3e2664c8a25445e644aec3a68bef5abb6abce67d)
+- Ollama thinking controls and top-level think API parameter: https://github.com/ollama/ollama/blob/main/docs/capabilities/thinking.mdx
 - Qwen3.5 4B Ollama model and Apache-2.0 licence: https://registry.ollama.com/library/qwen3.5%3A4b-q4_K_M
 - IBM Granite 3.3 2B Ollama model and Apache-2.0 licence: https://registry.ollama.com/library/granite3.3%3A2b
